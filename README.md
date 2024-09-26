@@ -45,7 +45,7 @@ Antes de comenzar con la instalación, asegúrate de tener lo siguiente:
 [Ver Prototipo](enlace-al-prototipo)
 
 ## Contribuciones
-¡Apreciamos las contribuciones! Si deseas colaborar, puedes abrir un problema (issue) o enviar una solicitud de extracción (pull request) en nuestro [repositorio de GitHub](https://github.com/tuusuario/UrbanStyleWebApp).
+¡Apreciamos las contribuciones! Si deseas colaborar, puedes abrir un problema (issue) o enviar una solicitud de extracción (pull request) en nuestro [repositorio de GitHub](https://github.com/Erit18/UrbanStyleWebApp).
 
 ## Autores
 **Equipo de Desarrollo**

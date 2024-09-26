@@ -1,4 +1,4 @@
-<img width="110" height="100" align="left" alt="Prueba" src=".assets/logo.png" style="padding-right: 20px; padding-bottom: 10px;">
+<img width="110" height="100" align="left" alt="Prueba" src=".assets/logo.png" style="padding-top: 50px; padding-bottom: 10px;">
 
 # Urban Style Web App
 

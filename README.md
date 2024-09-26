@@ -1,4 +1,5 @@
-<img width="100" height="100" align="left" style="float: left; margin: 0 10px 0 0;" alt="Prueba" src=".assets/logo.png">
+<img width="120" height="100" align="left" style="float: left; margin: 0 10px 0 0;" alt="Prueba" src=".assets/logo.png">
+
 # Urban Style Web App
 
 ## Descripción del Proyecto

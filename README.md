@@ -1,8 +1,9 @@
 <img width="110" height="100" align="left" alt="Prueba" src=".assets/logo.png">
 
 # Urban Style Web App
+Este repositorio se ha creado con el propósito de facilitar el aprendizaje y desarrollo de páginas web utilizando HTML, CSS y JavaScript, utilizando como proyecto base el restaurante MarCriollo. :smiley:
 
-# Descripción del Proyecto
+## Descripción del Proyecto
 Urban Style es una tienda dedicada a la venta de ropa de moda urbana, especializada en ofrecer prendas y accesorios que reflejan las últimas tendencias del estilo callejero. Este aplicativo web tiene como objetivo optimizar la gestión de ventas, mejorar la experiencia de compra y potenciar la presencia digital de la empresa.
 
 ## Problemática

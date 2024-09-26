@@ -1,3 +1,4 @@
+![Logo de Urban Style](.assets/logo.png)
 # Urban Style Web App
 
 ## Descripción del Proyecto
@@ -44,10 +45,10 @@ Antes de comenzar con la instalación, asegúrate de tener lo siguiente:
 ![Diseño de la Interfaz](ruta/a/tu/screenshot.png)
 [Ver Prototipo](enlace-al-prototipo)
 
-## Contribuciones
+## Contribuciones 🤝
 ¡Apreciamos las contribuciones! Si deseas colaborar, puedes abrir un problema (issue) o enviar una solicitud de extracción (pull request) en nuestro [repositorio de GitHub](https://github.com/Erit18/UrbanStyleWebApp).
 
-## Autores
+## Autores 
 **Equipo de Desarrollo**
 - **Adrián Ramos Barzola**: [adrianrb111@gmail.com](mailto:adrianrb111@gmail.com)
 - **Nombre de Tu Compañero**: [email@ejemplo.com](mailto:email@ejemplo.com)

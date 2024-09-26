@@ -1,0 +1,4 @@
+controllers\ProductoController.class
+models\Producto.class
+com\mycompany\urbanstylewebapp\JakartaRestConfiguration.class
+com\mycompany\urbanstylewebapp\resources\JakartaEE8Resource.class

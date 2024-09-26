@@ -1,4 +1,4 @@
-<img width="110" height="100" align="left" style="float: left; margin: 0 0 0 0;" alt="Prueba" src=".assets/logo.png">
+<img width="110" height="100" align="left" alt="Prueba" src=".assets/logo.png">
 
 # Urban Style Web App
 

@@ -1,6 +1,8 @@
-<img width="110" height="100" align="left" alt="Prueba" src=".assets/logo.png" style="margin-bottom: 20px;">
+<img width="110" height="100" align="left" alt="Prueba" src=".assets/logo.png"
 
 # Urban Style Web App
+
+<br><br>
 
 ## Descripción del Proyecto
 Urban Style es una tienda dedicada a la venta de ropa de moda urbana, especializada en ofrecer prendas y accesorios que reflejan las últimas tendencias del estilo callejero. Este aplicativo web tiene como objetivo optimizar la gestión de ventas, mejorar la experiencia de compra y potenciar la presencia digital de la empresa.

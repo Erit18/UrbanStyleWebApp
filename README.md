@@ -13,14 +13,6 @@ Urban Style enfrenta desafíos significativos. Actualmente, no cuentan con un si
 ## 🎯 Objetivo General
 Desarrollar un aplicativo web para Urban Style que optimice la gestión de ventas, mejore la experiencia de compra de los clientes y potencie la presencia digital de la empresa.
 
-## 🎯 Objetivos Específicos
-- Implementar un sistema de ventas automatizado.
-- Desarrollar una base de datos.
-- Ofrecer un amplio catálogo de ropa urbana en línea.
-- Integrar múltiples opciones de pago en línea.
-- Incluir funcionalidades de seguimiento de pedidos.
-- Facilitar opciones de entrega y recogida en tienda.
-
 ## 🔑 Características
 - **Catálogo de Productos**: Acceso a una amplia gama de ropa urbana y accesorios.
 - **Sistema de Compras Online**: Posibilidad de realizar compras desde la plataforma.
@@ -45,8 +37,8 @@ Antes de comenzar con la instalación, asegúrate de tener lo siguiente:
 ![Diagrama de Entidad-Relación](ruta/a/tu/diagrama.png)
 
 ## 🎨 Diseño Frontend
-![Diseño de la Interfaz](ruta/a/tu/screenshot.png)
-[Ver Prototipo](enlace-al-prototipo)
+![Diseño de la Interfaz](.assets/principal.png)
+[Ver Prototipo](https://www.figma.com/design/iGYcEdPROoZ7eYLJHx0zZ2/Untitled?node-id=0-1&t=NC8lq16Ep4zBlZg2-1)
 
 ## 🤝 Contribuciones
 ¡Apreciamos las contribuciones! Si deseas colaborar, puedes abrir un problema (issue) o enviar una solicitud de extracción (pull request) en nuestro [repositorio de GitHub](https://github.com/Erit18/UrbanStyleWebApp).

@@ -46,4 +46,7 @@ Antes de comenzar con la instalación, asegúrate de tener lo siguiente:
 ## 👥 Autores 
 **Equipo de Desarrollo**
 - **👤 Adrián Ramos Barzola**: [adrianrb111@gmail.com](mailto:adrianrb111@gmail.com)
-- **👤 Nombre de Tu Compañero**: [email@ejemplo.com](mailto:email@ejemplo.com)
+- **👤 Sebastián Geovanni Buitrón Velásquez**: [email@ejemplo.com](mailto:email@ejemplo.com)
+- **👤 Kevin Arnold Clemente Albornoz**: [email@ejemplo.com](mailto:email@ejemplo.com)
+- **👤 Danna Roxanne Susanibar Quispe**: [email@ejemplo.com](mailto:email@ejemplo.com)
+- **👤 Fabian García Champi**: [email@ejemplo.com](mailto:email@ejemplo.com)

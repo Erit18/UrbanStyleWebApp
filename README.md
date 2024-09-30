@@ -49,6 +49,7 @@ Antes de comenzar con la instalación, asegúrate de tener lo siguiente:
 - **[☕ Java JDK 1.8 o superior](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)**: Necesario para compilar y ejecutar el proyecto.
 - **[📦 Maven](https://maven.apache.org/download.cgi)**: Utilizado para gestionar dependencias y construir el proyecto.
 - **[🌐 Apache Tomcat](https://tomcat.apache.org/)**: Un servidor de aplicaciones compatible con Java EE para desplegar la aplicación.
+- **[🐬 MySQL Workbench](https://dev.mysql.com/downloads/workbench/)**: Herramienta para diseñar, modelar y gestionar la base de datos.
 
 ## 🛠️ Tecnologías Utilizadas
 - **Java**: Lenguaje de programación principal.
@@ -56,6 +57,7 @@ Antes de comenzar con la instalación, asegúrate de tener lo siguiente:
 - **CSS**: Estilos y diseño de la interfaz de usuario.
 - **JavaScript**: Funcionalidades interactivas en el front-end.
 - **Maven**: Gestión de dependencias y construcción del proyecto.
+- **MySQL**: Sistema de gestión de bases de datos para almacenar la información de la tienda.
 
 ## 🎨 Diseño Frontend
 ![Diseño de la Interfaz](.assets/principal.png)

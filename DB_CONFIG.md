@@ -230,28 +230,28 @@ CREATE TABLE Canje_Puntos (
 
 ## Relaciones entre Tablas
 **Usuarios -> Pedidos (Uno a muchos)**
-•	Un usuario puede tener múltiples pedidos, pero cada pedido pertenece a un único usuario.
+-	Un usuario puede tener múltiples pedidos, pero cada pedido pertenece a un único usuario.
 
 **Pedidos -> Detalle de Producto (Uno a muchos)**
-•	Cada pedido puede tener varios productos a través del detalle de producto, pero un detalle de producto pertenece a un único pedido.
+-	Cada pedido puede tener varios productos a través del detalle de producto, pero un detalle de producto pertenece a un único pedido.
 
 **Productos -> Detalle de Producto (Uno a muchos)**
-•	Un producto puede aparecer en múltiples detalles de pedido, pero un detalle de producto está vinculado a un solo producto.
+-	Un producto puede aparecer en múltiples detalles de pedido, pero un detalle de producto está vinculado a un solo producto.
 
 **Usuarios -> Carrito (Uno a uno)**
-•	Cada usuario tiene un carrito asociado, y el carrito pertenece a un solo usuario.
+-	Cada usuario tiene un carrito asociado, y el carrito pertenece a un solo usuario.
 
 **Producto -> Notificaciones (Uno a muchos)**
-•	Un producto puede generar múltiples notificaciones si su stock se agota o está cerca de caducar.
+-	Un producto puede generar múltiples notificaciones si su stock se agota o está cerca de caducar.
 
 **Usuarios -> Reviews (Uno a muchos)**
-•	Un usuario puede dejar varias reseñas, pero cada reseña está asociada a un único usuario.
+-	Un usuario puede dejar varias reseñas, pero cada reseña está asociada a un único usuario.
 
 **Productos -> Reviews (Uno a muchos)**
-•	Un producto puede tener varias reseñas, pero una reseña está vinculada a un único producto.
+-	Un producto puede tener varias reseñas, pero una reseña está vinculada a un único producto.
 
 **Usuarios -> Cupones (Uno a muchos)**
-•	Un usuario puede tener varios cupones, pero cada cupón pertenece a un solo usuario.
+-	Un usuario puede tener varios cupones, pero cada cupón pertenece a un solo usuario.
 
 **Pedidos -> Envíos (Uno a uno)**
-•	Cada pedido tiene un único registro de envío asociado.
+-	Cada pedido tiene un único registro de envío asociado.

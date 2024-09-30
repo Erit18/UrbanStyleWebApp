@@ -4,8 +4,8 @@
 
 # Urban Style Web App
 
-## 📝 Descripción del Proyecto
-Urban Style es una tienda dedicada a la venta de ropa de moda urbana, especializada en ofrecer prendas y accesorios que reflejan las últimas tendencias del estilo callejero. Este aplicativo web tiene como objetivo optimizar la gestión de ventas, mejorar la experiencia de compra y potenciar la presencia digital de la empresa.
+## 📝 Presentación de la empresa
+Urban Style es una tienda dedicada a la venta de ropa de moda urbana, especializada en ofrecer prendas y accesorios que reflejan las últimas tendencias del estilo callejero. Ofrecen una variedad de prendas, accesorios y calzado diseñados para capturar la esencia del entorno urbano, enfocándose en un público joven de entre 17 y 30 años, tanto para hombres como para mujeres.
 
 ## 🚩 Problemática
 Urban Style enfrenta desafíos significativos. Actualmente, no cuentan con un sistema de compras online, lo que limita su capacidad para llegar a un público más amplio. Además, la falta de un registro de inventario eficiente dificulta la gestión de sus prendas, afectando la disponibilidad y el servicio al cliente.
@@ -13,13 +13,13 @@ Urban Style enfrenta desafíos significativos. Actualmente, no cuentan con un si
 ## 🎯 Objetivo General
 Desarrollar un aplicativo web para Urban Style que optimice la gestión de ventas, mejore la experiencia de compra de los clientes y potencie la presencia digital de la empresa.
 
-## 🎯 Impacto en los procesos
+## 🌟 Impacto en los procesos
 El desarrollo del aplicativo web para Urban Style tendrá un impacto significativo en varios procesos clave de la empresa:
 1.	**Gestión de Ventas:** La implementación de un sistema automatizado permitirá un control más preciso y eficiente de las compras y el inventario, reduciendo errores y mejorando el flujo de trabajo.
 2.	**Experiencia de Compra:** Los clientes podrán realizar compras en línea de manera fácil y rápida, accediendo a un catálogo completo y personalizado que mejorará su satisfacción. Esto ayudará a fidelizar a los clientes y atraer nuevos consumidores que buscan comodidad en sus compras.
 3.	**Transparencia y Seguimiento de Pedidos:** Con la posibilidad de rastrear pedidos en tiempo real, se mejorará la confianza de los clientes en la marca, lo que fortalecerá la reputación de Urban Style y fomentará relaciones duraderas con los clientes.
 
-## 🎯 Alcance de la Solución Informática
+## 💻 Alcance de la Solución Informática
 El desarrollo del aplicativo web para Urban Style se plantea como la solución integral a las problemáticas identificadas. Este incluirá:
 1.	**Funcionalidad de Compras en Línea:**
 •	Registro de Usuarios: Permitir a los clientes crear cuentas, acceder a ellas y recuperar contraseñas, facilitando así el acceso al sistema.

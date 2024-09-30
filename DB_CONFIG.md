@@ -64,7 +64,7 @@ CREATE TABLE Productos (
 );
    ```
 
-4. **Detalle_Producto**
+4. **Detalle del Producto**
 ```sql
 CREATE TABLE Detalle_Producto (
     id_detalle_producto INT IDENTITY(1,1) PRIMARY KEY,
@@ -134,7 +134,7 @@ CREATE TABLE Notificaciones (
 );
    ```
 
-9. **Seguimiento_Envios**
+9. **Seguimiento de Envios**
 ```sql
 CREATE TABLE Seguimiento_Envios (
     id_seguimiento INT IDENTITY(1,1) PRIMARY KEY,
@@ -181,7 +181,7 @@ CREATE TABLE Pedido_Cupon (
 );
    ```
 
-13. **Chat_Soporte**
+13. **Chat de Soporte**
 ```sql
 CREATE TABLE Chat_Soporte (
     id_chat INT IDENTITY(1,1) PRIMARY KEY,
@@ -206,7 +206,7 @@ CREATE TABLE Recomendaciones (
 );
    ```
 
-15. **Puntos_Fidelizacion**
+15. **Puntos de Fidelizacion**
 ```sql
 CREATE TABLE Puntos_Fidelizacion (
     id_fidelizacion INT IDENTITY(1,1) PRIMARY KEY,
@@ -217,7 +217,7 @@ CREATE TABLE Puntos_Fidelizacion (
 );
    ```
 
-16. **Canje_Puntos**
+16. **Canje de Puntos**
 ```sql
 CREATE TABLE Canje_Puntos (
     id_canje INT IDENTITY(1,1) PRIMARY KEY,

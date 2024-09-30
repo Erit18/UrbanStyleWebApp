@@ -229,13 +229,29 @@ CREATE TABLE Canje_Puntos (
    ```
 
 ## Relaciones entre Tablas
-- **Usuarios** (1) --- (N) **Carrito**
-- **Usuarios** (1) --- (N) **Pedidos**
-- **Usuarios** (1) --- (N) **Notificaciones**
-- **Usuarios** (1) --- (N) **Reseñas**
-- **Usuarios** (1) --- (N) **Chat_Soporte**
-- **Productos** (1) --- (N) **Detalle_Producto**
-- **Productos** (1) --- (N) **Detalle_Pedido**
-- **Proveedores** (1) --- (N) **Productos**
-- **Pedidos** (1) --- (N) **Detalle_Pedido**
-- **Pedidos** (1) --- (1) **Seguimiento_Envios**
+**Usuarios -> Pedidos (Uno a muchos)**
+•	Un usuario puede tener múltiples pedidos, pero cada pedido pertenece a un único usuario.
+
+**Pedidos -> Detalle de Producto (Uno a muchos)**
+•	Cada pedido puede tener varios productos a través del detalle de producto, pero un detalle de producto pertenece a un único pedido.
+
+**Productos -> Detalle de Producto (Uno a muchos)**
+•	Un producto puede aparecer en múltiples detalles de pedido, pero un detalle de producto está vinculado a un solo producto.
+
+**Usuarios -> Carrito (Uno a uno)**
+•	Cada usuario tiene un carrito asociado, y el carrito pertenece a un solo usuario.
+
+**Producto -> Notificaciones (Uno a muchos)**
+•	Un producto puede generar múltiples notificaciones si su stock se agota o está cerca de caducar.
+
+**Usuarios -> Reviews (Uno a muchos)**
+•	Un usuario puede dejar varias reseñas, pero cada reseña está asociada a un único usuario.
+
+**Productos -> Reviews (Uno a muchos)**
+•	Un producto puede tener varias reseñas, pero una reseña está vinculada a un único producto.
+
+**Usuarios -> Cupones (Uno a muchos)**
+•	Un usuario puede tener varios cupones, pero cada cupón pertenece a un solo usuario.
+
+**Pedidos -> Envíos (Uno a uno)**
+•	Cada pedido tiene un único registro de envío asociado.

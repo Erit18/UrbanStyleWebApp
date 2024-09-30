@@ -33,8 +33,8 @@ Antes de comenzar con la instalación, asegúrate de tener lo siguiente:
 - **JavaScript**: Funcionalidades interactivas en el front-end.
 - **Maven**: Gestión de dependencias y construcción del proyecto.
 
-## 🖼️ Diagrama de Entidad-Relación
-![Diagrama de Entidad-Relación](ruta/a/tu/diagrama.png)
+## 🖼️ Diseño Lógico
+![Diseño Lógico](db_diagram.png)
 
 ## 🎨 Diseño Frontend
 ![Diseño de la Interfaz](.assets/principal.png)

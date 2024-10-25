@@ -1,0 +1,27 @@
+# Carpetas compiladas
+/target/
+/bin/
+
+# Archivos de configuración de IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# Logs
+*.log
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties

@@ -389,39 +389,22 @@
             </div>
             </div>
         </div>
-<footer class="footer-distributed">
-    <div class="footer-left">
-        <img src="../Intranet/imagenes/Logo.jpeg" alt="Logo" class="logo" >
-        <p class="footer-company-name">Copyright © 2024 <strong>DC STYLE</strong> Reservados todos los derechos</p>
-    </div>
-    <div class="footer-center">
-        <div>
-            <i class="fa fa-map-marker"></i>
-            <p><span>Ubicación</span> Los Olivos, UTP 2024</p>
-        </div>
-        <div>
-            <i class="fa fa-phone"></i>
-            <p>+51 456 789 067</p>
-        </div>
-        <div>
-            <i class="fa fa-envelope"></i>
-            <p><a href="mailto:sagar00001.co@gmail.com">DcStyle@empresa.com</a></p>
-        </div>
-    </div>
-    <div class="footer-right">
-        <p class="footer-company-about">
-            <span>Sobre la empresa</span>
-            <strong>DC Style</strong> Descubre las ropas en tendencia de este año 2024
-        </p>
-        <div class="footer-icons">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-instagram"></i></a>
-            <a href="#"><i class="fa fa-linkedin"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="#"><i class="fa fa-youtube"></i></a>
-        </div>
-    </div>
-</footer>
+
+<!--FOOTER (pie de página)-->
+<div id="footer-placeholder"></div>
+
+
+<script>
+    // Cargar el header
+    fetch("../catalogo/fragments/header.html")
+        .then(response => response.text())
+        .then(data => document.getElementById("header-placeholder").innerHTML = data);
+
+    // Cargar el footer
+    fetch("../catalogo/fragments/footer.html")
+        .then(response => response.text())
+        .then(data => document.getElementById("footer-placeholder").innerHTML = data);
+</script>
     
 
     <script src="../../js/script.js"></script>

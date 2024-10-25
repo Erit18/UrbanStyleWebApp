@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+   
+}
+
+/* Menú lateral */
+.sidebar {
+    background-color: #040404;
+    color: #faf9f9;
+    width: 250px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* Menú */
+.menu a {
+    display: flex;
+    align-items: center;
+    color: #f8f7f7;
+    text-decoration: none;
+    padding: 10px 0;
+}
+
+.menu a i {
+    margin-right: 10px;
+}
+
+/* Área principal */
+.content {
+    flex-grow: 1;
+    padding: 90px;
+    background-color: #ffffff;
+    overflow-y: auto;
+    font-size: 1.5rem;
+}
+.contentD{
+    flex-grow: 1;
+    padding: 10px;
+    background-color: #ffffff;
+    overflow-y: auto;
+    font-size: 1.5rem;
+}

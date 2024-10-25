@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');z
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body{
+    background: #ffffff;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+}
+/* Evita la superposición y asegura el correcto posicionamiento */
+.nav-item .dropdown-menu .dropdown-menu {
+  display: none; /* Por defecto oculto */
+  position: absolute; /* Asegura que se posicionen relativos al menú principal */
+  left: 100%; /* Despliega los submenús a la derecha del menú principal */
+  top: 0; /* Alinea el submenú en la parte superior */
+  z-index: 1; /* Asegura que no se superpongan los submenús */
+}
+
+/* Muestra el submenú cuando se hace hover en "Hombre" o "Mujer" */
+.nav-item .dropdown-menu .nav-item:hover > .dropdown-menu {
+  display: block; /* Muestra el submenú */
+}
+
+/* Asegura que los menús "Hombre" y "Mujer" no se tapan entre sí */
+.nav-item .dropdown-menu .nav-item {
+  position: relative;
+}
+
+.card {
+  margin: 20px;
+}
+
+.navbar {
+    display: flex;
+    position: relative;
+    width: 100%; /* Para que la barra de navegación ocupe todo el ancho */
+    z-index: 1001; /* Asegura que quede sobre otros elementos */
+    padding: 20px 0;
+}
+
+header {
+    background-color: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar ul li {
+    margin: 0 10px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+
+.envios-gratis {
+    text-align: center;
+    background-color: #eee;
+    padding: 5px 0;
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+main {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+.carrito {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: serif;
+}
+
+.producto {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+}
+
+.producto img {
+    width: 80px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.detalles {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.detalles h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.detalles p {
+    margin: 3px 0;
+    font-size: 14px;
+}
+
+.detalles .precio {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.cantidad {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px; /* Agrega espacio entre el input y los botones */
+}
+
+.cantidad button {
+    width: 40px; /* Ajusta el ancho */
+    height: 40px; /* Ajusta el alto */
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    font-size: 18px; /* Asegura que el tamaño de la fuente sea adecuado */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cantidad input {
+    width: 50px; /* Aumenta el ancho para el número */
+    height: 40px; /* Asegura que tenga la misma altura que los botones */
+    text-align: center;
+    border: 1px solid #ddd;
+    margin: 0 5px;
+    font-size: 18px; /* Ajusta el tamaño del texto */
+}
+
+.eliminar {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+}
+
+.eliminar i {
+    font-size: 18px;
+}
+
+.resumen {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.resumen h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.resumen-detalles p {
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.resumen-detalles .descuento {
+    color: red;
+}
+
+.resumen h3 {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.finalizar, .btn-danger {
+    background-color: #000; /* Color negro */
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%; /* Asegura que ocupen todo el ancho */
+}
+
+.finalizar:hover, .btn-danger:hover {
+    background-color: #333; /* Color más oscuro al pasar el mouse */
+}
+
+body .mensaje {
+    position: fixed;
+    top: 50%; /* Coloca el mensaje en el medio verticalmente */
+    left: 50%; /* Coloca el mensaje en el medio horizontalmente */
+    transform: translate(-50%, -50%); /* Ajusta la posición para centrarlo */
+    background-color: #28a745; /* Color verde */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+    transition: opacity 0.5s ease;
+    opacity: 0.9; /* Un poco de transparencia */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+}

@@ -24,4 +24,7 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
-.mvn/timing.properties.VSCodeCounter/
+.mvn/timing.properties
+
+# Carpeta VSCode Counter
+.VSCodeCounter/

@@ -3,7 +3,7 @@ package com.mycompany.aplicativowebintegrador.modelo;
 import java.util.Date;
 
 public class Proveedor {
-    private int id;
+    private int id_proveedor; // Cambiar de 'id' a 'id_proveedor'
     private String nombre;
     private String contacto;
     private String telefono;
@@ -12,8 +12,8 @@ public class Proveedor {
     private Date fechaRegistro;
 
     // Constructor completo
-    public Proveedor(int id, String nombre, String contacto, String telefono, String email, String direccion) {
-        this.id = id;
+    public Proveedor(int id_proveedor, String nombre, String contacto, String telefono, String email, String direccion) {
+        this.id_proveedor = id_proveedor;
         this.nombre = nombre;
         this.contacto = contacto;
         this.telefono = telefono;
@@ -31,12 +31,12 @@ public class Proveedor {
     }
 
     // Getters y setters
-    public int getId() {
-        return id;
+    public int getId_proveedor() {
+        return id_proveedor;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId_proveedor(int id_proveedor) {
+        this.id_proveedor = id_proveedor;
     }
 
     public String getNombre() {

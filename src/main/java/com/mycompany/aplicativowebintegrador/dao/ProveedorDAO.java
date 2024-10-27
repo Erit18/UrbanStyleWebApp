@@ -13,9 +13,13 @@ public class ProveedorDAO {
         List<Proveedor> proveedores = new ArrayList<>();
         String sql = "SELECT * FROM Proveedores";
         
+        System.out.println("DEBUG - ProveedorDAO.obtenerTodos() - Iniciando consulta");
+        
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
+            
+            System.out.println("DEBUG - ProveedorDAO.obtenerTodos() - Conexión establecida");
             
             while (rs.next()) {
                 Proveedor proveedor = new Proveedor(
@@ -26,8 +30,16 @@ public class ProveedorDAO {
                     rs.getString("email"),
                     rs.getString("direccion")
                 );
+                System.out.println("DEBUG - Proveedor cargado -> ID: " + proveedor.getId_proveedor() + 
+                                 ", Nombre: " + proveedor.getNombre());
                 proveedores.add(proveedor);
             }
+            
+            System.out.println("DEBUG - Total proveedores cargados: " + proveedores.size());
+        } catch (SQLException e) {
+            System.err.println("ERROR - ProveedorDAO.obtenerTodos(): " + e.getMessage());
+            e.printStackTrace();
+            throw e;
         }
         return proveedores;
     }
@@ -82,7 +94,7 @@ public class ProveedorDAO {
             pstmt.setString(3, proveedor.getTelefono());
             pstmt.setString(4, proveedor.getEmail());
             pstmt.setString(5, proveedor.getDireccion());
-            pstmt.setInt(6, proveedor.getId());
+            pstmt.setInt(6, proveedor.getId_proveedor());
             
             pstmt.executeUpdate();
         }

@@ -11,8 +11,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
-@WebServlet("/proveedor/*")
+@WebServlet("/api/proveedores/*")
 public class ProveedorServlet extends HttpServlet {
     private ProveedorDAO proveedorDAO;
     private Gson gson;
@@ -22,17 +24,25 @@ public class ProveedorServlet extends HttpServlet {
         super.init();
         this.proveedorDAO = new ProveedorDAO();
         this.gson = new Gson();
+        System.out.println("DEBUG - ProveedorServlet inicializado");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        System.out.println("DEBUG - ProveedorServlet.doGet() - Iniciando");
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
         try {
             String pathInfo = request.getPathInfo();
+            System.out.println("DEBUG - Path info: " + pathInfo);
+            
             if (pathInfo == null || pathInfo.equals("/")) {
                 List<Proveedor> proveedores = proveedorDAO.obtenerTodos();
+                System.out.println("DEBUG - Proveedores encontrados: " + proveedores.size());
                 String json = gson.toJson(proveedores);
+                System.out.println("DEBUG - JSON a enviar: " + json);
                 response.getWriter().write(json);
             } else {
                 int id = Integer.parseInt(pathInfo.substring(1));
@@ -46,6 +56,8 @@ public class ProveedorServlet extends HttpServlet {
                 }
             }
         } catch (SQLException e) {
+            System.err.println("ERROR - ProveedorServlet.doGet: " + e.getMessage());
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write(gson.toJson("Error: " + e.getMessage()));
         }

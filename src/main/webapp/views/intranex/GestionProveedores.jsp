@@ -86,8 +86,13 @@
         </div>
     </div>
 
+    <!-- Justo antes de los scripts -->
+    <script>
+        const contextPath = '${pageContext.request.contextPath}';
+        console.log('contextPath definido:', contextPath);
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/gestionProveedores.js"></script>
 </body>
 </html>
-

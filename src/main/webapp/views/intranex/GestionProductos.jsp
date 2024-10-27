@@ -44,7 +44,7 @@
         </table>
     </div>
 
-    <!-- Modal para agregar/editar producto -->
+    <!-- Modal de Producto -->
     <div class="modal fade" id="productoModal" tabindex="-1" aria-labelledby="productoModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -54,56 +54,68 @@
                 </div>
                 <div class="modal-body">
                     <form id="productoForm">
-                        <input type="hidden" id="productoId" name="id_ropa">
+                        <input type="hidden" id="productoId">
+                        
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            <input type="text" class="form-control" id="nombre" required>
                         </div>
+                        
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción</label>
-                            <textarea class="form-control" id="descripcion" rows="3"></textarea>
+                            <textarea class="form-control" id="descripcion"></textarea>
                         </div>
+                        
                         <div class="mb-3">
                             <label for="precio" class="form-label">Precio</label>
                             <input type="number" class="form-control" id="precio" step="0.01" required>
                         </div>
+                        
                         <div class="mb-3">
                             <label for="categoria" class="form-label">Categoría</label>
-                            <select class="form-select" id="categoria" required>
+                            <select class="form-control" id="categoria" required>
+                                <option value="">Seleccione una categoría</option>
                                 <option value="hombre">Hombre</option>
                                 <option value="mujer">Mujer</option>
                                 <option value="unisex">Unisex</option>
                             </select>
                         </div>
+                        
                         <div class="mb-3">
                             <label for="stock" class="form-label">Stock</label>
                             <input type="number" class="form-control" id="stock" required>
                         </div>
+                        
                         <div class="mb-3">
                             <label for="fechaCaducidad" class="form-label">Fecha de Caducidad</label>
                             <input type="date" class="form-control" id="fechaCaducidad">
                         </div>
+                        
                         <div class="mb-3">
                             <label for="descuento" class="form-label">Descuento</label>
-                            <input type="number" class="form-control" id="descuento" step="0.01">
+                            <input type="number" class="form-control" id="descuento" step="0.01" value="0">
                         </div>
+                        
                         <div class="mb-3">
                             <label for="idProveedor" class="form-label">Proveedor</label>
-                            <select class="form-control" id="idProveedor" name="id_proveedor">
+                            <select class="form-control" id="idProveedor" required>
                                 <option value="">Seleccione un proveedor</option>
                             </select>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="guardarProducto">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarProducto">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const contextPath = '${pageContext.request.contextPath}';
+    </script>
     <script src="${pageContext.request.contextPath}/js/gestionProductos.js"></script>
 </body>
 </html>

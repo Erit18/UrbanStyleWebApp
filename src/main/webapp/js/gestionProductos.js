@@ -1,41 +1,53 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM cargado, iniciando carga de productos...');
     cargarProductos();
-    cargarProveedores();
-
-    document.getElementById('btnNuevoProducto').addEventListener('click', function() {
-        document.getElementById('productoForm').reset();
-        document.getElementById('productoId').value = '';
-        document.getElementById('productoModalLabel').textContent = 'Nuevo Producto';
-        new bootstrap.Modal(document.getElementById('productoModal')).show();
-    });
-
-    document.getElementById('guardarProducto').addEventListener('click', guardarProducto);
 });
 
 function cargarProductos() {
-    fetch('/AplicativoWebIntegrador/producto')
-        .then(response => response.json())
+    console.log('Iniciando cargarProductos()');
+    
+    fetch('/AplicativoWebIntegrador/api/productos-lista')
+        .then(response => {
+            console.log('Respuesta recibida:', response);
+            return response.json();
+        })
         .then(productos => {
+            console.log('Productos recibidos:', productos);
             const tbody = document.getElementById('tablaProductos');
             tbody.innerHTML = '';
 
             productos.forEach(producto => {
+                console.log('Procesando producto:', producto);
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${producto.id}</td>
+                    <td>${producto.id_ropa}</td>
                     <td>${producto.nombre}</td>
                     <td>${producto.categoria}</td>
-                    <td>$${producto.precio.toFixed(2)}</td>
+                    <td>$${Number(producto.precio).toFixed(2)}</td>
                     <td>${producto.stock}</td>
                     <td>
-                        <button class="btn btn-sm btn-primary" onclick="editarProducto(${producto.id})">Editar</button>
-                        <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${producto.id})">Eliminar</button>
+                        <button class="btn btn-sm btn-primary" onclick="editarProducto(${producto.id_ropa})">
+                            <i class="bi bi-pencil"></i> Editar
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${producto.id_ropa})">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         })
-        .catch(error => console.error('Error al cargar productos:', error));
+        .catch(error => {
+            console.error('Error al cargar productos:', error);
+            const tbody = document.getElementById('tablaProductos');
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center text-danger">
+                        Error al cargar los productos: ${error.message}
+                    </td>
+                </tr>
+            `;
+        });
 }
 
 function cargarProveedores() {
@@ -46,7 +58,7 @@ function cargarProveedores() {
             select.innerHTML = '<option value="">Seleccione un proveedor</option>';
             proveedores.forEach(proveedor => {
                 const option = document.createElement('option');
-                option.value = proveedor.id;
+                option.value = proveedor.id_proveedor;  // Cambiar de id a id_proveedor
                 option.textContent = proveedor.nombre;
                 select.appendChild(option);
             });
@@ -55,25 +67,26 @@ function cargarProveedores() {
 }
 
 function guardarProducto() {
-    // Convertir la fecha al formato correcto (YYYY-MM-DD)
     const fechaCaducidad = document.getElementById('fechaCaducidad').value;
     
     const producto = {
-        id: document.getElementById('productoId').value || null,
+        id_ropa: document.getElementById('productoId').value || null,
         nombre: document.getElementById('nombre').value,
         descripcion: document.getElementById('descripcion').value,
         precio: parseFloat(document.getElementById('precio').value),
         categoria: document.getElementById('categoria').value,
         stock: parseInt(document.getElementById('stock').value),
-        fechaCaducidad: fechaCaducidad, // Ya viene en formato YYYY-MM-DD del input date
+        fecha_caducidad: fechaCaducidad,
         descuento: parseFloat(document.getElementById('descuento').value) || 0,
-        idProveedor: parseInt(document.getElementById('idProveedor').value)
+        id_proveedor: parseInt(document.getElementById('idProveedor').value)
     };
 
     console.log('Datos a enviar:', producto); // Para debug
 
-    const method = producto.id ? 'PUT' : 'POST';
-    const url = producto.id ? `/AplicativoWebIntegrador/producto/${producto.id}` : '/AplicativoWebIntegrador/producto';
+    const method = producto.id_ropa ? 'PUT' : 'POST';
+    const url = producto.id_ropa ? 
+        `/AplicativoWebIntegrador/producto/${producto.id_ropa}` : 
+        '/AplicativoWebIntegrador/producto';
 
     fetch(url, {
         method: method,
@@ -105,12 +118,15 @@ function editarProducto(id) {
     fetch(`/AplicativoWebIntegrador/producto/${id}`)
         .then(response => response.json())
         .then(producto => {
-            document.getElementById('productoId').value = producto.id;
+            document.getElementById('productoId').value = producto.id_ropa;
             document.getElementById('nombre').value = producto.nombre;
             document.getElementById('descripcion').value = producto.descripcion;
             document.getElementById('precio').value = producto.precio;
             document.getElementById('categoria').value = producto.categoria;
             document.getElementById('stock').value = producto.stock;
+            document.getElementById('fechaCaducidad').value = producto.fecha_caducidad;
+            document.getElementById('descuento').value = producto.descuento;
+            document.getElementById('idProveedor').value = producto.id_proveedor;
 
             document.getElementById('productoModalLabel').textContent = 'Editar Producto';
             new bootstrap.Modal(document.getElementById('productoModal')).show();
@@ -130,4 +146,12 @@ function eliminarProducto(id) {
         })
         .catch(error => console.error('Error al eliminar producto:', error));
     }
+}
+
+// Función para depurar el objeto producto
+function debugProducto(producto) {
+    console.log('DEBUG - Producto completo:', producto);
+    console.log('DEBUG - id_ropa:', producto.id_ropa, typeof producto.id_ropa);
+    console.log('DEBUG - Propiedades:', Object.keys(producto));
+    return producto;
 }

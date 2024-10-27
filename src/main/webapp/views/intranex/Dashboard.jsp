@@ -52,8 +52,10 @@
             <a href="${pageContext.request.contextPath}/views/intranex/GestionProveedores.jsp">
                 <i class="bi bi-truck"></i> Gestión de Proveedores
             </a>
+            <a href="${pageContext.request.contextPath}/views/intranex/GestionAlertas.jsp">
+                <i class="bi bi-exclamation-triangle"></i> Alertas de Inventario
+            </a>
             <a href="#"><i class="bi bi-bar-chart-line"></i> Reportes de Ventas</a>
-            <a href="#"><i class="bi bi-exclamation-triangle"></i> Alertas de Inventario</a>
         </nav>
         <div class="sidebar-footer">
             <div class="user-info">

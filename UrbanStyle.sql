@@ -88,3 +88,32 @@ CREATE TABLE Alertas (
     fecha_alerta DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_ropa) REFERENCES Ropa(id_ropa)
 );
+
+
+-- Primero, limpiamos las tablas existentes
+DELETE FROM Alertas;
+DELETE FROM Ropa;
+DELETE FROM Proveedores;
+
+-- Reiniciamos los auto_increment
+ALTER TABLE Alertas AUTO_INCREMENT = 1;
+ALTER TABLE Ropa AUTO_INCREMENT = 1;
+ALTER TABLE Proveedores AUTO_INCREMENT = 1;
+
+-- 1. Insertar proveedor
+INSERT INTO Proveedores (nombre, contacto, telefono, email, direccion) 
+VALUES ('Proveedor Test', 'Juan Pérez', '123456789', 'juan@test.com', 'Calle Test 123');
+
+-- 2. Insertar productos (ahora empezarán desde id_ropa = 1)
+INSERT INTO Ropa (nombre, descripcion, precio, categoria, stock, id_proveedor) 
+VALUES 
+('Camiseta Básica', 'Camiseta de algodón', 29.99, 'unisex', 5, 1),
+('Jeans Clásicos', 'Jeans azules', 59.99, 'unisex', 3, 1),
+('Vestido Verano', 'Vestido ligero', 45.99, 'mujer', 2, 1);
+
+-- 3. Insertar alertas (usando los nuevos IDs correctos)
+INSERT INTO Alertas (id_ropa, mensaje) 
+VALUES 
+(1, 'Stock bajo: Quedan solo 5 unidades de Camiseta Básica'),
+(2, 'Stock crítico: Quedan solo 3 unidades de Jeans Clásicos'),
+(3, 'Stock crítico: Quedan solo 2 unidades de Vestido Verano');

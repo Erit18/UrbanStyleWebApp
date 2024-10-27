@@ -28,7 +28,7 @@
             <button class="btn btn-primary" id="btnNuevoProducto">Nuevo Producto</button>
         </div>
         <table class="table table-striped">
-            <thead>
+            <thead class="table-dark">
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
@@ -39,7 +39,7 @@
                 </tr>
             </thead>
             <tbody id="tablaProductos">
-                <!-- Aquí se cargarán los productos dinámicamente -->
+                <!-- Los productos se cargarán dinámicamente aquí -->
             </tbody>
         </table>
     </div>
@@ -54,10 +54,10 @@
                 </div>
                 <div class="modal-body">
                     <form id="productoForm">
-                        <input type="hidden" id="productoId">
+                        <input type="hidden" id="productoId" name="id_ropa">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" required>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
                         </div>
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción</label>
@@ -89,7 +89,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="idProveedor" class="form-label">Proveedor</label>
-                            <select class="form-select" id="idProveedor">
+                            <select class="form-control" id="idProveedor" name="id_proveedor">
                                 <option value="">Seleccione un proveedor</option>
                             </select>
                         </div>

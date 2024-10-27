@@ -13,8 +13,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
-@WebServlet("/producto/*")
+@WebServlet("/api/productos/*")
 public class ProductoServlet extends HttpServlet {
     private ProductoServicio productoServicio;
     private Gson gson;
@@ -29,12 +32,28 @@ public class ProductoServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Cache-Control", "no-cache");
+        
         try {
             String pathInfo = request.getPathInfo();
             if (pathInfo == null || pathInfo.equals("/")) {
-                String json = gson.toJson(productoServicio.obtenerTodosLosProductos());
+                List<Producto> productos = productoServicio.obtenerTodosLosProductos();
+                
+                // Verificar cada producto antes de convertirlo a JSON
+                for (Producto p : productos) {
+                    System.out.println("DEBUG - Verificando producto antes de JSON:");
+                    System.out.println("  id_ropa: " + p.getId_ropa());
+                    System.out.println("  nombre: " + p.getNombre());
+                    System.out.println("  toString: " + p.toString());
+                }
+                
+                String json = gson.toJson(productos);
+                System.out.println("DEBUG - JSON final: " + json);
+                
                 response.getWriter().write(json);
             } else {
                 int id = Integer.parseInt(pathInfo.substring(1));
@@ -47,9 +66,12 @@ public class ProductoServlet extends HttpServlet {
                     response.getWriter().write(gson.toJson("Producto no encontrado"));
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write(gson.toJson("Error al obtener productos: " + e.getMessage()));
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Error: " + e.getMessage());
+            response.getWriter().write(gson.toJson(error));
         }
     }
 

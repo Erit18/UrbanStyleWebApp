@@ -4,46 +4,46 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Producto {
-    private int id;
+    private int id_ropa;
     private String nombre;
     private String descripcion;
     private BigDecimal precio;
     private String categoria;
     private int stock;
-    private Date fechaCaducidad;
+    private Date fecha_caducidad;
     private BigDecimal descuento;
-    private int idProveedor;
-    private Date fechaAgregado;
+    private int id_proveedor;
+    private Date fecha_agregado;
 
     // Constructor completo
-    public Producto(int id, String nombre, String descripcion, BigDecimal precio, String categoria, int stock, Date fechaCaducidad, BigDecimal descuento, int idProveedor, Date fechaAgregado) {
-        this.id = id;
+    public Producto(int id_ropa, String nombre, String descripcion, BigDecimal precio, String categoria, int stock, Date fecha_caducidad, BigDecimal descuento, int id_proveedor, Date fecha_agregado) {
+        this.id_ropa = id_ropa;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.categoria = categoria;
         this.stock = stock;
-        this.fechaCaducidad = fechaCaducidad;
+        this.fecha_caducidad = fecha_caducidad;
         this.descuento = descuento;
-        this.idProveedor = idProveedor;
-        this.fechaAgregado = fechaAgregado;
+        this.id_proveedor = id_proveedor;
+        this.fecha_agregado = fecha_agregado;
     }
 
     // Constructor sin ID (para nuevos productos)
-    public Producto(String nombre, String descripcion, BigDecimal precio, String categoria, int stock, Date fechaCaducidad, BigDecimal descuento, int idProveedor, Date fechaAgregado) {
-        this(0, nombre, descripcion, precio, categoria, stock, fechaCaducidad, descuento, idProveedor, fechaAgregado);
+    public Producto(String nombre, String descripcion, BigDecimal precio, String categoria, int stock, Date fecha_caducidad, BigDecimal descuento, int id_proveedor, Date fecha_agregado) {
+        this(0, nombre, descripcion, precio, categoria, stock, fecha_caducidad, descuento, id_proveedor, fecha_agregado);
     }
 
     // Constructor vacío
     public Producto() {}
 
     // Getters y setters
-    public int getId() {
-        return id;
+    public int getId_ropa() {
+        return id_ropa;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId_ropa(int id_ropa) {
+        this.id_ropa = id_ropa;
     }
 
     public String getNombre() {
@@ -86,12 +86,12 @@ public class Producto {
         this.stock = stock;
     }
 
-    public Date getFechaCaducidad() {
-        return fechaCaducidad;
+    public Date getFecha_caducidad() {
+        return fecha_caducidad;
     }
 
-    public void setFechaCaducidad(Date fechaCaducidad) {
-        this.fechaCaducidad = fechaCaducidad;
+    public void setFecha_caducidad(Date fecha_caducidad) {
+        this.fecha_caducidad = fecha_caducidad;
     }
 
     public BigDecimal getDescuento() {
@@ -102,19 +102,19 @@ public class Producto {
         this.descuento = descuento;
     }
 
-    public int getIdProveedor() {
-        return idProveedor;
+    public int getId_proveedor() {
+        return id_proveedor;
     }
 
-    public void setIdProveedor(int idProveedor) {
-        this.idProveedor = idProveedor;
+    public void setId_proveedor(int id_proveedor) {
+        this.id_proveedor = id_proveedor;
     }
 
-    public Date getFechaAgregado() {
-        return fechaAgregado;
+    public Date getFecha_agregado() {
+        return fecha_agregado;
     }
 
-    public void setFechaAgregado(Date fechaAgregado) {
-        this.fechaAgregado = fechaAgregado;
+    public void setFecha_agregado(Date fecha_agregado) {
+        this.fecha_agregado = fecha_agregado;
     }
 }

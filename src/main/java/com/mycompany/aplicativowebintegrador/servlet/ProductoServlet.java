@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.io.BufferedReader;
 
 @WebServlet("/api/productos/*")
 public class ProductoServlet extends HttpServlet {
@@ -78,8 +79,22 @@ public class ProductoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
         try {
-            Producto producto = gson.fromJson(request.getReader(), Producto.class);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            try (BufferedReader reader = request.getReader()) {
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+            }
+            
+            String requestBody = sb.toString();
+            System.out.println("DEBUG - Cuerpo de la solicitud: " + requestBody);
+            
+            Producto producto = gson.fromJson(requestBody, Producto.class);
+            System.out.println("DEBUG - Producto parseado: " + producto);
             
             // Validaciones básicas
             if (producto.getNombre() == null || producto.getNombre().trim().isEmpty()) {
@@ -91,13 +106,22 @@ public class ProductoServlet extends HttpServlet {
             if (producto.getStock() < 0) {
                 throw new IllegalArgumentException("El stock no puede ser negativo");
             }
+            if (producto.getId_proveedor() <= 0) {
+                throw new IllegalArgumentException("Debe seleccionar un proveedor válido");
+            }
 
             productoServicio.agregarProducto(producto);
             response.setStatus(HttpServletResponse.SC_CREATED);
-            response.getWriter().write(gson.toJson("Producto creado exitosamente"));
+            Map<String, String> successResponse = new HashMap<>();
+            successResponse.put("message", "Producto creado exitosamente");
+            response.getWriter().write(gson.toJson(successResponse));
+            
         } catch (Exception e) {
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write(gson.toJson("Error al crear producto: " + e.getMessage()));
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Error al crear producto: " + e.getMessage());
+            response.getWriter().write(gson.toJson(errorResponse));
         }
     }
 

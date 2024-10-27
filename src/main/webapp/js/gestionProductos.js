@@ -79,7 +79,8 @@ async function cargarProveedores() {
         
         proveedores.forEach(proveedor => {
             const option = document.createElement('option');
-            option.value = proveedor.id;  // Asegúrate de que coincida con el nombre del campo en el modelo
+            // Cambiar de proveedor.id a proveedor.id_proveedor
+            option.value = proveedor.id_proveedor;
             option.textContent = proveedor.nombre;
             select.appendChild(option);
         });
@@ -109,6 +110,8 @@ async function guardarProducto() {
         descuento: parseFloat(document.getElementById('descuento').value) || 0,
         id_proveedor: parseInt(document.getElementById('idProveedor').value)
     };
+
+    console.log('Datos del producto a guardar:', productoData); // Debug
     
     try {
         const isEditing = productoData.id_ropa !== null;
@@ -124,7 +127,10 @@ async function guardarProducto() {
             body: JSON.stringify(productoData)
         });
         
-        if (!response.ok) throw new Error('Error al guardar el producto');
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Error al guardar el producto');
+        }
         
         // Cerrar modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('productoModal'));

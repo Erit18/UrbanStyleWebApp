@@ -1,176 +1,90 @@
--- Crear la base de datos
-CREATE DATABASE UrbanStyle;
+-- Creación de la base de datos
+CREATE DATABASE UrbanStyleDB;
+USE UrbanStyleDB;
 
--- Usar la base de datos
-USE UrbanStyle;
-
--- Tabla de Usuarios
+-- Tabla Usuarios
 CREATE TABLE Usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    correo VARCHAR(100) UNIQUE NOT NULL,
-    contrasena VARCHAR(255) NOT NULL,
-    direccion TEXT,
-    telefono VARCHAR(20),
-    tipo_usuario ENUM('cliente', 'empleado', 'administrador') NOT NULL,
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    nombre VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    contraseña VARCHAR(255),
+    rol ENUM('cliente', 'administrador'),
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla de Proveedores
+-- Tabla Proveedores
 CREATE TABLE Proveedores (
     id_proveedor INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_proveedor VARCHAR(100) NOT NULL,
-    contacto_proveedor VARCHAR(100),
-    telefono_proveedor VARCHAR(20),
-    correo_proveedor VARCHAR(100),
-    direccion_proveedor TEXT
+    nombre VARCHAR(100),
+    contacto VARCHAR(100),
+    telefono VARCHAR(20),
+    email VARCHAR(100),
+    direccion TEXT,
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla de Productos
-CREATE TABLE Productos (
-    id_producto INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    descripcion TEXT NOT NULL,
-    categoria VARCHAR(50),
-    temporada ENUM('primavera', 'verano', 'otoño', 'invierno'),
+-- Tabla Ropa
+CREATE TABLE Ropa (
+    id_ropa INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100),
+    descripcion TEXT,
+    precio DECIMAL(10, 2),
+    categoria ENUM('hombre', 'mujer', 'unisex'),
+    stock INT,
+    fecha_caducidad DATE,
+    descuento DECIMAL(5, 2) DEFAULT 0,
     id_proveedor INT,
+    fecha_agregado DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_proveedor) REFERENCES Proveedores(id_proveedor)
 );
 
--- Tabla de Detalle de Producto (Con fecha de caducidad)
-CREATE TABLE Detalle_Producto (
-    id_detalle_producto INT AUTO_INCREMENT PRIMARY KEY,
-    id_producto INT NOT NULL,
-    talla ENUM('XS', 'S', 'M', 'L', 'XL', 'XXL'),
-    color VARCHAR(50),
-    precio DECIMAL(10,2) NOT NULL,
-    stock INT NOT NULL,
-    fecha_caducidad DATE,
-    FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
-);
-
--- Tabla de Carrito de Compras
-CREATE TABLE Carrito (
-    id_carrito INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
-    id_detalle_producto INT NOT NULL,
-    cantidad INT NOT NULL,
-    fecha_agregado TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
-    FOREIGN KEY (id_detalle_producto) REFERENCES Detalle_Producto(id_detalle_producto)
-);
-
--- Tabla de Pedidos
+-- Tabla Pedidos
 CREATE TABLE Pedidos (
     id_pedido INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
-    fecha_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    total DECIMAL(10, 2) NOT NULL,
-    tipo_pago ENUM('tarjeta', 'yape') NOT NULL,
-    tipo_comprobante ENUM('boleta', 'factura') NOT NULL,
-    direccion_envio TEXT,
-    estado ENUM('pendiente', 'en proceso', 'enviado', 'entregado') DEFAULT 'pendiente',
+    id_usuario INT,
+    total DECIMAL(10, 2),
+    estado ENUM('pendiente', 'pagado', 'enviado', 'completado', 'cancelado'),
+    fecha_pedido DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
 );
 
--- Tabla de Detalle de Pedidos
+-- Tabla Detalle_Pedido
 CREATE TABLE Detalle_Pedido (
-    id_detalle_pedido INT AUTO_INCREMENT PRIMARY KEY,
-    id_pedido INT NOT NULL,
-    id_detalle_producto INT NOT NULL,
-    cantidad INT NOT NULL,
-    subtotal DECIMAL(10, 2) NOT NULL,
+    id_detalle INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT,
+    id_ropa INT,
+    cantidad INT,
+    precio_unitario DECIMAL(10, 2),
     FOREIGN KEY (id_pedido) REFERENCES Pedidos(id_pedido),
-    FOREIGN KEY (id_detalle_producto) REFERENCES Detalle_Producto(id_detalle_producto)
+    FOREIGN KEY (id_ropa) REFERENCES Ropa(id_ropa)
 );
 
--- Tabla de Notificaciones (con alertas por caducidad)
-CREATE TABLE Notificaciones (
-    id_notificacion INT AUTO_INCREMENT PRIMARY KEY,
-    id_producto INT,
-    id_usuario INT NOT NULL,
-    mensaje TEXT NOT NULL,
-    tipo_notificacion ENUM('pedido', 'alerta_stock', 'alerta_caducidad') NOT NULL,
-    leido BOOLEAN DEFAULT FALSE,
-    fecha_notificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+-- Tabla Carrito
+CREATE TABLE Carrito (
+    id_carrito INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
+    id_ropa INT,
+    cantidad INT,
+    fecha_agregado DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
-    FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
+    FOREIGN KEY (id_ropa) REFERENCES Ropa(id_ropa)
 );
 
--- Tabla de Seguimiento de Envíos
-CREATE TABLE Seguimiento_Envios (
-    id_seguimiento INT AUTO_INCREMENT PRIMARY KEY,
-    id_pedido INT NOT NULL,
-    estado_envio ENUM('en preparación', 'en tránsito', 'entregado') DEFAULT 'en preparación',
-    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+-- Tabla Pagos
+CREATE TABLE Pagos (
+    id_pago INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT,
+    metodo_pago ENUM('tarjeta_credito', 'tarjeta_debito', 'paypal', 'transferencia_bancaria'),
+    estado_pago ENUM('pendiente', 'completado', 'fallido'),
+    fecha_pago DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_pedido) REFERENCES Pedidos(id_pedido)
 );
 
--- Tabla de Reseñas
-CREATE TABLE Reseñas (
-    id_resena INT AUTO_INCREMENT PRIMARY KEY,
-    id_producto INT NOT NULL,
-    id_usuario INT NOT NULL,
-    calificacion INT CHECK (calificacion BETWEEN 1 AND 5),
-    comentario TEXT,
-    fecha_resena TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_producto) REFERENCES Productos(id_producto),
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
-);
-
--- Tabla de Cupones
-CREATE TABLE Cupones (
-    id_cupon INT AUTO_INCREMENT PRIMARY KEY,
-    codigo_cupon VARCHAR(50) NOT NULL UNIQUE,
-    descuento DECIMAL(5, 2) CHECK (descuento > 0),
-    fecha_expiracion DATE NOT NULL,
-    cantidad_max_uso INT NOT NULL,
-    cantidad_usada INT DEFAULT 0
-);
-
--- Tabla de Cupones Aplicados en Pedidos
-CREATE TABLE Pedido_Cupon (
-    id_pedido INT NOT NULL,
-    id_cupon INT NOT NULL,
-    FOREIGN KEY (id_pedido) REFERENCES Pedidos(id_pedido),
-    FOREIGN KEY (id_cupon) REFERENCES Cupones(id_cupon)
-);
-
--- Tabla de Chat de Soporte
-CREATE TABLE Chat_Soporte (
-    id_chat INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
-    mensaje TEXT NOT NULL,
-    respuesta TEXT,
-    fecha_mensaje TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fecha_respuesta TIMESTAMP,
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
-);
-
--- Tabla de Recomendaciones
-CREATE TABLE Recomendaciones (
-    id_recomendacion INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
-    id_producto INT NOT NULL,
-    fecha_recomendacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
-    FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
-);
-
--- Tabla de Fidelización (Acumulación de Puntos)
-CREATE TABLE Puntos_Fidelizacion (
-    id_fidelizacion INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
-    puntos_acumulados INT DEFAULT 0,
-    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
-);
-
--- Tabla de Canje de Puntos
-CREATE TABLE Canje_Puntos (
-    id_canje INT AUTO_INCREMENT PRIMARY KEY,
-    id_fidelizacion INT NOT NULL,
-    puntos_canjeados INT NOT NULL,
-    fecha_canje TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_fidelizacion) REFERENCES Puntos_Fidelizacion(id_fidelizacion)
+-- Tabla Alertas
+CREATE TABLE Alertas (
+    id_alerta INT AUTO_INCREMENT PRIMARY KEY,
+    id_ropa INT,
+    mensaje TEXT,
+    fecha_alerta DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_ropa) REFERENCES Ropa(id_ropa)
 );

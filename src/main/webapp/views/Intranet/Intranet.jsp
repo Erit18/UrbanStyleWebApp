@@ -77,12 +77,12 @@
             
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item ">
-                    <a class="nav-link active" href="Intranet.html">Log In</a>
+                    <a class="nav-link active" href="Intranet.jsp">Log In</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="../catalogo/CarritoCompras.html">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
                           </svg>
                     </a>
                 </li>
@@ -102,7 +102,7 @@
       <main>
          <div class="container" id="container">
             <div class="form-container sign-up">
-                <form>
+                <form action="${pageContext.request.contextPath}/registro" method="post">
                     <h1>Regístrarse</h1>
                     <div class="social-icons">
                         <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
@@ -110,26 +110,31 @@
                         <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
                         <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                     </div>
-                    <input type="text" placeholder="Name">
-                    <input type="email" placeholder="Email">
-                    <input type="user" placeholder="User">
-                    <input type="password" placeholder="Password">
-                    <button>Registrar</button>
+                    <input type="text" name="nombre" placeholder="Nombre" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="contraseña" placeholder="Contraseña" required>
+                    <button type="submit">Registrar</button>
                 </form>
             </div>
             <div class="form-container sign-in">
-                <form>
+                <form action="${pageContext.request.contextPath}/login" method="post">
                     <h1>Iniciar Sesión</h1>
+                    <% if(request.getParameter("registro") != null && request.getParameter("registro").equals("exitoso")) { %>
+                        <p style="color: green;">Registro exitoso. Por favor, inicie sesión.</p>
+                    <% } %>
+                    <% if(request.getParameter("error") != null && request.getParameter("error").equals("true")) { %>
+                        <p style="color: red;">Error en el registro: <%= request.getParameter("message") %></p>
+                    <% } %>
                     <div class="social-icons">
                         <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
                         <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
                         <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
                         <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                     </div>
-                    <input type="email" placeholder="Email">
-                    <input type="password" placeholder="Password">
-                    <a href="../intranex/Dashboard.html">Forget Your Password?</a>
-                    <button>Iniciar</button>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="contraseña" placeholder="Password" required>
+                    <a href="#">Forget Your Password?</a>
+                    <button type="submit">Iniciar</button>
                 </form>
             </div>
             <div class="toggle-container">
@@ -189,3 +194,6 @@
     
 
     </html>
+
+
+

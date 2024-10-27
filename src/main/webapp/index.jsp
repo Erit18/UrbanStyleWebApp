@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.mycompany.aplicativowebintegrador.modelo.Usuario" %>
 <html lang="es">
 
 <head>
@@ -11,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleindex.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styleindex.css">
     <title>Inicio</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -20,7 +22,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="index.html">
-                <img src="views/Intranet/imagenes/Logo.jpeg" alt="Logo" class="logo" >
+                <img src="${pageContext.request.contextPath}/views/Intranet/imagenes/Logo.jpeg" alt="Logo" class="logo" >
             </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -77,14 +79,25 @@
             
             
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item ">
-                    <a class="nav-link active" href="views/Intranet/Intranet.html">Log In</a>
-                </li>
+                <% if (session.getAttribute("usuario") != null) { %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Bienvenido, <%= ((Usuario)session.getAttribute("usuario")).getNombre() %>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Cerrar sesión</a></li>
+                        </ul>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="views/Intranet/Intranet.jsp">Log In</a>
+                    </li>
+                <% } %>
                 <li class="nav-item">
                     <a class="nav-link" href="views/catalogo/CarritoCompras.html">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
                             <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                          </svg>
+                        </svg>
                     </a>
                 </li>
             </ul>
@@ -149,7 +162,7 @@
     </div>
 
     <script>
-    fetch('/AplicativoWebIntegrador/best-sellers')
+    fetch('${pageContext.request.contextPath}/best-sellers')
         .then(response => response.json())
         .then(products => {
             const container = document.getElementById('bestSellersContainer');
@@ -217,7 +230,7 @@
     <script src="js/script.js"></script>
     <!-- Añade esto justo antes del cierre del body -->
     <script>
-        fetch('/visita?pagina=index')
+        fetch('${pageContext.request.contextPath}/visita?pagina=index')
             .then(response => console.log('Visita registrada'))
             .catch(error => console.error('Error:', error));
     </script>

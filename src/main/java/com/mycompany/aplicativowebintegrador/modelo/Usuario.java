@@ -32,7 +32,10 @@ public class Usuario {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("Email inválido");
+        }
+        this.email = email.toLowerCase().trim();
     }
 
     public String getContraseña() {
@@ -40,6 +43,9 @@ public class Usuario {
     }
 
     public void setContraseña(String contraseña) {
+        if (contraseña != null && contraseña.length() < 6) {
+            throw new IllegalArgumentException("La contraseña debe tener al menos 6 caracteres");
+        }
         this.contraseña = contraseña;
     }
 
@@ -48,6 +54,12 @@ public class Usuario {
     }
 
     public void setRol(String rol) {
-        this.rol = rol;
+        if (rol != null) {
+            rol = rol.toLowerCase().trim();
+            if (!"administrador".equals(rol) && !"cliente".equals(rol)) {
+                throw new IllegalArgumentException("Rol inválido");
+            }
+            this.rol = rol;
+        }
     }
 }

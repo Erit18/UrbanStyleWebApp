@@ -13,36 +13,56 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Arrays;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(LoginServlet.class);
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private static final int SESSION_MAX_INACTIVE_INTERVAL = 30 * 60; // 30 minutos
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
         String email = request.getParameter("email");
-        String contraseña = request.getParameter("contraseña");
-
-        logger.info("Intento de inicio de sesión para el email: {}", email);
-
+        String password = request.getParameter("password");
+        
+        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
+            request.setAttribute("error", "Por favor complete todos los campos");
+            request.getRequestDispatcher("/views/Intranet/Intranet.jsp").forward(request, response);
+            return;
+        }
+        
         try {
-            Usuario usuario = usuarioDAO.autenticar(email, contraseña);
-
+            Usuario usuario = usuarioDAO.autenticar(email, password);
+            
             if (usuario != null) {
-                HttpSession session = request.getSession();
+                // Configurar sesión
+                HttpSession session = request.getSession(true);
+                session.setMaxInactiveInterval(SESSION_MAX_INACTIVE_INTERVAL);
                 session.setAttribute("usuario", usuario);
-                logger.info("Usuario autenticado: {}", usuario.getNombre());
-                logger.info("Redirigiendo a: {}", request.getContextPath() + "/index.jsp");
-                response.sendRedirect(request.getContextPath() + "/index.jsp");
+                session.setAttribute("lastAccessTime", System.currentTimeMillis());
+                
+                String rolNormalizado = usuario.getRol().trim().toLowerCase();
+                if ("administrador".equals(rolNormalizado)) {
+                    response.sendRedirect(request.getContextPath() + "/views/intranex/Dashboard.jsp");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/index.jsp");
+                }
             } else {
-                logger.warn("Autenticación fallida para el email: {}", email);
                 request.setAttribute("error", "Credenciales inválidas");
                 request.getRequestDispatcher("/views/Intranet/Intranet.jsp").forward(request, response);
             }
         } catch (Exception e) {
-            logger.error("Error durante la autenticación", e);
             request.setAttribute("error", "Error en el servidor");
             request.getRequestDispatcher("/views/Intranet/Intranet.jsp").forward(request, response);
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        response.sendRedirect(request.getContextPath() + "/views/Intranet/Intranet.jsp");
     }
 }

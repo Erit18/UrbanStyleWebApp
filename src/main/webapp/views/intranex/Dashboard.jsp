@@ -1,76 +1,80 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.mycompany.aplicativowebintegrador.modelo.Usuario" %>
 <%
-    if(session.getAttribute("usuario") == null) {
-        response.sendRedirect(request.getContextPath() + "/views/Intranet/Intranet.html");
+    // Verificación de seguridad
+    Usuario currentUser = (Usuario) session.getAttribute("usuario");
+    if (currentUser == null) {
+        System.out.println("No hay usuario en sesión");
+        response.sendRedirect(request.getContextPath() + "/views/Intranet/Intranet.jsp");
         return;
     }
+    
+    String rolNormalizado = currentUser.getRol().trim().toLowerCase();
+    System.out.println("Verificando acceso a Dashboard");
+    System.out.println("Usuario: " + currentUser.getEmail());
+    System.out.println("Rol: [" + currentUser.getRol() + "]");
+    System.out.println("Rol normalizado: [" + rolNormalizado + "]");
+    
+    if (!"administrador".equals(rolNormalizado)) {
+        System.out.println("Acceso denegado - no es administrador");
+        response.sendRedirect(request.getContextPath() + "/views/Intranet/Intranet.jsp");
+        return;
+    }
+    
+    System.out.println("Acceso permitido a Dashboard");
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
-    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../css/estilos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script src="../../js/app.js" defer></script>
 </head>
 <body>
-
-   <!--HEADER-->
-   <div id="sidebar-placeholder"></div>
-
-   <script>
-       // Cargar el header
-       fetch("../intranex/fragments1/sidebar.html")
-           .then(response => response.text())
-           .then(data => document.getElementById("sidebar-placeholder").innerHTML = data);
-   </script>
-
-    <!-- Contenido principal -->
-    <div class="contentD">
-        <h1>Dashboard de Ventas e Inventario</h1> 
-
-        <!-- Ejemplo de secciones adicionales -->
-        <div class="container-fluid">
-            <div class="row">
-                <!-- Sección 1 -->
-                <div class="col-md-6">
-                <!-- Gráfico de Ventas -->
-                <section>
-                    <h2>Ventas por Categoría y genero</h2>
-                    <canvas id="salesPieChart" width="400" height="200"></canvas>
-                </section>
-                
-                </div>
-                <!-- Sección 2 -->
-                <div class="col-md-6">
-                    <section>
-                        <h2>Ventas (Últimos 6 Meses)</h2>
-                        <canvas id="salesChart" width="400" height="200"></canvas>
-                    </section>
-                    <section>
-                        <h2>Inventario de Prendas</h2>
-                        <canvas id="inventoryChart" width="400" height="200"></canvas>
-                    </section>
-                
-                </div>
-                 <div class="col-md-12">
-                    
-                 </div>
-
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="user-info">
+                <span class="user-name">UrbanStyle</span>
+                <span class="user-role">Admin</span>
+            </div>
+        </div>
+        <nav class="menu">
+            <a href="#"><i class="bi bi-graph-up"></i> Dashboard</a>
+            <a href="${pageContext.request.contextPath}/views/intranex/GestionProductos.jsp"><i class="bi bi-box-seam"></i> Gestión de Productos</a>
+            <a href="#"><i class="bi bi-cart-check"></i> Gestión de Pedidos</a>
+            <a href="${pageContext.request.contextPath}/views/intranex/GestionUsuarios.jsp">
+                <i class="bi bi-people"></i> Gestión de Usuarios
+            </a>
+            <a href="${pageContext.request.contextPath}/views/intranex/GestionProveedores.jsp">
+                <i class="bi bi-truck"></i> Gestión de Proveedores
+            </a>
+            <a href="#"><i class="bi bi-bar-chart-line"></i> Reportes de Ventas</a>
+            <a href="#"><i class="bi bi-exclamation-triangle"></i> Alertas de Inventario</a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <span>Bienvenido, <%= currentUser.getNombre() %> (<%= currentUser.getRol() %>)</span>
+            </div>
+            <div class="logout">
+                <a href="${pageContext.request.contextPath}/logout" class="btn-logout">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </a>
             </div>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-     <script src="../MenuDashboard-main/js/app.js"></script>
 
-     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="main-content">
+        <div class="contentD">
+            <h1>Dashboard de Ventas e Inventario</h1>
+            <!-- Aquí va el contenido de los gráficos y estadísticas -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/app.js"></script>
 </body>
 </html>

@@ -102,8 +102,8 @@
       <main>
          <div class="container" id="container">
             <div class="form-container sign-up">
-                <form action="${pageContext.request.contextPath}/registro" method="post">
-                    <h1>Regístrarse</h1>
+                <form action="${pageContext.request.contextPath}/registro" method="post" id="registroForm" onsubmit="console.log('Formulario enviado')">
+                    <h1>Registrarse</h1>
                     <div class="social-icons">
                         <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
                         <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
@@ -112,19 +112,13 @@
                     </div>
                     <input type="text" name="nombre" placeholder="Nombre" required>
                     <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="contraseña" placeholder="Contraseña" required>
-                    <button type="submit">Registrar</button>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit" onclick="console.log('Botón clickeado')">Registrar</button>
                 </form>
             </div>
             <div class="form-container sign-in">
-                <form action="${pageContext.request.contextPath}/login" method="post">
+                <form action="${pageContext.request.contextPath}/login" method="post" id="loginForm">
                     <h1>Iniciar Sesión</h1>
-                    <% if(request.getParameter("registro") != null && request.getParameter("registro").equals("exitoso")) { %>
-                        <p style="color: green;">Registro exitoso. Por favor, inicie sesión.</p>
-                    <% } %>
-                    <% if(request.getParameter("error") != null && request.getParameter("error").equals("true")) { %>
-                        <p style="color: red;">Error en el registro: <%= request.getParameter("message") %></p>
-                    <% } %>
                     <div class="social-icons">
                         <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
                         <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
@@ -132,9 +126,25 @@
                         <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                     </div>
                     <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="contraseña" placeholder="Password" required>
-                    <a href="#">Forget Your Password?</a>
-                    <button type="submit">Iniciar</button>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <% 
+                    String error = (String) session.getAttribute("error");
+                    String mensaje = (String) session.getAttribute("mensaje");
+                    session.removeAttribute("error");
+                    session.removeAttribute("mensaje");
+                    
+                    if (error != null) { 
+                    %>
+                        <div class="alert alert-danger" id="errorAlert">
+                            <%= error %>
+                        </div>
+                    <% } %>
+                    <% if (mensaje != null) { %>
+                        <div class="alert alert-success" id="mensajeAlert">
+                            <%= mensaje %>
+                        </div>
+                    <% } %>
+                    <button type="submit">Iniciar Sesión</button>
                 </form>
             </div>
             <div class="toggle-container">
@@ -189,11 +199,67 @@
         
 
         <script src="../../js/script.js"></script>
+        <script>
+            // Debug para verificar que los elementos existen
+            console.log('Container:', document.getElementById('container'));
+            console.log('Register button:', document.getElementById('register'));
+            console.log('Login button:', document.getElementById('login'));
+            console.log('Registro form:', document.getElementById('registroForm'));
+        </script>
+        <script>
+            // Función para ocultar alertas automáticamente
+            function ocultarAlertas() {
+                // Ocultar mensaje de éxito después de 3 segundos
+                const mensajeAlert = document.getElementById('mensajeAlert');
+                if (mensajeAlert) {
+                    setTimeout(() => {
+                        mensajeAlert.style.transition = 'opacity 0.5s ease';
+                        mensajeAlert.style.opacity = '0';
+                        setTimeout(() => {
+                            mensajeAlert.remove();
+                        }, 500);
+                    }, 3000); // 3000 milisegundos = 3 segundos
+                }
+
+                // Ocultar mensaje de error después de 5 segundos
+                const errorAlert = document.getElementById('errorAlert');
+                if (errorAlert) {
+                    setTimeout(() => {
+                        errorAlert.style.transition = 'opacity 0.5s ease';
+                        errorAlert.style.opacity = '0';
+                        setTimeout(() => {
+                            errorAlert.remove();
+                        }, 500);
+                    }, 5000); // 5000 milisegundos = 5 segundos
+                }
+            }
+
+            // Ejecutar cuando el DOM esté cargado
+            document.addEventListener('DOMContentLoaded', ocultarAlertas);
+        </script>
+        <style>
+            .alert {
+                padding: 10px;
+                margin: 10px 0;
+                border-radius: 4px;
+                transition: opacity 0.5s ease;
+            }
+            
+            .alert-success {
+                background-color: #d4edda;
+                border-color: #c3e6cb;
+                color: #155724;
+            }
+            
+            .alert-danger {
+                background-color: #f8d7da;
+                border-color: #f5c6cb;
+                color: #721c24;
+            }
+        </style>
     </body>
   
     
 
     </html>
-
-
 

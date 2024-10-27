@@ -15,32 +15,15 @@
 </head>
 <body>
 
-    <div class="sidebar">
-        <!-- Sección superior con logo -->
-        <div class="top-menu">
-            <a href="index.html" class="text-decoration-none">
-                <div class="logo d-flex align-items-center">
-                    <img src="./img/Logo.jpg" alt="Logo" style="width: 40px; margin-right: 10px;">
-                  
-                </div>
-            </a>
-            <span>DC style</span>
-        </div>
+   <!--HEADER-->
+   <div id="sidebar-placeholder"></div>
 
-        <!-- Opciones del menú -->
-        <div class="menu">
-            <a href="Dashboard.html"><i class="bi bi-grid-fill"></i> Dashboard</a>
-            <a href="Usuario.html"><i class="bi bi-person"></i> Usuarios</a>
-            <a href="Mensajeria.html"><i class="bi bi-chat-left-text"></i> Mensajes</a>
-            <a href="Archivos.html"><i class="bi bi-folder"></i> Archivos</a>
-            <a href="Pedidos.html"><i class="bi bi-cart"></i> Pedidos</a>
-        </div>
-
-        <!-- Botón de cerrar sesión -->
-        <div class="menu">
-            <a href="#" class="mt-auto"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
-        </div>
-    </div>
+   <script>
+       // Cargar el header
+       fetch("../intranex/fragments1/sidebar.html")
+           .then(response => response.text())
+           .then(data => document.getElementById("sidebar-placeholder").innerHTML = data);
+   </script>
 
     <!-- Contenido principal -->
     <div class="container mt-5">

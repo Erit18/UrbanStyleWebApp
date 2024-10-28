@@ -1,5 +1,7 @@
 package experimental;
 
+import java.util.Arrays;
+
 public class AlgorithmExample {
     private int[] numbers;
     
@@ -88,6 +90,58 @@ public class AlgorithmExample {
             arr[k] = R[j];
             j++;
             k++;
+        }
+    }
+    
+    public void heapSort() {
+        int n = numbers.length;
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapify(numbers, n, i);
+        for (int i = n - 1; i >= 0; i--) {
+            int temp = numbers[0];
+            numbers[0] = numbers[i];
+            numbers[i] = temp;
+            heapify(numbers, i, 0);
+        }
+    }
+
+    private void heapify(int arr[], int n, int i) {
+        int largest = i;
+        int l = 2 * i + 1;
+        int r = 2 * i + 2;
+
+        if (l < n && arr[l] > arr[largest])
+            largest = l;
+        if (r < n && arr[r] > arr[largest])
+            largest = r;
+
+        if (largest != i) {
+            int swap = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = swap;
+            heapify(arr, n, largest);
+        }
+    }
+
+    public void searchAlgorithms() {
+        // Binary Search Implementation
+        Arrays.sort(numbers);
+        int target = numbers[numbers.length / 2];
+        int left = 0, right = numbers.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (numbers[mid] == target) break;
+            if (numbers[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+
+        // Jump Search Implementation
+        int step = (int) Math.sqrt(numbers.length);
+        int prev = 0;
+        while (numbers[Math.min(step, numbers.length) - 1] < target) {
+            prev = step;
+            step += (int) Math.sqrt(numbers.length);
+            if (prev >= numbers.length) break;
         }
     }
 }

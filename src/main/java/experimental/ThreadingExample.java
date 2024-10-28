@@ -73,4 +73,60 @@ public class ThreadingExample {
         producer.start();
         consumer.start();
     }
+    
+    public void advancedThreadPatterns() {
+        // Barrier Pattern
+        CyclicBarrier barrier = new CyclicBarrier(5, () -> 
+            System.out.println("Barrier action executed"));
+
+        // Semaphore Pattern
+        Semaphore semaphore = new Semaphore(3);
+        
+        for (int i = 0; i < 10; i++) {
+            final int taskId = i;
+            executorService.submit(() -> {
+                try {
+                    semaphore.acquire();
+                    Thread.sleep(1000);
+                    semaphore.release();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+        }
+    }
+
+    public void forkJoinExample() {
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
+        
+        RecursiveTask<Long> task = new RecursiveTask<Long>() {
+            protected Long compute() {
+                long sum = 0;
+                for (int i = 0; i < 10000; i++) {
+                    sum += i;
+                }
+                return sum;
+            }
+        };
+
+        forkJoinPool.execute(task);
+    }
+
+    public void phaser() {
+        Phaser phaser = new Phaser(1);
+        for (int i = 0; i < 3; i++) {
+            phaser.register();
+            final int threadId = i;
+            executorService.submit(() -> {
+                try {
+                    Thread.sleep(threadId * 100);
+                    phaser.arriveAndAwaitAdvance();
+                    Thread.sleep(threadId * 200);
+                    phaser.arriveAndDeregister();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+        }
+    }
 }

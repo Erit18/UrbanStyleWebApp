@@ -38,8 +38,9 @@
                     <p>ENTREGA: <span>S/0</span></p>
                 </div>
                 <h3>TOTAL: <span>S/0</span></h3>
-                <button class="finalizar">FINALIZAR COMPRA</button>
-                <button class="btn btn-danger" onclick="vaciarCarrito()">Vaciar Carrito</button> <!-- Botón para vaciar el carrito -->
+                <!-- Cambiamos el onclick por un id -->
+                <button id="btnFinalizarCompra" class="finalizar btn btn-primary">FINALIZAR COMPRA</button>
+                <button class="btn btn-danger" onclick="vaciarCarrito()">Vaciar Carrito</button>
             </div>
         </section>
     </main>
@@ -63,8 +64,30 @@
     
 </body>
 
+<script src="../../js/script.js"></script>
 <script src="../../js/ScriptC.js"></script>
 
-
-
-
+<script>
+    // Asegurarnos de que el DOM esté cargado
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar el carrito
+        renderCarrito();
+        
+        // Agregar el event listener al botón
+        const btnFinalizarCompra = document.getElementById('btnFinalizarCompra');
+        if (btnFinalizarCompra) {
+            btnFinalizarCompra.addEventListener('click', function() {
+                const carrito = JSON.parse(localStorage.getItem('cart')) || [];
+                console.log('Carrito:', carrito); // Debug
+                
+                if (carrito.length === 0) {
+                    mostrarMensaje('El carrito está vacío');
+                    return;
+                }
+                
+                console.log('Redirigiendo...'); // Debug
+                window.location.href = 'FinalizarCompra.html';
+            });
+        }
+    });
+</script>

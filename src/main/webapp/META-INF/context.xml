@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/AplicativoWebIntegrador">
-  <!-- Aquí puedes agregar configuraciones específicas del contexto si es necesario -->
+    <Parameter name="jakarta.servlet.jsp.jstl.fmt.request.charset" value="UTF-8"/>
+    <Parameter name="file.encoding" value="UTF-8"/>
+    <Parameter name="client.encoding.override" value="UTF-8"/>
 </Context>

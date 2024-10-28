@@ -62,7 +62,7 @@
             </li>
             
             <li class="nav-item mx-4">
-                <a class="nav-link active" href="../SCliente/Servicio-Cliente.html">SERVICIO AL CLIENTE</a>
+                <a class="nav-link active" href="../SCliente/Servicio-Cliente.html">LIBRO DE RECLAMACIONES</a>
             </li>
             </ul>
             <form class="d-flex" style="width: 35%;">
@@ -118,7 +118,7 @@
             </div>
             <div class="form-container sign-in">
                 <form action="${pageContext.request.contextPath}/login" method="post" id="loginForm">
-                    <h1>Iniciar Sesión</h1>
+                    <h1>Iniciar Sesi�n</h1>
                     <div class="social-icons">
                         <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
                         <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
@@ -166,26 +166,27 @@
  <footer class="footer-distributed">
         <div class="footer-left">
             <img src="imagenes/Logo.jpeg" alt="Logo" class="logo">
-            <p class="footer-company-name">Copyright © 2024 <strong>DC STYLE</strong> Reservados todos los derechos</p>
+            <h3>Urban<span>Style</span></h3>
+            <p class="footer-company-name">Copyright � 2024 <strong>UrbanStyle</strong> Reservados todos los derechos</p>
         </div>
         <div class="footer-center">
             <div>
                 <i class="fa fa-map-marker"></i>
-                <p><span>Ubicación</span> Los Olivos, UTP 2024</p>
+                <p><span>Ubicaci�n</span> Los Olivos, UTP 2024</p>
             </div>
             <div>
                 <i class="fa fa-phone"></i>
-                <p>+51 456 789 067</p>
+                <p>+51 957 789 067</p>
             </div>
             <div>
                 <i class="fa fa-envelope"></i>
-                <p><a href="mailto:sagar00001.co@gmail.com">DcStyle@empresa.com</a></p>
+                <p><a href="mailto:sagar00001.co@gmail.com">UrbanStyle@empresa.com</a></p>
             </div>
         </div>
         <div class="footer-right">
             <p class="footer-company-about">
                 <span>Sobre la empresa</span>
-                <strong>DC Style</strong> Descubre las ropas en tendencia de este año 2024
+                <strong>UrbanStyle</strong> Descubre las ropas en tendencia de este a�o 2024
             </p>
             <div class="footer-icons">
                 <a href="#"><i class="fa fa-facebook"></i></a>

@@ -13,9 +13,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Productos - UrbanStyle</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
+    <style type="text/css" media="print">
+        @media print {
+            .sidebar, .no-print {
+                display: none !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -23,25 +34,40 @@
     </div>
 
     <div class="main-content">
-        <h1>Gestión de Productos</h1>
-        <div class="mb-3">
-            <button class="btn btn-primary" id="btnNuevoProducto">Nuevo Producto</button>
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Gestión de Productos</h2>
+                <div class="d-flex gap-2">
+                    <button type="button" id="btnExportExcel" class="btn btn-success">
+                        <i class="bi bi-file-earmark-excel"></i> Exportar Excel
+                    </button>
+                    <button type="button" id="btnExportPDF" class="btn btn-danger">
+                        <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+                    </button>
+                    <button type="button" id="btnPrint" class="btn btn-primary">
+                        <i class="bi bi-printer"></i> Imprimir
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnNuevoProducto">
+                        <i class="bi bi-plus-circle"></i> Nuevo Producto
+                    </button>
+                </div>
+            </div>
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaProductos">
+                    <!-- Los productos se cargarán dinámicamente aquí -->
+                </tbody>
+            </table>
         </div>
-        <table class="table table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Categoría</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="tablaProductos">
-                <!-- Los productos se cargarán dinámicamente aquí -->
-            </tbody>
-        </table>
     </div>
 
     <!-- Modal de Producto -->
@@ -115,6 +141,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const contextPath = '${pageContext.request.contextPath}';
+        console.log('contextPath definido:', contextPath);
     </script>
     <script src="${pageContext.request.contextPath}/js/gestionProductos.js"></script>
 </body>

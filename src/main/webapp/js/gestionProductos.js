@@ -1,35 +1,11 @@
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM cargado');
-    
-    // Cargar productos iniciales
-    cargarProductos();
-    
-    // Cargar proveedores al inicio
-    cargarProveedores();
-    
-    // Configurar botón Nuevo Producto
-    document.getElementById('btnNuevoProducto').addEventListener('click', () => {
-        console.log('Click en Nuevo Producto');
-        document.getElementById('productoForm').reset();
-        document.getElementById('productoId').value = '';
-        document.getElementById('productoModalLabel').textContent = 'Nuevo Producto';
-        const modal = new bootstrap.Modal(document.getElementById('productoModal'));
-        modal.show();
-    });
-    
-    // Configurar botón Guardar del modal
-    document.getElementById('btnGuardarProducto').addEventListener('click', guardarProducto);
-});
-
+// Funciones de carga
 async function cargarProductos() {
     console.log('Iniciando cargarProductos()');
-    
     try {
-        const response = await fetch(`${contextPath}/api/productos-lista`);
+        const response = await fetch(`${contextPath}/api/productos`);
         if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
         const productos = await response.json();
         console.log('Productos recibidos:', productos);
         
@@ -42,14 +18,14 @@ async function cargarProductos() {
                 <td>${producto.id_ropa}</td>
                 <td>${producto.nombre}</td>
                 <td>${producto.categoria}</td>
-                <td>$${Number(producto.precio).toFixed(2)}</td>
+                <td>S/ ${producto.precio.toFixed(2)}</td>
                 <td>${producto.stock}</td>
                 <td>
-                    <button onclick="editarProducto(${producto.id_ropa})" class="btn btn-primary btn-sm">
-                        <i class="bi bi-pencil"></i> Editar
+                    <button class="btn btn-sm btn-primary me-1" onclick="editarProducto(${producto.id_ropa})">
+                        <i class="bi bi-pencil"></i>
                     </button>
-                    <button onclick="eliminarProducto(${producto.id_ropa})" class="btn btn-danger btn-sm ms-1">
-                        <i class="bi bi-trash"></i> Eliminar
+                    <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${producto.id_ropa})">
+                        <i class="bi bi-trash"></i>
                     </button>
                 </td>
             `;
@@ -57,7 +33,6 @@ async function cargarProductos() {
         });
     } catch (error) {
         console.error('Error al cargar productos:', error);
-        alert('Error al cargar los productos: ' + error.message);
     }
 }
 
@@ -66,11 +41,9 @@ async function cargarProveedores() {
     try {
         const response = await fetch(`${contextPath}/api/proveedores`);
         console.log('Respuesta proveedores:', response);
-        
         if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
         const proveedores = await response.json();
         console.log('Proveedores recibidos:', proveedores);
         
@@ -79,122 +52,104 @@ async function cargarProveedores() {
         
         proveedores.forEach(proveedor => {
             const option = document.createElement('option');
-            // Cambiar de proveedor.id a proveedor.id_proveedor
             option.value = proveedor.id_proveedor;
             option.textContent = proveedor.nombre;
             select.appendChild(option);
         });
     } catch (error) {
         console.error('Error al cargar proveedores:', error);
-        alert('Error al cargar la lista de proveedores');
     }
 }
 
-async function guardarProducto() {
-    console.log('Iniciando guardarProducto');
-    const form = document.getElementById('productoForm');
+// Inicialización cuando el DOM está listo
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('DOM Cargado - Inicializando gestionProductos.js');
     
-    if (!form.checkValidity()) {
-        form.reportValidity();
+    if (typeof contextPath === 'undefined') {
+        console.error('Error: contextPath no está definido');
         return;
     }
-    
-    const productoData = {
-        id_ropa: document.getElementById('productoId').value || null,
-        nombre: document.getElementById('nombre').value,
-        descripcion: document.getElementById('descripcion').value,
-        precio: parseFloat(document.getElementById('precio').value),
-        categoria: document.getElementById('categoria').value,
-        stock: parseInt(document.getElementById('stock').value),
-        fecha_caducidad: document.getElementById('fechaCaducidad').value || null,
-        descuento: parseFloat(document.getElementById('descuento').value) || 0,
-        id_proveedor: parseInt(document.getElementById('idProveedor').value)
-    };
+    console.log('contextPath:', contextPath);
 
-    console.log('Datos del producto a guardar:', productoData); // Debug
-    
-    try {
-        const isEditing = productoData.id_ropa !== null;
-        const url = isEditing ? 
-            `${contextPath}/api/productos/${productoData.id_ropa}` : 
-            `${contextPath}/api/productos`;
-        
-        const response = await fetch(url, {
-            method: isEditing ? 'PUT' : 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(productoData)
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Error al guardar el producto');
+    // Cargar datos iniciales
+    await cargarProductos();
+    await cargarProveedores();
+
+    // Configurar botones de exportación
+    const btnExcel = document.getElementById('btnExportExcel');
+    const btnPDF = document.getElementById('btnExportPDF');
+    const btnPrint = document.getElementById('btnPrint');
+
+    console.log('Botones encontrados:', {
+        excel: btnExcel !== null,
+        pdf: btnPDF !== null,
+        print: btnPrint !== null
+    });
+
+    // Función para manejar exportaciones
+    async function handleExport(tipo, url, mimeType, filename) {
+        console.log(`Iniciando exportación a ${tipo}`);
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': mimeType
+                }
+            });
+            
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`Error HTTP ${response.status}: ${text}`);
+            }
+            
+            const blob = await response.blob();
+            console.log(`Blob recibido para ${tipo}:`, blob.type, blob.size, 'bytes');
+            
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = downloadUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(downloadUrl);
+            document.body.removeChild(a);
+            console.log(`Descarga de ${tipo} completada`);
+        } catch (error) {
+            console.error(`Error al exportar ${tipo}:`, error);
+            alert(`Error al exportar a ${tipo}: ${error.message}`);
         }
-        
-        // Cerrar modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('productoModal'));
-        modal.hide();
-        
-        // Recargar productos
-        await cargarProductos();
-        
-        alert(isEditing ? 'Producto actualizado con éxito' : 'Producto creado con éxito');
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error al guardar el producto: ' + error.message);
     }
-}
 
-async function editarProducto(id) {
-    console.log('Editando producto:', id);
-    try {
-        const response = await fetch(`${contextPath}/api/productos/${id}`);
-        if (!response.ok) throw new Error('Error al obtener el producto');
-        
-        const producto = await response.json();
-        console.log('Producto a editar:', producto);
-        
-        // Rellenar el formulario
-        document.getElementById('productoId').value = producto.id_ropa;
-        document.getElementById('nombre').value = producto.nombre;
-        document.getElementById('descripcion').value = producto.descripcion || '';
-        document.getElementById('precio').value = producto.precio;
-        document.getElementById('categoria').value = producto.categoria;
-        document.getElementById('stock').value = producto.stock;
-        
-        // Mostrar el modal
-        const modal = new bootstrap.Modal(document.getElementById('productoModal'));
-        modal.show();
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error al cargar el producto');
+    // Configurar eventos de los botones
+    if (btnExcel) {
+        btnExcel.onclick = () => {
+            console.log('Click en botón Excel');
+            handleExport(
+                'Excel',
+                `${contextPath}/api/productos/export/excel`,
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'productos.xlsx'
+            );
+        };
     }
-}
 
-async function eliminarProducto(id) {
-    console.log('Eliminando producto:', id);
-    if (!confirm('¿Está seguro de eliminar este producto?')) return;
-    
-    try {
-        const response = await fetch(`${contextPath}/api/productos/${id}`, {
-            method: 'DELETE'
-        });
-        
-        if (!response.ok) throw new Error('Error al eliminar el producto');
-        
-        await cargarProductos(); // Recargar la tabla
-        alert('Producto eliminado con éxito');
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error al eliminar el producto');
+    if (btnPDF) {
+        btnPDF.onclick = () => {
+            console.log('Click en botón PDF');
+            handleExport(
+                'PDF',
+                `${contextPath}/api/productos/export/pdf`,
+                'application/pdf',
+                'productos.pdf'
+            );
+        };
     }
-}
 
-// Función para depurar el objeto producto
-function debugProducto(producto) {
-    console.log('DEBUG - Producto completo:', producto);
-    console.log('DEBUG - id_ropa:', producto.id_ropa, typeof producto.id_ropa);
-    console.log('DEBUG - Propiedades:', Object.keys(producto));
-    return producto;
-}
+    if (btnPrint) {
+        btnPrint.onclick = () => {
+            console.log('Click en botón Imprimir');
+            window.print();
+        };
+    }
+});

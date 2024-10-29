@@ -120,52 +120,33 @@ INSERT INTO Proveedores (nombre, contacto, telefono, email, direccion) VALUES
 ('Urban Textiles Perú', 'Carmen Paredes', '962345678', 'cparedes@urbantextiles.pe', 'Jr. Antonio Bazo 789, La Victoria, Lima'),
 ('Lima Street Wholesale', 'Miguel Chang', '973456789', 'mchang@limastreet.pe', 'Av. Grau 423, La Victoria, Lima');
 
--- Insertar Ropa con categorías variadas
-INSERT INTO Ropa (nombre, descripcion, precio, categoria, stock, id_proveedor) VALUES 
+-- Insertar Ropa con categorías variadas y fechas de caducidad
+INSERT INTO Ropa (nombre, descripcion, precio, categoria, stock, fecha_caducidad, id_proveedor) VALUES 
 -- Poleras/Hoodies
-('Urban Hoodie Oversize', 'Polera oversize de algodón premium con diseño urbano exclusivo', 159.90, 'hombre', 45, 1),
-('Hoodie Graffiti Lima', 'Polera con diseño exclusivo de artista urbano limeño', 149.90, 'unisex', 38, 1),
-('Pullover Crop Urban', 'Polera corta sin capucha, perfect fit', 129.90, 'mujer', 50, 2),
-('Hoodie Retro 90s', 'Polera estilo retro con diseño de los 90s', 139.90, 'hombre', 30, 2),
+('Urban Hoodie Oversize', 'Polera oversize de algodón premium con diseño urbano exclusivo', 159.90, 'hombre', 45, '2025-06-15', 1),
+('Hoodie Graffiti Lima', 'Polera con diseño exclusivo de artista urbano limeño', 149.90, 'unisex', 38, '2025-07-20', 1),
+('Pullover Crop Urban', 'Polera corta sin capucha, perfect fit', 129.90, 'mujer', 50, '2025-05-30', 2),
+('Hoodie Retro 90s', 'Polera estilo retro con diseño de los 90s', 139.90, 'hombre', 30, '2025-08-10', 2),
 
 -- Pantalones
-('Cargo Pants Urban', 'Pantalón cargo con bolsillos laterales', 179.90, 'hombre', 40, 1),
-('Jogger Premium Black', 'Jogger negro con acabado premium', 149.90, 'unisex', 35, 2),
-('Mom Jeans Vintage', 'Jean mom fit de cintura alta', 189.90, 'mujer', 42, 3),
-('Pants Drill Skater', 'Pantalón drill para skaters', 159.90, 'hombre', 28, 3),
+('Cargo Pants Urban', 'Pantalón cargo con bolsillos laterales', 179.90, 'hombre', 40, '2025-09-25', 1),
+('Jogger Premium Black', 'Jogger negro con acabado premium', 149.90, 'unisex', 35, '2025-07-15', 2),
+('Mom Jeans Vintage', 'Jean mom fit de cintura alta', 189.90, 'mujer', 42, '2025-06-30', 3),
+('Pants Drill Skater', 'Pantalón drill para skaters', 159.90, 'hombre', 28, '2025-08-20', 3),
 
 -- Polos y Tops
-('Polo Oversize Basic', 'Polo básico oversize de algodón pima', 69.90, 'hombre', 60, 1),
-('Crop Top Urban Art', 'Top corto con arte urbano de artistas locales', 79.90, 'mujer', 45, 2),
-('Tank Top Street Style', 'Polo sin mangas con diseño urbano', 74.90, 'mujer', 55, 3),
-('Polo Skate Life', 'Polo con diseño de cultura skater', 69.90, 'unisex', 50, 1),
+('Polo Oversize Basic', 'Polo básico oversize de algodón pima', 69.90, 'hombre', 60, '2025-05-15', 1),
+('Crop Top Urban Art', 'Top corto con arte urbano de artistas locales', 79.90, 'mujer', 45, '2025-07-10', 2),
+('Tank Top Street Style', 'Polo sin mangas con diseño urbano', 74.90, 'mujer', 55, '2025-06-20', 3),
+('Polo Skate Life', 'Polo con diseño de cultura skater', 69.90, 'unisex', 50, '2025-08-30', 1),
 
 -- Más variedad
-('Falda Cargo Street', 'Falda cargo con bolsillos', 129.90, 'mujer', 35, 2),
-('Shorts Basketball Pro', 'Shorts estilo basketball', 99.90, 'hombre', 40, 1),
-('Crop Hoodie Fashion', 'Polera corta con capucha', 139.90, 'mujer', 30, 3),
-('Baggy Jeans Classic', 'Jeans holgados estilo urbano', 169.90, 'unisex', 45, 2);
+('Falda Cargo Street', 'Falda cargo con bolsillos', 129.90, 'mujer', 35, '2025-09-15', 2),
+('Shorts Basketball Pro', 'Shorts estilo basketball', 99.90, 'hombre', 40, '2025-07-25', 1),
+('Crop Hoodie Fashion', 'Polera corta con capucha', 139.90, 'mujer', 30, '2025-08-15', 3),
+('Baggy Jeans Classic', 'Jeans holgados estilo urbano', 169.90, 'unisex', 45, '2025-06-25', 2);
 
 
--- Insertar Usuarios iniciales
-INSERT INTO Usuarios (nombre, email, contraseña, rol) VALUES
-('Admin Sistema', 'admin@urbanstyle.pe', 'admin123', 'administrador'),
-('José Martínez', 'jose@gmail.com', 'cliente123', 'cliente'),
-('Ana López', 'ana@gmail.com', 'cliente123', 'cliente');
-
--- Insertar Pedidos de ejemplo
-INSERT INTO Pedidos (id_usuario, total, estado) VALUES
-(2, 389.70, 'completado'),
-(3, 259.80, 'pagado');
-
--- Insertar Detalles de Pedidos
-INSERT INTO Detalle_Pedido (id_pedido, id_ropa, cantidad, precio_unitario) VALUES
-(1, 1, 2, 159.90),
-(1, 5, 1, 69.90),
-(2, 2, 1, 149.90),
-(2, 6, 1, 109.90);
-
--- Insertar Alertas para productos con stock bajo
 -- Insertar Alertas para productos con stock bajo
 INSERT INTO Alertas (id_ropa, mensaje)
 SELECT id_ropa, CONCAT('Stock bajo: Quedan solo ', stock, ' unidades de ', nombre)

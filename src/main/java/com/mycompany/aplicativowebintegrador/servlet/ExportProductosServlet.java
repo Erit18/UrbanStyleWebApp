@@ -11,7 +11,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.BaseColor;
 import com.mycompany.aplicativowebintegrador.dao.ProductoDAO;
+import com.mycompany.aplicativowebintegrador.dao.ProveedorDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Producto;
+import com.mycompany.aplicativowebintegrador.modelo.Proveedor;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -21,22 +23,36 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet({"/api/productos/export/excel", "/api/productos/export/pdf"})
 public class ExportProductosServlet extends HttpServlet {
     
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private final ProveedorDAO proveedorDAO = new ProveedorDAO();
+    private Map<Integer, String> proveedoresCache;
+    
+    private void cargarProveedores() throws SQLException {
+        proveedoresCache = new HashMap<>();
+        List<Proveedor> proveedores = proveedorDAO.obtenerTodos();
+        for (Proveedor proveedor : proveedores) {
+            proveedoresCache.put(proveedor.getId_proveedor(), proveedor.getNombre());
+        }
+    }
+    
+    private String obtenerNombreProveedor(int idProveedor) {
+        return proveedoresCache.getOrDefault(idProveedor, "No especificado");
+    }
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        
-        System.out.println("ExportProductosServlet: Inicio de la petición");
-        String uri = request.getRequestURI();
-        System.out.println("URI solicitada: " + uri);
-        
         try {
+            // Cargar todos los proveedores al inicio
+            cargarProveedores();
+            
             ProductoDAO productoDAO = new ProductoDAO();
             List<Producto> productos = productoDAO.obtenerTodos();
             
@@ -45,23 +61,18 @@ public class ExportProductosServlet extends HttpServlet {
                 return;
             }
 
+            String uri = request.getRequestURI();
             if (uri.endsWith("/excel")) {
-                System.out.println("Iniciando exportación a Excel");
                 response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
                 response.setHeader("Content-Disposition", "attachment; filename=\"productos.xlsx\"");
                 exportToExcel(response, productos);
             } else if (uri.endsWith("/pdf")) {
-                System.out.println("Iniciando exportación a PDF");
                 response.setContentType("application/pdf");
                 response.setHeader("Content-Disposition", "attachment; filename=\"productos.pdf\"");
                 exportToPDF(response, productos);
-            } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Formato no soportado");
             }
-        } catch (Exception e) {
-            System.err.println("Error en ExportProductosServlet: " + e.getMessage());
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al exportar: " + e.getMessage());
+        } catch (SQLException e) {
+            throw new ServletException("Error al obtener datos", e);
         }
     }
     
@@ -69,15 +80,13 @@ public class ExportProductosServlet extends HttpServlet {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Productos");
             
-            // Crear estilo para encabezados
-            CellStyle headerStyle = workbook.createCellStyle();
-            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            headerStyle.setAlignment(HorizontalAlignment.CENTER);
-            
             // Crear encabezados
             Row headerRow = sheet.createRow(0);
             String[] columns = {"ID", "Nombre", "Categoría", "Precio", "Stock", "Proveedor", "Fecha Cad.", "Descuento"};
+            
+            CellStyle headerStyle = workbook.createCellStyle();
+            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
             
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
@@ -92,12 +101,12 @@ public class ExportProductosServlet extends HttpServlet {
                 row.createCell(0).setCellValue(producto.getId_ropa());
                 row.createCell(1).setCellValue(producto.getNombre());
                 row.createCell(2).setCellValue(producto.getCategoria());
-                row.createCell(3).setCellValue(producto.getPrecio().doubleValue());
+                row.createCell(3).setCellValue(String.format("S/ %.2f", producto.getPrecio()));
                 row.createCell(4).setCellValue(producto.getStock());
-                row.createCell(5).setCellValue(producto.getId_proveedor());
+                row.createCell(5).setCellValue(obtenerNombreProveedor(producto.getId_proveedor()));
                 row.createCell(6).setCellValue(producto.getFecha_caducidad() != null ? 
                     dateFormat.format(producto.getFecha_caducidad()) : "");
-                row.createCell(7).setCellValue(producto.getDescuento().doubleValue());
+                row.createCell(7).setCellValue(String.format("%.2f%%", producto.getDescuento()));
             }
             
             // Autoajustar columnas

@@ -13,7 +13,6 @@ async function cargarProductos() {
         const productos = await productosResponse.json();
         const proveedores = await proveedoresResponse.json();
         
-        // Crear un mapa de proveedores para búsqueda rápida
         const proveedoresMap = new Map(
             proveedores.map(p => [p.id_proveedor, p.nombre])
         );
@@ -23,37 +22,26 @@ async function cargarProductos() {
         
         productos.forEach(producto => {
             const tr = document.createElement('tr');
-            // Vista normal (en pantalla)
+            
+            // Crear todas las celdas con sus clases correspondientes
             tr.innerHTML = `
                 <td>${producto.id_ropa}</td>
                 <td>${producto.nombre}</td>
                 <td>${producto.categoria}</td>
                 <td>S/ ${producto.precio.toFixed(2)}</td>
                 <td>${producto.stock}</td>
-                <td>
-                    <button class="btn btn-sm btn-primary me-1 no-print" onclick="editarProducto(${producto.id_ropa})">
+                <td class="no-print">
+                    <button class="btn btn-sm btn-primary me-1" onclick="editarProducto(${producto.id_ropa})">
                         <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger no-print" onclick="eliminarProducto(${producto.id_ropa})">
+                    <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${producto.id_ropa})">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
+                <td class="print-only" style="display: none;">${proveedoresMap.get(producto.id_proveedor) || 'No especificado'}</td>
+                <td class="print-only" style="display: none;">${producto.fecha_caducidad ? new Date(producto.fecha_caducidad).toLocaleDateString() : '-'}</td>
             `;
-
-            // Agregar elementos solo visibles en impresión
-            const proveedorTd = document.createElement('td');
-            proveedorTd.textContent = proveedoresMap.get(producto.id_proveedor) || 'No especificado';
-            proveedorTd.className = 'print-only';
-            proveedorTd.style.display = 'none';
-            tr.appendChild(proveedorTd);
-
-            const fechaTd = document.createElement('td');
-            fechaTd.textContent = producto.fecha_caducidad ? 
-                new Date(producto.fecha_caducidad).toLocaleDateString() : '-';
-            fechaTd.className = 'print-only';
-            fechaTd.style.display = 'none';
-            tr.appendChild(fechaTd);
-
+            
             tbody.appendChild(tr);
         });
     } catch (error) {

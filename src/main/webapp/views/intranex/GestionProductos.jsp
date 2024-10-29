@@ -18,19 +18,37 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
     <style type="text/css" media="print">
         @media print {
-            .sidebar, .no-print {
-                display: none !important;
-            }
-            .main-content {
-                margin-left: 0 !important;
-                width: 100% !important;
-            }
             .no-print {
                 display: none !important;
             }
             .print-only {
                 display: table-cell !important;
             }
+            /* Ajustes específicos para la tabla */
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            th, td {
+                padding: 8px !important;
+                text-align: left !important;
+                border: 1px solid #ddd !important;
+            }
+            /* Ajustes de ancho de columnas */
+            table th:nth-child(1), 
+            table td:nth-child(1) { width: 5% !important; }    /* ID */
+            table th:nth-child(2), 
+            table td:nth-child(2) { width: 20% !important; }   /* Nombre */
+            table th:nth-child(3), 
+            table td:nth-child(3) { width: 10% !important; }   /* Categoría */
+            table th:nth-child(4), 
+            table td:nth-child(4) { width: 10% !important; }   /* Precio */
+            table th:nth-child(5), 
+            table td:nth-child(5) { width: 8% !important; }    /* Stock */
+            table th:nth-child(7), 
+            table td:nth-child(7) { width: 27% !important; }   /* Proveedor */
+            table th:nth-child(8), 
+            table td:nth-child(8) { width: 15% !important; }   /* Fecha */
         }
     </style>
 </head>

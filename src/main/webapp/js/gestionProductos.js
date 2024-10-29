@@ -1,19 +1,29 @@
-// Funciones de carga
 async function cargarProductos() {
     console.log('Iniciando cargarProductos()');
     try {
-        const response = await fetch(`${contextPath}/api/productos`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        const [productosResponse, proveedoresResponse] = await Promise.all([
+            fetch(`${contextPath}/api/productos`),
+            fetch(`${contextPath}/api/proveedores`)
+        ]);
+        
+        if (!productosResponse.ok || !proveedoresResponse.ok) {
+            throw new Error('Error al cargar datos');
         }
-        const productos = await response.json();
-        console.log('Productos recibidos:', productos);
+        
+        const productos = await productosResponse.json();
+        const proveedores = await proveedoresResponse.json();
+        
+        // Crear un mapa de proveedores para búsqueda rápida
+        const proveedoresMap = new Map(
+            proveedores.map(p => [p.id_proveedor, p.nombre])
+        );
         
         const tbody = document.getElementById('tablaProductos');
         tbody.innerHTML = '';
         
         productos.forEach(producto => {
             const tr = document.createElement('tr');
+            // Vista normal (en pantalla)
             tr.innerHTML = `
                 <td>${producto.id_ropa}</td>
                 <td>${producto.nombre}</td>
@@ -21,14 +31,29 @@ async function cargarProductos() {
                 <td>S/ ${producto.precio.toFixed(2)}</td>
                 <td>${producto.stock}</td>
                 <td>
-                    <button class="btn btn-sm btn-primary me-1" onclick="editarProducto(${producto.id_ropa})">
+                    <button class="btn btn-sm btn-primary me-1 no-print" onclick="editarProducto(${producto.id_ropa})">
                         <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${producto.id_ropa})">
+                    <button class="btn btn-sm btn-danger no-print" onclick="eliminarProducto(${producto.id_ropa})">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
             `;
+
+            // Agregar elementos solo visibles en impresión
+            const proveedorTd = document.createElement('td');
+            proveedorTd.textContent = proveedoresMap.get(producto.id_proveedor) || 'No especificado';
+            proveedorTd.className = 'print-only';
+            proveedorTd.style.display = 'none';
+            tr.appendChild(proveedorTd);
+
+            const fechaTd = document.createElement('td');
+            fechaTd.textContent = producto.fecha_caducidad ? 
+                new Date(producto.fecha_caducidad).toLocaleDateString() : '-';
+            fechaTd.className = 'print-only';
+            fechaTd.style.display = 'none';
+            tr.appendChild(fechaTd);
+
             tbody.appendChild(tr);
         });
     } catch (error) {
@@ -237,8 +262,19 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     if (btnPrint) {
         btnPrint.onclick = () => {
-            console.log('Click en botón Imprimir');
+            // Mostrar columnas adicionales antes de imprimir
+            const printOnlyElements = document.querySelectorAll('.print-only');
+            printOnlyElements.forEach(el => el.style.display = 'table-cell');
+            
+            // Ocultar elementos no imprimibles
+            const noPrintElements = document.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.style.display = 'none');
+            
             window.print();
+            
+            // Restaurar la vista normal después de imprimir
+            printOnlyElements.forEach(el => el.style.display = 'none');
+            noPrintElements.forEach(el => el.style.display = '');
         };
     }
 

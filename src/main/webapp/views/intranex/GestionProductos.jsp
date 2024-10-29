@@ -25,6 +25,12 @@
                 margin-left: 0 !important;
                 width: 100% !important;
             }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: table-cell !important;
+            }
         }
     </style>
 </head>
@@ -35,7 +41,7 @@
 
     <div class="main-content">
         <div class="container mt-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-3 no-print">
                 <h2>Gestión de Productos</h2>
                 <div class="d-flex gap-2">
                     <button type="button" id="btnExportExcel" class="btn btn-success">
@@ -60,11 +66,13 @@
                         <th>Categoría</th>
                         <th>Precio</th>
                         <th>Stock</th>
-                        <th>Acciones</th>
+                        <th class="no-print">Acciones</th>
+                        <th class="print-only" style="display: none;">Proveedor</th>
+                        <th class="print-only" style="display: none;">Fecha Cad.</th>
                     </tr>
                 </thead>
                 <tbody id="tablaProductos">
-                    <!-- Los productos se cargarán dinámicamente aquí -->
+                    <!-- Los datos se cargarán dinámicamente -->
                 </tbody>
             </table>
         </div>

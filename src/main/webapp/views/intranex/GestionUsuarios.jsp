@@ -19,7 +19,45 @@
 </head>
 <body>
     <div class="sidebar">
-        <!-- Copiar el contenido del sidebar del Dashboard.jsp -->
+        <div class="sidebar-header">
+            <div class="user-info">
+                <span class="user-name">UrbanStyle</span>
+                <span class="user-role">Admin</span>
+            </div>
+        </div>
+        <nav class="menu">
+            <a href="${pageContext.request.contextPath}/views/intranex/Dashboard.jsp">
+                <i class="bi bi-graph-up"></i> Dashboard
+            </a>
+            <a href="${pageContext.request.contextPath}/views/intranex/GestionProductos.jsp">
+                <i class="bi bi-box-seam"></i> Gestión de Productos
+            </a>
+            <a href="#">
+                <i class="bi bi-cart-check"></i> Gestión de Pedidos
+            </a>
+            <a href="${pageContext.request.contextPath}/views/intranex/GestionUsuarios.jsp" class="active">
+                <i class="bi bi-people"></i> Gestión de Usuarios
+            </a>
+            <a href="${pageContext.request.contextPath}/views/intranex/GestionProveedores.jsp">
+                <i class="bi bi-truck"></i> Gestión de Proveedores
+            </a>
+            <a href="${pageContext.request.contextPath}/views/intranex/GestionAlertas.jsp">
+                <i class="bi bi-exclamation-triangle"></i> Alertas de Inventario
+            </a>
+            <a href="#">
+                <i class="bi bi-bar-chart-line"></i> Reportes de Ventas
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <span>Bienvenido, <%= usuario.getNombre() %> (<%= usuario.getRol() %>)</span>
+            </div>
+            <div class="logout">
+                <a href="${pageContext.request.contextPath}/logout" class="btn-logout">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
     </div>
 
     <div class="main-content">

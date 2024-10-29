@@ -16,6 +16,90 @@
     color: #faf9f9;
     padding: 20px;
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilos para el header del sidebar */
+.sidebar-header {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 20px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.user-role {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* Estilos para el menú de navegación */
+.menu {
+    flex: 1;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.menu a:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+.menu a i {
+    margin-right: 10px;
+    font-size: 1.1rem;
+}
+
+/* Estilos para el footer del sidebar */
+.sidebar-footer {
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    margin-top: auto;
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-logout i {
+    margin-right: 10px;
+}
+
+/* Estilo para el enlace activo */
+.menu a.active {
+    background-color: #333;
+    color: #fff;
 }
 
 /* Contenedor principal */

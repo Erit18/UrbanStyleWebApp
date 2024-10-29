@@ -12,7 +12,7 @@ public class ProductoDAO {
     
     public List<Producto> obtenerTodos() throws SQLException {
         List<Producto> productos = new ArrayList<>();
-        String sql = "SELECT * FROM Ropa ORDER BY fecha_agregado DESC";
+        String sql = "SELECT * FROM Ropa ORDER BY fecha_agregado ASC";
         
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -47,7 +47,8 @@ public class ProductoDAO {
     }
     
     public void insertar(Producto producto) throws SQLException {
-        String sql = "INSERT INTO Ropa (nombre, descripcion, precio, categoria, stock, fecha_caducidad, descuento, id_proveedor) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Ropa (nombre, descripcion, precio, categoria, stock, fecha_caducidad, descuento, id_proveedor, fecha_agregado) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -58,7 +59,6 @@ public class ProductoDAO {
             pstmt.setString(4, producto.getCategoria());
             pstmt.setInt(5, producto.getStock());
             
-            // Manejo de fecha
             if (producto.getFecha_caducidad() != null) {
                 pstmt.setDate(6, new java.sql.Date(producto.getFecha_caducidad().getTime()));
             } else {

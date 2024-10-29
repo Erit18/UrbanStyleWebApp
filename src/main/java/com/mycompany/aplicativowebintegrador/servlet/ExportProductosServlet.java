@@ -124,7 +124,7 @@ public class ExportProductosServlet extends HttpServlet {
         response.setHeader("Content-Disposition", "attachment; filename=productos.pdf");
         
         try {
-            Document document = new Document(PageSize.A4);
+            Document document = new Document(PageSize.A4.rotate());
             PdfWriter.getInstance(document, response.getOutputStream());
             
             document.open();
@@ -137,33 +137,63 @@ public class ExportProductosServlet extends HttpServlet {
             );
             Paragraph title = new Paragraph("Reporte de Productos", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
+            title.setSpacingAfter(20);
             document.add(title);
-            document.add(new Paragraph("\n"));
             
             // Crear tabla
-            PdfPTable table = new PdfPTable(8); // 8 columnas
+            PdfPTable table = new PdfPTable(8);
             table.setWidthPercentage(100);
+            
+            // Establecer anchos relativos de las columnas
+            float[] columnWidths = {0.5f, 2f, 1f, 1f, 0.7f, 1.5f, 1f, 1f};
+            table.setWidths(columnWidths);
+            
+            // Estilo para encabezados
+            com.itextpdf.text.Font headerFont = new com.itextpdf.text.Font(
+                com.itextpdf.text.Font.FontFamily.HELVETICA, 
+                10, 
+                com.itextpdf.text.Font.BOLD
+            );
             
             // Añadir encabezados
             String[] headers = {"ID", "Nombre", "Categoría", "Precio", "Stock", "Proveedor", "Fecha Cad.", "Descuento"};
             for (String header : headers) {
-                PdfPCell cell = new PdfPCell(new Phrase(header));
+                PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                cell.setPadding(5);
                 table.addCell(cell);
             }
             
+            // Estilo para datos
+            com.itextpdf.text.Font dataFont = new com.itextpdf.text.Font(
+                com.itextpdf.text.Font.FontFamily.HELVETICA, 
+                9, 
+                com.itextpdf.text.Font.NORMAL
+            );
+            
             // Añadir datos
             for (Producto producto : productos) {
-                table.addCell(String.valueOf(producto.getId_ropa()));
-                table.addCell(producto.getNombre());
-                table.addCell(producto.getCategoria());
-                table.addCell(String.format("S/ %.2f", producto.getPrecio()));
-                table.addCell(String.valueOf(producto.getStock()));
-                table.addCell(String.valueOf(producto.getId_proveedor()));
-                table.addCell(producto.getFecha_caducidad() != null ? 
-                            dateFormat.format(producto.getFecha_caducidad()) : "");
-                table.addCell(String.format("%.2f%%", producto.getDescuento()));
+                // Crear y configurar cada celda
+                PdfPCell[] cells = {
+                    new PdfPCell(new Phrase(String.valueOf(producto.getId_ropa()), dataFont)),
+                    new PdfPCell(new Phrase(producto.getNombre(), dataFont)),
+                    new PdfPCell(new Phrase(producto.getCategoria(), dataFont)),
+                    new PdfPCell(new Phrase(String.format("S/ %.2f", producto.getPrecio()), dataFont)),
+                    new PdfPCell(new Phrase(String.valueOf(producto.getStock()), dataFont)),
+                    new PdfPCell(new Phrase(obtenerNombreProveedor(producto.getId_proveedor()), dataFont)),
+                    new PdfPCell(new Phrase(producto.getFecha_caducidad() != null ? 
+                        dateFormat.format(producto.getFecha_caducidad()) : "", dataFont)),
+                    new PdfPCell(new Phrase(String.format("%.2f%%", producto.getDescuento()), dataFont))
+                };
+                
+                // Configurar alineación y padding para cada celda
+                for (PdfPCell cell : cells) {
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    cell.setPadding(5);
+                    table.addCell(cell);
+                }
             }
             
             document.add(table);

@@ -61,6 +61,95 @@ async function cargarProveedores() {
     }
 }
 
+// Variables globales para el modal
+let productoModal;
+let productoActual;
+
+async function editarProducto(id) {
+    console.log('Editando producto:', id);
+    try {
+        const response = await fetch(`${contextPath}/api/productos/${id}`);
+        if (!response.ok) throw new Error('Error al obtener producto');
+        
+        productoActual = await response.json();
+        
+        // Rellenar el formulario con los datos del producto
+        document.getElementById('productoId').value = productoActual.id_ropa;
+        document.getElementById('nombre').value = productoActual.nombre;
+        document.getElementById('descripcion').value = productoActual.descripcion || '';
+        document.getElementById('precio').value = productoActual.precio;
+        document.getElementById('categoria').value = productoActual.categoria;
+        document.getElementById('stock').value = productoActual.stock;
+        document.getElementById('fechaCaducidad').value = productoActual.fecha_caducidad ? 
+            new Date(productoActual.fecha_caducidad).toISOString().split('T')[0] : '';
+        document.getElementById('descuento').value = productoActual.descuento;
+        document.getElementById('idProveedor').value = productoActual.id_proveedor;
+        
+        // Mostrar el modal
+        productoModal.show();
+        document.getElementById('productoModalLabel').textContent = 'Editar Producto';
+    } catch (error) {
+        console.error('Error al editar producto:', error);
+        alert('Error al cargar el producto');
+    }
+}
+
+async function eliminarProducto(id) {
+    if (!confirm('¿Está seguro de que desea eliminar este producto?')) return;
+    
+    try {
+        const response = await fetch(`${contextPath}/api/productos/${id}`, {
+            method: 'DELETE'
+        });
+        
+        if (!response.ok) throw new Error('Error al eliminar producto');
+        
+        await cargarProductos(); // Recargar la tabla
+        alert('Producto eliminado exitosamente');
+    } catch (error) {
+        console.error('Error al eliminar producto:', error);
+        alert('Error al eliminar el producto');
+    }
+}
+
+async function guardarProducto(event) {
+    event.preventDefault();
+    
+    const formData = {
+        id_ropa: document.getElementById('productoId').value || null,
+        nombre: document.getElementById('nombre').value,
+        descripcion: document.getElementById('descripcion').value,
+        precio: parseFloat(document.getElementById('precio').value),
+        categoria: document.getElementById('categoria').value,
+        stock: parseInt(document.getElementById('stock').value),
+        fecha_caducidad: document.getElementById('fechaCaducidad').value || null,
+        descuento: parseFloat(document.getElementById('descuento').value) || 0,
+        id_proveedor: parseInt(document.getElementById('idProveedor').value)
+    };
+
+    const url = `${contextPath}/api/productos${formData.id_ropa ? `/${formData.id_ropa}` : ''}`;
+    const method = formData.id_ropa ? 'PUT' : 'POST';
+
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) throw new Error('Error al guardar producto');
+
+        await cargarProductos(); // Recargar la tabla
+        productoModal.hide();
+        alert(formData.id_ropa ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente');
+    } catch (error) {
+        console.error('Error al guardar producto:', error);
+        alert('Error al guardar el producto');
+    }
+}
+
 // Inicialización cuando el DOM está listo
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('DOM Cargado - Inicializando gestionProductos.js');
@@ -151,5 +240,26 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log('Click en botón Imprimir');
             window.print();
         };
+    }
+
+    // Inicializar el modal
+    productoModal = new bootstrap.Modal(document.getElementById('productoModal'));
+    
+    // Configurar el botón Nuevo Producto
+    const btnNuevoProducto = document.getElementById('btnNuevoProducto');
+    if (btnNuevoProducto) {
+        btnNuevoProducto.onclick = () => {
+            // Limpiar el formulario
+            document.getElementById('productoForm').reset();
+            document.getElementById('productoId').value = '';
+            document.getElementById('productoModalLabel').textContent = 'Nuevo Producto';
+            productoModal.show();
+        };
+    }
+
+    // Configurar el botón Guardar del modal
+    const btnGuardarProducto = document.getElementById('btnGuardarProducto');
+    if (btnGuardarProducto) {
+        btnGuardarProducto.onclick = guardarProducto;
     }
 });

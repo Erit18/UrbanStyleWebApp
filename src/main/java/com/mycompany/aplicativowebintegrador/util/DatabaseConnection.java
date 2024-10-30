@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 
 public class DatabaseConnection {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
-    private static final String URL = "jdbc:mysql://localhost:3306/UrbanStyleDB?useSSL=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://localhost:3306/urbanstyle";
     private static final String USER = "root";
-    private static final String PASSWORD = "erits321123";
+    private static final String PASSWORD = "123";
 
     static {
         try {
@@ -28,5 +28,9 @@ public class DatabaseConnection {
             logger.error("Error al conectar a la base de datos", e);
             throw e;
         }
+    }
+
+    public static void setConnection(Connection mockConnection) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

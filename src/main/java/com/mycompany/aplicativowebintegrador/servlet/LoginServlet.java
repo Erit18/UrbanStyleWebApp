@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.Arrays;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {

@@ -151,43 +151,55 @@
       </div>
       </div>
 
-    <div class="container-fluid best-sellers my-5">
+    <div class="container-fluid best-sellers">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-left bold-text"> BEST SELLERS</h2>
-            <h2 class="text-right bold-text" style="font-size: 1.25rem;"><a href="views/catalogo/CatPolera.html" style="text-decoration: none; color: black;">Ver Todo</a></h2>
+            <h2 class="text-left bold-text">PRODUCTOS DESTACADOS</h2>
+            <h2 class="text-right bold-text" style="font-size: 1.25rem;">
+                <a href="views/catalogo/CatPolera.html" style="text-decoration: none; color: black;">Ver Todo</a>
+            </h2>
         </div>
-        <div class="row" id="bestSellersContainer">
-            <!-- Los productos se cargarán aquí dinámicamente -->
+        <div class="row product-container">
+            <div class="col-md-4 product-wrapper">
+                <div class="product-item">
+                    <a href="views/catalogo/DetalleProducto.html" style="text-decoration: none; color: #000;">
+                        <img src="views/Intranet/imagenes/Polo1.png" class="img-fluid" alt="Producto 1">
+                        <div class="rating">
+                            <span>5/5</span>
+                            <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                        </div>
+                        <h5>Polo Oversize</h5>
+                        <h6>S/89.90</h6>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 product-wrapper">
+                <div class="product-item">
+                    <a href="views/catalogo/DetalleProducto.html" style="text-decoration: none; color: #000;">
+                        <img src="views/Intranet/imagenes/Polera1.png" class="img-fluid" alt="Producto 2">
+                        <div class="rating">
+                            <span>5/5</span>
+                            <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                        </div>
+                        <h5>Polera Oversize</h5>
+                        <h6>S/129.90</h6>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 product-wrapper">
+                <div class="product-item">
+                    <a href="views/catalogo/DetalleProducto.html" style="text-decoration: none; color: #000;">
+                        <img src="views/Intranet/imagenes/Jean1.png" class="img-fluid" alt="Producto 3">
+                        <div class="rating">
+                            <span>5/5</span>
+                            <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                        </div>
+                        <h5>Jean Mom</h5>
+                        <h6>S/149.90</h6>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-
-    <script>
-    fetch('${pageContext.request.contextPath}/best-sellers')
-        .then(response => response.json())
-        .then(products => {
-            const container = document.getElementById('bestSellersContainer');
-            products.forEach(product => {
-                container.innerHTML += `
-                    <div class="col-6 col-md-4 product-item">
-                        <a href="views/catalogo/DetalleProducto.html" style="text-decoration: none; color: #000;">
-                            <img src="views/Intranet/imagenes/Polo1.png" class="img-fluid" alt="${product.nombre}">
-                            <div class="rating" style="font-size: 1.5rem; text-align: left;">
-                                <span>5/5</span>
-                                <span class="star">&#9733;</span>
-                                <span class="star">&#9733;</span>
-                                <span class="star">&#9733;</span>
-                                <span class="star">&#9733;</span>
-                                <span class="star">&#9733;</span>
-                            </div>
-                            <h5>${product.nombre}</h5>
-                            <h6>S/${product.precio}</h6>
-                        </a>
-                    </div>
-                `;
-            });
-        })
-        .catch(error => console.error('Error:', error));
-    </script>
 
  
       

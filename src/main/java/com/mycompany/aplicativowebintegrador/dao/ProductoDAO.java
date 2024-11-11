@@ -18,12 +18,9 @@ public class ProductoDAO {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             
-            System.out.println("DEBUG - ProductoDAO: Iniciando obtenerTodos()");
-            
             while (rs.next()) {
                 Producto producto = new Producto();
-                int id = rs.getInt("id_ropa");
-                producto.setId_ropa(id);
+                producto.setId_ropa(rs.getInt("id_ropa"));
                 producto.setNombre(rs.getString("nombre"));
                 producto.setDescripcion(rs.getString("descripcion"));
                 producto.setPrecio(rs.getBigDecimal("precio"));
@@ -34,14 +31,9 @@ public class ProductoDAO {
                 producto.setId_proveedor(rs.getInt("id_proveedor"));
                 producto.setFecha_agregado(rs.getTimestamp("fecha_agregado"));
                 
-                System.out.println("DEBUG - ProductoDAO: Producto cargado -> ID: " + id + 
-                                 ", Nombre: " + producto.getNombre() + 
-                                 ", getId_ropa(): " + producto.getId_ropa());
-                
                 productos.add(producto);
             }
             
-            System.out.println("DEBUG - ProductoDAO: Total productos cargados: " + productos.size());
             return productos;
         }
     }
@@ -128,5 +120,52 @@ public class ProductoDAO {
             }
         }
         return null; // Retorna null si no se encuentra el producto
+    }
+
+    public List<Producto> obtenerProductosDestacados(int limite) throws SQLException {
+        List<Producto> productos = new ArrayList<>();
+        String sql = "SELECT * FROM Ropa ORDER BY fecha_agregado ASC LIMIT ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, limite);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Producto producto = new Producto();
+                producto.setId_ropa(rs.getInt("id_ropa"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setDescripcion(rs.getString("descripcion"));
+                producto.setPrecio(rs.getBigDecimal("precio"));
+                producto.setCategoria(rs.getString("categoria"));
+                producto.setStock(rs.getInt("stock"));
+                producto.setFecha_caducidad(rs.getDate("fecha_caducidad"));
+                producto.setDescuento(rs.getBigDecimal("descuento"));
+                producto.setId_proveedor(rs.getInt("id_proveedor"));
+                producto.setFecha_agregado(rs.getTimestamp("fecha_agregado"));
+                
+                productos.add(producto);
+            }
+            
+            return productos;
+        }
+    }
+
+    public String obtenerRutaImagen(Producto producto) {
+        String baseImagePath = "views/Intranet/imagenes/";
+        String defaultImage = baseImagePath + "default-product.jpg";
+        
+        if (producto == null || producto.getCategoria() == null) {
+            return defaultImage;
+        }
+        
+        // Construir la ruta según la categoría
+        String imagePath = baseImagePath + 
+                          producto.getCategoria().toLowerCase() + "/" + 
+                          producto.getId_ropa() + ".jpg";
+        
+        // La verificación de si existe el archivo se hará en el JSP
+        return imagePath;
     }
 }

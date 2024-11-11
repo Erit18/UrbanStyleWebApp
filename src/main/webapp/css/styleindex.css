@@ -119,10 +119,11 @@ body{
 
 .product-item img {
   width: 100%;
-  height: 350px;
+  height: 300px;
   object-fit: contain;
   border-radius: 10px;
   margin-bottom: 20px;
+  background-color: #f8f9fa; /* Fondo claro para las imágenes */
 }
 
 .product-item :hover{
@@ -401,5 +402,33 @@ main {
 /* Ajustar el último producto-item */
 .product-wrapper:last-child .product-item {
     margin-bottom: 700px; /* Aumentar el margen inferior del último producto */
+}
+
+/* Estilos para la página de todos los productos */
+.container-fluid.mt-5 {
+    padding: 0 40px;
+    margin-bottom: 100px;
+}
+
+.container-fluid.mt-5 .row {
+    margin: 0 -15px;
+}
+
+/* Ajustes para la cuadrícula de productos */
+@media (min-width: 768px) {
+    .col-md-4.col-lg-3 {
+        padding: 15px;
+    }
+}
+
+/* Ajuste para productos en vista móvil */
+@media (max-width: 767px) {
+    .col-md-4.col-lg-3 {
+        padding: 10px;
+    }
+    
+    .product-item {
+        margin: 10px 0;
+    }
 }
 

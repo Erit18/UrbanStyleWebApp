@@ -8,14 +8,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todos los Productos - DC Style</title>
+    <link href="https://fonts.googleapis.com/css?family=Inknut+Antiqua&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styleindex.css">
 </head>
 <body>
-    <!-- Navbar (puedes reutilizar el mismo del index.jsp) -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <!-- ... código del navbar ... -->
-    </nav>
+    <jsp:include page="fragments/header.html"/>
+
+    <div class="envio-bar d-flex justify-content-center align-items-center">
+        <span class="mx-2">
+            <img src="${pageContext.request.contextPath}/views/Intranet/imagenes/peru.png" alt="Perú" width="24">
+        </span>
+        <span class="envio-text">🛩️ENVÍOS GRATIS A TODO EL PERÚ🛩️</span>
+        <span class="mx-2">
+            <img src="${pageContext.request.contextPath}/views/Intranet/imagenes/peru.png" alt="Avión" width="24">
+        </span>
+    </div>
 
     <div class="container-fluid mt-5">
         <h2 class="text-center mb-4 bold-text">TODOS LOS PRODUCTOS</h2>
@@ -51,10 +62,7 @@
         </div>
     </div>
 
-    <!-- Footer (puedes reutilizar el mismo del index.jsp) -->
-    <footer class="footer-distributed">
-        <!-- ... código del footer ... -->
-    </footer>
+    <jsp:include page="fragments/footer.html"/>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -37,20 +37,29 @@ async function cargarDatos() {
         const response = await fetch(`${contextPath}/api/ventas?${params}`);
         
         if (!response.ok) {
-            throw new Error('Error al cargar datos');
+            throw new Error(`Error del servidor: ${response.status}`);
         }
         
         const ventas = await response.json();
+        
+        // Verificar si ventas es un objeto de error
+        if (ventas.error) {
+            throw new Error(ventas.error);
+        }
+        
         console.log('Datos recibidos:', ventas);
         
-        // Actualizar la UI
+        // Actualizar la UI solo si no hay errores
         actualizarTabla(ventas);
         actualizarResumen(calcularResumen(ventas));
         actualizarGraficos(prepararDatosGraficos(ventas));
         
     } catch (error) {
         console.error('Error al cargar datos:', error);
-        alert('Error al cargar los datos del reporte');
+        // Solo mostrar el alert si es un error real
+        if (error.message !== 'No se encontraron ventas') {
+            alert('Error al cargar los datos del reporte');
+        }
     }
 }
 
@@ -183,7 +192,7 @@ function actualizarTabla(ventas) {
     ventas.forEach(venta => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${venta.id_venta}</td>
+            <td>${venta.id || 'undefined'}</td>
             <td>${venta.fecha}</td>
             <td>${venta.cliente}</td>
             <td>${venta.productos}</td>

@@ -28,38 +28,16 @@ async function cargarDatos() {
             categoria: categoria
         });
 
-        console.log('Cargando datos con parámetros:', {
-            fechaInicio,
-            fechaFin,
-            categoria
-        });
-
         const response = await fetch(`${contextPath}/api/ventas?${params}`);
-        
-        if (!response.ok) {
-            throw new Error(`Error del servidor: ${response.status}`);
-        }
-        
         const ventas = await response.json();
         
-        // Verificar si ventas es un objeto de error
-        if (ventas.error) {
-            throw new Error(ventas.error);
-        }
-        
-        console.log('Datos recibidos:', ventas);
-        
-        // Actualizar la UI solo si no hay errores
         actualizarTabla(ventas);
         actualizarResumen(calcularResumen(ventas));
         actualizarGraficos(prepararDatosGraficos(ventas));
         
     } catch (error) {
         console.error('Error al cargar datos:', error);
-        // Solo mostrar el alert si es un error real
-        if (error.message !== 'No se encontraron ventas') {
-            alert('Error al cargar los datos del reporte');
-        }
+        // Solo registramos el error en la consola, sin mostrar alert
     }
 }
 

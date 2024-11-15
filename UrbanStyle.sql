@@ -153,3 +153,54 @@ SELECT id_ropa, CONCAT('Stock bajo: Quedan solo ', stock, ' unidades de ', nombr
 FROM Ropa
 WHERE stock <= 30;
 
+
+
+
+-- Insertar pedidos de prueba usando los usuarios existentes
+INSERT INTO Pedidos (id_usuario, total, estado) VALUES 
+(33, 458.70, 'completado'),  -- José Martínez
+(34, 269.80, 'pagado');      -- Ana López
+
+-- Insertar detalles de pedido
+INSERT INTO Detalle_Pedido (id_pedido, id_ropa, cantidad, precio_unitario) VALUES 
+(1, 1, 2, 159.90),  -- 2 Urban Hoodie Oversize para José Martínez
+(1, 5, 1, 179.90),  -- 1 Cargo Pants Urban para José Martínez
+(2, 7, 1, 189.90),  -- 1 Mom Jeans Vintage para Ana López
+(2, 10, 1, 79.90);  -- 1 Crop Top Urban Art para Ana López
+
+
+-- Consulta para obtener el reporte de ventas
+SELECT 
+    CONCAT('VTA-', LPAD(p.id_pedido, 3, '0')) as id_venta,
+    DATE_FORMAT(p.fecha_pedido, '%d/%m/%Y') as fecha,
+    u.nombre as cliente,
+    GROUP_CONCAT(
+        CONCAT(r.nombre, 
+        CASE 
+            WHEN dp.cantidad > 1 THEN CONCAT(' x', dp.cantidad)
+            ELSE ''
+        END)
+        SEPARATOR ', '
+    ) as productos,
+    p.total,
+    p.estado
+FROM 
+    Pedidos p
+    INNER JOIN Usuarios u ON p.id_usuario = u.id_usuario
+    INNER JOIN Detalle_Pedido dp ON p.id_pedido = dp.id_pedido
+    INNER JOIN Ropa r ON dp.id_ropa = r.id_ropa
+WHERE 
+    p.estado IN ('pagado', 'completado')
+GROUP BY 
+    p.id_pedido, p.fecha_pedido, u.nombre, p.total, p.estado
+ORDER BY 
+    p.fecha_pedido DESC;
+
+
+-- Consulta para ver las fechas actuales
+SELECT id_pedido, fecha_pedido FROM Pedidos;
+
+-- Si necesitas actualizar las fechas:
+UPDATE Pedidos SET fecha_pedido = '2024-11-13' WHERE id_pedido = 1;
+UPDATE Pedidos SET fecha_pedido = '2024-11-14' WHERE id_pedido = 2;
+

@@ -70,14 +70,17 @@
         }
         
         .tiempo-limite {
-            background-color: #343a40;
+            background-color: #212529;
             color: white;
-            padding: 0.8rem;
+            padding: 1rem;
             border-radius: 5px;
-            margin-top: 1rem;
+            margin: 1rem 0;
             text-align: center;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            width: 100%;
+            display: block;
         }
 
         .producto-titulo {
@@ -108,12 +111,15 @@
             font-size: 1.1rem;
         }
 
-        .btn-carrito {
+        .btn-carrito, .tiempo-limite {
             padding: 1rem;
             font-size: 1.2rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            width: 100%;
+            margin: 0.5rem 0;
+            border-radius: 5px;
         }
 
         .btn-carrito:hover {
@@ -185,13 +191,16 @@
                         <div class="ahorro-texto">
                             <i class="fas fa-tags"></i> ¡Ahorras S/ <%= String.format("%.2f", precioOriginal.subtract(precioFinal)) %>!
                         </div>
-                        <div class="tiempo-limite">
-                            <i class="fas fa-clock"></i> ¡Oferta por tiempo limitado! 🔥
-                        </div>
                     <% } else { %>
                         <div class="precio-normal">S/ <%= String.format("%.2f", precioOriginal) %></div>
                     <% } %>
                 </div>
+                
+                <% if (descuento != null && descuento.compareTo(BigDecimal.ZERO) > 0) { %>
+                    <div class="tiempo-limite">
+                        <i class="fas fa-clock"></i> ¡Oferta por tiempo limitado! 🔥
+                    </div>
+                <% } %>
                 
                 <p class="producto-descripcion"><%= producto.getDescripcion() %></p>
                 
@@ -204,7 +213,7 @@
                     </div>
                 </div>
                 
-                <button class="btn btn-dark w-100 btn-carrito" 
+                <button class="btn btn-dark btn-carrito" 
                         onclick="añadirAlCarrito('<%= producto.getNombre() %>', <%= precioFinal %>, 'M', '<%= producto.getCategoria() %>')">
                     <i class="fas fa-shopping-cart"></i> Añadir al Carrito
                 </button>

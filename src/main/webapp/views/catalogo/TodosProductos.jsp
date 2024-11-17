@@ -40,7 +40,7 @@
             %>
             <div class="col-md-4 col-lg-3 mb-4">
                 <div class="product-item">
-                    <a href="DetalleProducto.html" style="text-decoration: none; color: #000;">
+                    <a href="DetalleProducto.jsp?id=<%= producto.getId_ropa() %>" style="text-decoration: none; color: #000;">
                         <img src="${pageContext.request.contextPath}/<%= imagePath %>" 
                              class="img-fluid" 
                              alt="<%= producto.getNombre() %>"

@@ -171,7 +171,7 @@
             %>
             <div class="col-md-4 product-wrapper">
                 <div class="product-item">
-                    <a href="views/catalogo/DetalleProducto.html" style="text-decoration: none; color: #000;">
+                    <a href="views/catalogo/DetalleProducto.jsp?id=<%= producto.getId_ropa() %>" style="text-decoration: none; color: #000;">
                         <img src="${pageContext.request.contextPath}/<%= imagePath %>" 
                              class="img-fluid" 
                              alt="<%= producto.getNombre() %>"

@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -41,49 +40,178 @@
                     <th scope="col">Acción</th>
                 </tr>
             </thead>
+            
             <tbody> 
                 <tr>
                     <th scope="row">001</th>
                     <td>Ana López</td>
                     <td>25/09/2023</td>
-                    <td><span class="badge bg-success">Completado</span></td>
+                    <td>
+                        <select class="form-select form-select-sm estado-pedido" onchange="actualizarEstado(this)">
+                            <option value="completado" selected>Completado</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </td>   
                     <td>S/150.00</td>
                     <td><button class="btn btn-primary btn-sm">Ver Detalles</button></td>
                 </tr>
                 <tr>
                     <th scope="row">002</th>
-                    <td>Juan Pérez</td>
+                    <td>Juan Perez</td>
                     <td>23/09/2023</td>
-                    <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                    <td>
+                        <select class="form-select form-select-sm estado-pedido" onchange="actualizarEstado(this)">
+                            <option value="completado" selected>Completado</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </td>
                     <td>S/250.00</td>
                     <td><button class="btn btn-primary btn-sm">Ver Detalles</button></td>
                 </tr>
                 <tr>
                     <th scope="row">003</th>
-                    <td>María García</td>
+                    <td>Maria Garcia</td>
                     <td>20/09/2023</td>
-                    <td><span class="badge bg-danger">Cancelado</span></td>
-                    <td>S/0.00</td>
+                    <td>
+                        <select class="form-select form-select-sm estado-pedido" onchange="actualizarEstado(this)">
+                            <option value="completado" selected>Completado</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </td>
+                    <td>S/80.00</td>
                     <td><button class="btn btn-primary btn-sm">Ver Detalles</button></td>
                 </tr>
                 <tr>
                     <th scope="row">004</th>
-                    <td>Carlos López</td>
+                    <td>Carlos Lopez</td>
                     <td>18/09/2023</td>
-                    <td><span class="badge bg-success">Completado</span></td>
+                    <td>
+                        <select class="form-select form-select-sm estado-pedido" onchange="actualizarEstado(this)">
+                            <option value="completado" selected>Completado</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </td>
                     <td>S/300.00</td>
                     <td><button class="btn btn-primary btn-sm">Ver Detalles</button></td>
                 </tr>
                 <tr>
                     <th scope="row">005</th>
-                    <td>Luisa Martínez</td>
+                    <td>Luisa Martinez</td>
                     <td>15/09/2023</td>
-                    <td><span class="badge bg-warning text-dark">Pendiente</span></td>
-                    <td>S/100.00</td>
+                    <td>
+                        <select class="form-select form-select-sm estado-pedido" onchange="actualizarEstado(this)">
+                            <option value="completado" selected>Completado</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </td>
+                    <td>S/300.00</td>
                     <td><button class="btn btn-primary btn-sm">Ver Detalles</button></td>
                 </tr>
             </tbody>
         </table>
+
+        <tbody id="tablaPedidos">
+            <!-- Los pedidos se cargarán dinámicamente aquí -->
+        </tbody>
+        
+        <script>
+        // Función para cargar los pedidos desde la base de datos
+        function cargarPedidos() {
+            fetch('../../controllers/obtenerPedidos.php')
+                .then(response => response.json())
+                .then(pedidos => {
+                    const tablaPedidos = document.getElementById('tablaPedidos');
+                    tablaPedidos.innerHTML = '';
+        
+                    pedidos.forEach(pedido => {
+                        const row = `
+                            <tr>
+                                <th scope="row">${pedido.id_pedido}</th>
+                                <td>${pedido.nombre_cliente}</td>
+                                <td>${pedido.fecha_pedido}</td>
+                                <td>
+                                    <select class="form-select form-select-sm estado-pedido" 
+                                            onchange="actualizarEstadoPedido(${pedido.id_pedido}, this.value)"
+                                            data-pedido-id="${pedido.id_pedido}">
+                                        <option value="pendiente" ${pedido.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+                                        <option value="pagado" ${pedido.estado === 'pagado' ? 'selected' : ''}>Pagado</option>
+                                        <option value="enviado" ${pedido.estado === 'enviado' ? 'selected' : ''}>Enviado</option>
+                                        <option value="completado" ${pedido.estado === 'completado' ? 'selected' : ''}>Completado</option>
+                                        <option value="cancelado" ${pedido.estado === 'cancelado' ? 'selected' : ''}>Cancelado</option>
+                                    </select>
+                                </td>
+                                <td>S/${pedido.total.toFixed(2)}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" 
+                                            onclick="verDetallesPedido(${pedido.id_pedido})">
+                                        Ver Detalles
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        tablaPedidos.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        
+        // Función para ver detalles del pedido
+        function verDetallesPedido(idPedido) {
+            fetch(`../../controllers/obtenerDetallePedido.php?id=${idPedido}`)
+                .then(response => response.json())
+                .then(detalles => {
+                    // Aquí puedes mostrar los detalles en un modal
+                    const detallesHTML = detalles.map(item => `
+                        <tr>
+                            <td>${item.nombre_producto}</td>
+                            <td>${item.cantidad}</td>
+                            <td>S/${item.precio_unitario}</td>
+                            <td>S/${item.subtotal}</td>
+                        </tr>
+                    `).join('');
+        
+                    // Mostrar modal con los detalles
+                    const modal = new bootstrap.Modal(document.getElementById('modalDetalles'));
+                    document.getElementById('detallesPedidoBody').innerHTML = detallesHTML;
+                    modal.show();
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        
+        // Cargar pedidos al iniciar la página
+        document.addEventListener('DOMContentLoaded', cargarPedidos);
+        </script>
+        
+        <!-- Modal para detalles del pedido -->
+        <div class="modal fade" id="modalDetalles" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detalles del Pedido</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detallesPedidoBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     
             

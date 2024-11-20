@@ -64,7 +64,7 @@ function renderCarrito() {
                 <div class="producto">
                     <h3>${producto.name}</h3>
                     <p>Talla: ${producto.talla}</p>
-                    <p>Color: ${producto.color}</p>
+                    <p>Categoría: ${producto.color}</p>
                     <p>Precio: S/${producto.price}</p>
                     <p>Cantidad: ${producto.quantity}</p>
                 </div>

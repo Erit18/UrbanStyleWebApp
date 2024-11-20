@@ -236,4 +236,14 @@ footer {
     color: white;
     border: none;
 }
+
+.talla-btn.active {
+    background-color: #212529 !important;
+    color: white !important;
+}
+
+.btn-group .btn {
+    margin: 0 5px;
+    min-width: 50px;
+}
  

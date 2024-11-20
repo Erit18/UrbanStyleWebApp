@@ -207,14 +207,14 @@
                 <div class="tallas-container">
                     <label for="tallas" class="form-label">Tallas disponibles</label>
                     <div id="tallas" class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-dark">S</button>
-                        <button type="button" class="btn btn-outline-dark">M</button>
-                        <button type="button" class="btn btn-outline-dark">L</button>
+                        <button type="button" class="btn btn-outline-dark talla-btn" data-talla="S">S</button>
+                        <button type="button" class="btn btn-outline-dark talla-btn" data-talla="M">M</button>
+                        <button type="button" class="btn btn-outline-dark talla-btn" data-talla="L">L</button>
                     </div>
                 </div>
                 
                 <button class="btn btn-dark btn-carrito" 
-                        onclick="añadirAlCarrito('<%= producto.getNombre() %>', <%= precioFinal %>, 'M', '<%= producto.getCategoria() %>')">
+                        onclick="añadirAlCarrito('<%= producto.getNombre() %>', <%= precioFinal %>, obtenerTallaSeleccionada(), '<%= producto.getCategoria() %>')">
                     <i class="fas fa-shopping-cart"></i> Añadir al Carrito
                 </button>
                 
@@ -241,6 +241,28 @@
         fetch("fragments/footer.html")
             .then(response => response.text())
             .then(data => document.getElementById("footer-placeholder").innerHTML = data);
+
+        // Agregar manejo de selección de tallas
+        let tallaSeleccionada = null;
+        const tallaBtns = document.querySelectorAll('.talla-btn');
+        
+        tallaBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remover clase activa de todos los botones
+                tallaBtns.forEach(b => b.classList.remove('active'));
+                // Agregar clase activa al botón seleccionado
+                this.classList.add('active');
+                tallaSeleccionada = this.getAttribute('data-talla');
+            });
+        });
+
+        function obtenerTallaSeleccionada() {
+            if (!tallaSeleccionada) {
+                alert('Por favor, selecciona una talla');
+                return false;
+            }
+            return tallaSeleccionada;
+        }
     </script>
 </body>
 </html> 

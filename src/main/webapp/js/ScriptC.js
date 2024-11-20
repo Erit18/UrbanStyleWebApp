@@ -1,15 +1,29 @@
 function añadirAlCarrito(nombre, precio, talla, color) {
+    // Verificar que se haya seleccionado una talla
+    if (!talla) {
+        return; // La función se detiene si no hay talla seleccionada
+    }
+
     let carrito = JSON.parse(localStorage.getItem('cart')) || [];
-    const productoExistente = carrito.find(item => item.name === nombre);
+    // Buscar producto con el mismo nombre Y talla
+    const productoExistente = carrito.find(item => 
+        item.name === nombre && item.talla === talla
+    );
 
     if (productoExistente) {
         productoExistente.quantity += 1;
     } else {
-        carrito.push({ name: nombre, price: precio, quantity: 1, talla: talla, color: color });
+        carrito.push({ 
+            name: nombre, 
+            price: precio, 
+            quantity: 1, 
+            talla: talla, 
+            color: color 
+        });
     }
 
     localStorage.setItem('cart', JSON.stringify(carrito));
-    mostrarMensaje(`${nombre} añadido al carrito`); // Mensaje visual
+    mostrarMensaje(`${nombre} (Talla: ${talla}) añadido al carrito`);
 }
 
 function mostrarMensaje(mensaje) {

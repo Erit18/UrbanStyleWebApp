@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycompany.aplicativowebintegrador.dao.AlertaDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Alerta;
+import com.mycompany.aplicativowebintegrador.servicio.AlertaService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -15,55 +16,37 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @WebServlet("/api/alertas/*")
 public class AlertaServlet extends HttpServlet {
-    private AlertaDAO alertaDAO;
+    private static final Logger logger = LoggerFactory.getLogger(AlertaServlet.class);
+    private AlertaService alertaService;
     private Gson gson;
 
     @Override
     public void init() throws ServletException {
-        System.out.println("DEBUG - AlertaServlet inicializado");
-        alertaDAO = new AlertaDAO();
+        alertaService = new AlertaService(new AlertaDAO());
         gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
             .create();
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        System.out.println("=== DEBUG - AlertaServlet.doGet() - INICIO ===");
-        System.out.println("URL solicitada: " + request.getRequestURL());
-        System.out.println("Query string: " + request.getQueryString());
-        
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
         try {
             String pathInfo = request.getPathInfo();
-            System.out.println("PathInfo: " + pathInfo);
-            
             if (pathInfo == null || pathInfo.equals("/")) {
-                List<Alerta> alertas = alertaDAO.listarAlertas();
-                System.out.println("Número de alertas recuperadas: " + alertas.size());
-                
-                // Imprimir cada alerta
-                for (Alerta alerta : alertas) {
-                    System.out.println("Alerta: {" +
-                        "id=" + alerta.getId_alerta() + 
-                        ", producto=" + alerta.getNombre_producto() + 
-                        ", mensaje=" + alerta.getMensaje() + 
-                        ", fecha=" + alerta.getFecha_alerta() +
-                        "}");
-                }
-                
-                String json = gson.toJson(alertas);
-                System.out.println("JSON a enviar: " + json);
-                response.getWriter().write(json);
+                List<Alerta> alertas = alertaService.listarAlertas();
+                response.getWriter().write(gson.toJson(alertas));
             } else {
                 int id = Integer.parseInt(pathInfo.substring(1));
-                Alerta alerta = alertaDAO.obtenerAlertaPorId(id);
+                Alerta alerta = alertaService.obtenerAlerta(id);
                 if (alerta != null) {
                     response.getWriter().write(gson.toJson(alerta));
                 } else {
@@ -72,11 +55,8 @@ public class AlertaServlet extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            System.err.println("ERROR en AlertaServlet.doGet(): " + e.getMessage());
-            e.printStackTrace();
             handleError(response, e);
         }
-        System.out.println("=== DEBUG - AlertaServlet.doGet() - FIN ===");
     }
 
     @Override
@@ -88,7 +68,7 @@ public class AlertaServlet extends HttpServlet {
         try {
             // Leer el cuerpo de la petición y convertirlo a objeto Alerta
             Alerta alerta = gson.fromJson(request.getReader(), Alerta.class);
-            boolean resultado = alertaDAO.crearAlerta(alerta);
+            boolean resultado = alertaService.crearAlerta(alerta);
             
             try (PrintWriter out = response.getWriter()) {
                 out.print(gson.toJson(resultado));
@@ -108,7 +88,7 @@ public class AlertaServlet extends HttpServlet {
         try {
             // Leer el cuerpo de la petición y convertirlo a objeto Alerta
             Alerta alerta = gson.fromJson(request.getReader(), Alerta.class);
-            boolean resultado = alertaDAO.actualizarAlerta(alerta);
+            boolean resultado = alertaService.actualizarAlerta(alerta);
             
             try (PrintWriter out = response.getWriter()) {
                 out.print(gson.toJson(resultado));
@@ -134,7 +114,7 @@ public class AlertaServlet extends HttpServlet {
 
         try {
             int id = Integer.parseInt(pathInfo.substring(1));
-            boolean resultado = alertaDAO.eliminarAlerta(id);
+            boolean resultado = alertaService.eliminarAlerta(id);
             
             try (PrintWriter out = response.getWriter()) {
                 out.print(gson.toJson(resultado));
@@ -145,10 +125,8 @@ public class AlertaServlet extends HttpServlet {
     }
 
     private void handleError(HttpServletResponse response, Exception e) throws IOException {
-        e.printStackTrace();
+        logger.error("Error en AlertaServlet", e);
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        Map<String, String> error = new HashMap<>();
-        error.put("error", e.getMessage());
-        response.getWriter().write(gson.toJson(error));
+        response.getWriter().write(gson.toJson(Map.of("error", e.getMessage())));
     }
 }

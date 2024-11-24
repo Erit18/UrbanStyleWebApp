@@ -250,7 +250,7 @@ END //
 
 DELIMITER ;
 
-
+-- 4. Crear el nuevo trigger
 DELIMITER //
 
 CREATE TRIGGER after_ropa_update 
@@ -263,5 +263,3 @@ BEGIN
 END //
 
 DELIMITER ;
-
-

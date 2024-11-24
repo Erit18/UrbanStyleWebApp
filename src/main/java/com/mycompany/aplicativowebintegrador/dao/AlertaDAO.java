@@ -15,9 +15,15 @@ public class AlertaDAO implements IAlertaDAO {
     @Override
     public List<Alerta> listarTodas() throws SQLException {
         List<Alerta> alertas = new ArrayList<>();
-        String sql = "SELECT a.*, r.nombre as nombre_producto FROM Alertas a " +
-                    "INNER JOIN Ropa r ON a.id_ropa = r.id_ropa " +
-                    "ORDER BY a.fecha_alerta DESC";
+        String sql = "SELECT a.*, r.nombre as nombre_producto, " +
+                     "CASE " +
+                     "  WHEN a.tipo_alerta = 'stock_bajo' THEN r.stock " +
+                     "  WHEN a.tipo_alerta = 'caducidad_proxima' THEN DATEDIFF(r.fecha_caducidad, CURDATE()) " +
+                     "END as valor_actual " +
+                     "FROM Alertas a " +
+                     "INNER JOIN Ropa r ON a.id_ropa = r.id_ropa " +
+                     "WHERE a.estado = 'activa' " +
+                     "ORDER BY a.fecha_alerta DESC";
         
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -97,6 +103,9 @@ public class AlertaDAO implements IAlertaDAO {
         alerta.setMensaje(rs.getString("mensaje"));
         alerta.setFecha_alerta(rs.getTimestamp("fecha_alerta"));
         alerta.setNombre_producto(rs.getString("nombre_producto"));
+        alerta.setTipo_alerta(rs.getString("tipo_alerta"));
+        alerta.setEstado(rs.getString("estado"));
+        alerta.setUmbral(rs.getInt("umbral"));
         return alerta;
     }
 }

@@ -86,7 +86,10 @@ CREATE TABLE Alertas (
     id_ropa INT,
     mensaje TEXT,
     fecha_alerta DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_ropa) REFERENCES Ropa(id_ropa)
+    FOREIGN KEY (id_ropa) REFERENCES Ropa(id_ropa),
+    tipo_alerta ENUM('stock_bajo', 'caducidad_proxima', 'manual') NOT NULL DEFAULT 'manual',
+    estado ENUM('activa', 'resuelta') NOT NULL DEFAULT 'activa',
+    umbral INT DEFAULT NULL
 );
 
 
@@ -147,15 +150,6 @@ INSERT INTO Ropa (nombre, descripcion, precio, categoria, stock, fecha_caducidad
 ('Baggy Jeans Classic', 'Jeans holgados estilo urbano', 169.90, 'unisex', 45, '2025-06-25', 2);
 
 
--- Insertar Alertas para productos con stock bajo
-INSERT INTO Alertas (id_ropa, mensaje)
-SELECT id_ropa, CONCAT('Stock bajo: Quedan solo ', stock, ' unidades de ', nombre)
-FROM Ropa
-WHERE stock <= 30;
-
-
-
-
 -- Insertar pedidos de prueba usando los usuarios existentes
 INSERT INTO Pedidos (id_usuario, total, estado) VALUES 
 (33, 458.70, 'completado'),  -- José Martínez
@@ -203,4 +197,71 @@ SELECT id_pedido, fecha_pedido FROM Pedidos;
 -- Si necesitas actualizar las fechas:
 UPDATE Pedidos SET fecha_pedido = '2024-11-13' WHERE id_pedido = 1;
 UPDATE Pedidos SET fecha_pedido = '2024-11-14' WHERE id_pedido = 2;
+
+
+DELIMITER //
+
+CREATE PROCEDURE GenerarAlertasAutomaticas()
+BEGIN
+    -- Primero, actualizar el estado de las alertas existentes
+    UPDATE Alertas a
+    INNER JOIN Ropa r ON a.id_ropa = r.id_ropa
+    SET a.estado = 'resuelta'
+    WHERE a.estado = 'activa' 
+    AND (
+        (a.tipo_alerta = 'stock_bajo' AND r.stock > 30) OR
+        (a.tipo_alerta = 'caducidad_proxima' AND DATEDIFF(r.fecha_caducidad, CURDATE()) > 30)
+    );
+
+    -- Luego, generar nuevas alertas por stock bajo
+    INSERT INTO Alertas (id_ropa, mensaje, tipo_alerta, estado, umbral)
+    SELECT 
+        id_ropa,
+        CONCAT('Stock bajo: ', nombre, ' (', stock, ' unidades)'),
+        'stock_bajo',
+        'activa',
+        30
+    FROM Ropa
+    WHERE stock <= 30
+    AND id_ropa NOT IN (
+        SELECT id_ropa 
+        FROM Alertas 
+        WHERE tipo_alerta = 'stock_bajo' 
+        AND estado = 'activa'
+    );
+
+    -- Generar alertas por caducidad próxima
+    INSERT INTO Alertas (id_ropa, mensaje, tipo_alerta, estado, umbral)
+    SELECT 
+        id_ropa,
+        CONCAT('¡Producto próximo a caducar! ', nombre, ' caduca el ', DATE_FORMAT(fecha_caducidad, '%d/%m/%Y')),
+        'caducidad_proxima',
+        'activa',
+        30
+    FROM Ropa
+    WHERE DATEDIFF(fecha_caducidad, CURDATE()) <= 30
+    AND id_ropa NOT IN (
+        SELECT id_ropa 
+        FROM Alertas 
+        WHERE tipo_alerta = 'caducidad_proxima' 
+        AND estado = 'activa'
+    );
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER after_ropa_update 
+AFTER UPDATE ON Ropa
+FOR EACH ROW
+BEGIN
+    IF NEW.stock != OLD.stock OR NEW.fecha_caducidad != OLD.fecha_caducidad THEN
+        CALL GenerarAlertasAutomaticas();
+    END IF;
+END //
+
+DELIMITER ;
+
 

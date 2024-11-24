@@ -136,11 +136,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     function cargarAlertas() {
-        console.log('Iniciando carga de alertas...');
-        
         fetch('${pageContext.request.contextPath}/api/alertas')
             .then(response => {
-                if (!response.ok) throw new Error('Error en la respuesta del servidor');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 return response.json();
             })
             .then(alertas => {
@@ -168,7 +168,8 @@
                         tdFecha.textContent = fecha.toLocaleString('es-ES');
                         
                         const tdEstado = document.createElement('td');
-                        tdEstado.innerHTML = '<span class="badge bg-warning text-dark">Pendiente</span>';
+                        const estadoClass = alerta.estado === 'activa' ? 'bg-warning' : 'bg-success';
+                        tdEstado.innerHTML = `<span class="badge ${estadoClass}">${alerta.estado}</span>`;
                         
                         const tdAcciones = document.createElement('td');
                         tdAcciones.innerHTML = `
@@ -201,14 +202,7 @@
             })
             .catch(error => {
                 console.error('Error al cargar alertas:', error);
-                const tbody = document.getElementById('alertasTableBody');
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="text-center text-danger">
-                            <i class="bi bi-exclamation-triangle me-2"></i>Error al cargar las alertas: ${error.message}
-                        </td>
-                    </tr>
-                `;
+                mostrarError('Error al cargar las alertas: ' + error.message);
             });
     }
 
@@ -327,31 +321,40 @@
         const form = document.getElementById('nuevaAlertaForm');
         const formData = new FormData(form);
         
-        fetch('${pageContext.request.contextPath}/api/alertas', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id_ropa: formData.get('id_ropa'),
-                mensaje: formData.get('mensaje')
+        try {
+            validarFormulario(formData);
+            
+            fetch('${pageContext.request.contextPath}/api/alertas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id_ropa: parseInt(formData.get('id_ropa')),
+                    mensaje: formData.get('mensaje')
+                })
             })
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result) {
-                alert('Alerta creada con éxito');
-                form.reset();
-                bootstrap.Modal.getInstance(document.getElementById('nuevaAlertaModal')).hide();
-                cargarAlertas();
-            } else {
-                throw new Error('No se pudo crear la alerta');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error al crear la alerta: ' + error.message);
-        });
+            .then(response => {
+                if (!response.ok) throw new Error('Error en la respuesta del servidor');
+                return response.json();
+            })
+            .then(result => {
+                if (result) {
+                    mostrarExito('Alerta creada con éxito');
+                    form.reset();
+                    bootstrap.Modal.getInstance(document.getElementById('nuevaAlertaModal')).hide();
+                    cargarAlertas();
+                } else {
+                    throw new Error('No se pudo crear la alerta');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarError('Error al crear la alerta: ' + error.message);
+            });
+        } catch (error) {
+            mostrarError(error.message);
+        }
     }
 
     function eliminarAlerta(id) {
@@ -388,6 +391,47 @@
             .catch(error => {
                 console.error('Error al cargar productos:', error);
             });
+    }
+
+    // Modificar el evento del botón "Nueva Alerta"
+    document.querySelector('[data-bs-target="#nuevaAlertaModal"]').addEventListener('click', () => {
+        const form = document.getElementById('nuevaAlertaForm');
+        form.reset();
+        document.querySelector('#nuevaAlertaModal .modal-title').textContent = 'Nueva Alerta';
+        const guardarBtn = document.querySelector('#nuevaAlertaModal .btn-primary');
+        guardarBtn.textContent = 'Guardar';
+        guardarBtn.onclick = guardarAlerta;
+        cargarProductos(); // Cargar productos cuando se abre el modal
+    });
+
+    function mostrarError(mensaje) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            ${mensaje}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.row'));
+    }
+
+    function validarFormulario(formData) {
+        if (!formData.get('id_ropa')) {
+            throw new Error('Debe seleccionar un producto');
+        }
+        if (!formData.get('mensaje')) {
+            throw new Error('Debe ingresar un mensaje');
+        }
+        return true;
+    }
+
+    function mostrarExito(mensaje) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            ${mensaje}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.row'));
     }
     </script>
 </body>

@@ -73,4 +73,8 @@
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
 
+    <listener>
+        <listener-class>com.mycompany.aplicativowebintegrador.util.AlertaScheduler</listener-class>
+    </listener>
+
 </web-app>

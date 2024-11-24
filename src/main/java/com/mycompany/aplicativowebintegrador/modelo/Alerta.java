@@ -8,6 +8,29 @@ public class Alerta {
     private String mensaje;
     private Date fecha_alerta;
     private String nombre_producto; // Campo adicional para mostrar el nombre del producto
+    private String tipo_alerta;
+    private String estado;
+    private Integer umbral;
+
+    // Enums para los tipos de alerta
+    public enum TipoAlerta {
+        STOCK_BAJO("stock_bajo"),
+        CADUCIDAD_PROXIMA("caducidad_proxima"),
+        MANUAL("manual");
+
+        private final String valor;
+        TipoAlerta(String valor) { this.valor = valor; }
+        public String getValor() { return valor; }
+    }
+
+    public enum EstadoAlerta {
+        ACTIVA("activa"),
+        RESUELTA("resuelta");
+
+        private final String valor;
+        EstadoAlerta(String valor) { this.valor = valor; }
+        public String getValor() { return valor; }
+    }
 
     // Constructor vacío
     public Alerta() {
@@ -61,4 +84,11 @@ public class Alerta {
     public void setNombre_producto(String nombre_producto) {
         this.nombre_producto = nombre_producto;
     }
+
+    public String getTipo_alerta() { return tipo_alerta; }
+    public void setTipo_alerta(String tipo_alerta) { this.tipo_alerta = tipo_alerta; }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+    public Integer getUmbral() { return umbral; }
+    public void setUmbral(Integer umbral) { this.umbral = umbral; }
 }

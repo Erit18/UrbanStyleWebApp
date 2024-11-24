@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 async function cargarDatos() {
-    const fechaInicio = document.getElementById('fechaInicio').value;
-    const fechaFin = document.getElementById('fechaFin').value;
-    const categoria = document.getElementById('categoria').value;
-
     try {
+        const fechaInicio = document.getElementById('fechaInicio').value;
+        const fechaFin = document.getElementById('fechaFin').value;
+        const categoria = document.getElementById('categoria').value;
+
         const params = new URLSearchParams({
             fechaInicio: fechaInicio,
             fechaFin: fechaFin,
@@ -29,31 +29,49 @@ async function cargarDatos() {
         });
 
         const response = await fetch(`${contextPath}/api/ventas?${params}`);
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+        }
+        
         const ventas = await response.json();
+        if (ventas.error) {
+            throw new Error(ventas.error);
+        }
+
+        console.log('Datos de ventas recibidos:', ventas);
         
         actualizarTabla(ventas);
-        actualizarResumen(calcularResumen(ventas));
-        actualizarGraficos(prepararDatosGraficos(ventas));
+        const resumen = calcularResumen(ventas);
+        actualizarResumen(resumen);
+        const datosGraficos = prepararDatosGraficos(ventas);
+        actualizarGraficos(datosGraficos);
         
     } catch (error) {
         console.error('Error al cargar datos:', error);
-        // Solo registramos el error en la consola, sin mostrar alert
+        mostrarError(`Error al cargar los datos: ${error.message}`);
     }
 }
 
 function calcularResumen(ventas) {
     const ventasTotales = ventas.reduce((sum, venta) => sum + venta.total, 0);
-    const productosVendidos = ventas.length;
-    const ticketPromedio = ventasTotales / (productosVendidos || 1);
+    const productosVendidos = ventas.reduce((sum, venta) => {
+        const productos = venta.productos.split(', ');
+        return sum + productos.reduce((prodSum, prod) => {
+            const cantidad = prod.includes('x') ? 
+                parseInt(prod.split('x')[1]) : 1;
+            return prodSum + cantidad;
+        }, 0);
+    }, 0);
+    
+    const ticketPromedio = ventas.length > 0 ? ventasTotales / ventas.length : 0;
 
     return {
         ventasTotales,
         productosVendidos,
         ticketPromedio,
-        // Por ahora, porcentajes estáticos
-        ventasTotalesPorcentaje: 15,
-        productosVendidosPorcentaje: 8,
-        ticketPromedioPorcentaje: 5
+        ventasTotalesPorcentaje: 0,
+        productosVendidosPorcentaje: 0,
+        ticketPromedioPorcentaje: 0
     };
 }
 
@@ -61,22 +79,32 @@ function prepararDatosGraficos(ventas) {
     // Agrupar ventas por día
     const ventasPorDia = {};
     ventas.forEach(venta => {
-        const fecha = venta.fecha;
+        const fecha = formatearFecha(venta.fecha);
         ventasPorDia[fecha] = (ventasPorDia[fecha] || 0) + venta.total;
     });
 
-    // Obtener últimos 7 días
-    const labels = Object.keys(ventasPorDia).sort().slice(-7);
-    const datos = labels.map(fecha => ventasPorDia[fecha]);
+    // Agrupar ventas por categoría (usando la categoría del primer producto)
+    const ventasPorCategoria = {
+        'hombre': 0,
+        'mujer': 0,
+        'unisex': 0
+    };
+    
+    ventas.forEach(venta => {
+        // Asumimos que todos los productos de una venta son de la misma categoría
+        const total = venta.total;
+        // Por ahora asignamos a 'unisex' si no podemos determinar la categoría
+        ventasPorCategoria['unisex'] += total;
+    });
 
     return {
         ventasPorDia: {
-            labels,
-            datos
+            labels: Object.keys(ventasPorDia),
+            datos: Object.values(ventasPorDia)
         },
         ventasPorCategoria: {
-            labels: ['Hombre', 'Mujer', 'Unisex'],
-            datos: [45, 35, 20] // Por ahora, datos estáticos
+            labels: Object.keys(ventasPorCategoria),
+            datos: Object.values(ventasPorCategoria)
         }
     };
 }
@@ -98,10 +126,22 @@ function actualizarPorcentaje(elementId, valor) {
     elemento.className = valor >= 0 ? 'text-success' : 'text-danger';
 }
 
+// Variables globales para los gráficos
+let ventasPorDiaChart = null;
+let ventasPorCategoriaChart = null;
+
 function actualizarGraficos(datos) {
+    // Destruir gráficos existentes si existen
+    if (ventasPorDiaChart) {
+        ventasPorDiaChart.destroy();
+    }
+    if (ventasPorCategoriaChart) {
+        ventasPorCategoriaChart.destroy();
+    }
+
     // Gráfico de ventas por día
     const ventasPorDiaCtx = document.getElementById('ventasPorDiaChart').getContext('2d');
-    new Chart(ventasPorDiaCtx, {
+    ventasPorDiaChart = new Chart(ventasPorDiaCtx, {
         type: 'line',
         data: {
             labels: datos.ventasPorDia.labels,
@@ -125,7 +165,7 @@ function actualizarGraficos(datos) {
 
     // Gráfico de ventas por categoría
     const ventasPorCategoriaCtx = document.getElementById('ventasPorCategoriaChart').getContext('2d');
-    new Chart(ventasPorCategoriaCtx, {
+    ventasPorCategoriaChart = new Chart(ventasPorCategoriaCtx, {
         type: 'doughnut',
         data: {
             labels: datos.ventasPorCategoria.labels,
@@ -152,11 +192,8 @@ function actualizarGraficos(datos) {
 
 function actualizarTabla(ventas) {
     const tbody = document.getElementById('tablaVentas');
-    
-    // Limpiar completamente la tabla
     tbody.innerHTML = '';
     
-    // Verificar si hay ventas
     if (!ventas || ventas.length === 0) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -166,19 +203,42 @@ function actualizarTabla(ventas) {
         return;
     }
 
-    // Actualizar con los nuevos datos
     ventas.forEach(venta => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${venta.id || 'undefined'}</td>
-            <td>${venta.fecha}</td>
-            <td>${venta.cliente}</td>
-            <td>${venta.productos}</td>
+            <td>${venta.id || '-'}</td>
+            <td>${formatearFecha(venta.fecha)}</td>
+            <td>${venta.nombreCliente || 'Cliente no especificado'}</td>
+            <td>${venta.productos || 'No hay productos'}</td>
             <td>S/. ${venta.total.toFixed(2)}</td>
-            <td><span class="badge bg-${venta.estado === 'completado' ? 'success' : 'warning'}">${venta.estado}</span></td>
+            <td><span class="badge bg-${obtenerColorEstado(venta.estado)}">${venta.estado}</span></td>
         `;
         tbody.appendChild(tr);
     });
+}
+
+function formatearFecha(fecha) {
+    if (!fecha) return '-';
+    return new Date(fecha).toLocaleDateString('es-PE', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+}
+
+function formatearProductos(productos) {
+    if (!productos) return 'No hay productos';
+    return productos;
+}
+
+function obtenerColorEstado(estado) {
+    const colores = {
+        'pagado': 'warning',
+        'completado': 'success',
+        'pendiente': 'info',
+        'cancelado': 'danger'
+    };
+    return colores[estado] || 'secondary';
 }
 
 // Funciones de exportación
@@ -190,5 +250,16 @@ function exportarExcel() {
 function exportarPDF() {
     console.log('Exportando a PDF...');
     // Implementar lógica de exportación a PDF
+}
+
+function mostrarError(mensaje) {
+    // Agregar al HTML un div para mostrar alertas
+    const alertaDiv = document.createElement('div');
+    alertaDiv.className = 'alert alert-danger alert-dismissible fade show';
+    alertaDiv.innerHTML = `
+        ${mensaje}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.querySelector('.container').insertBefore(alertaDiv, document.querySelector('.filtros-container'));
 }
  

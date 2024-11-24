@@ -166,12 +166,12 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="grafico-container">
-                        <canvas id="ventasPorDiaChart"></canvas>
+                        <canvas id="ventasPorDiaChart" width="400" height="200"></canvas>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="grafico-container">
-                        <canvas id="ventasPorCategoriaChart"></canvas>
+                        <canvas id="ventasPorCategoriaChart" width="400" height="200"></canvas>
                     </div>
                 </div>
             </div>

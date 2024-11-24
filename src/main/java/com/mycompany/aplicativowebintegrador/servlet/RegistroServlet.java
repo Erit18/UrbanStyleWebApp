@@ -1,16 +1,13 @@
 package com.mycompany.aplicativowebintegrador.servlet;
 
-import com.mycompany.aplicativowebintegrador.dao.UsuarioDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Usuario;
+import com.mycompany.aplicativowebintegrador.servicio.UsuarioService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Arrays;
@@ -18,18 +15,13 @@ import java.util.Arrays;
 @WebServlet("/registro")
 public class RegistroServlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(RegistroServlet.class);
-    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private final UsuarioService usuarioService = new UsuarioService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        System.out.println("=== Debug Registro ===");
-        System.out.println("Todos los parámetros recibidos:");
-        request.getParameterMap().forEach((key, value) -> {
-            System.out.println(key + ": " + Arrays.toString(value));
-        });
-        
+        logger.debug("=== Debug Registro ===");
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         
@@ -37,10 +29,11 @@ public class RegistroServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         
-        System.out.println("\nParámetros procesados:");
-        System.out.println("Nombre: [" + nombre + "]");
-        System.out.println("Email: [" + email + "]");
-        System.out.println("Password recibido: [" + (password != null ? "NO NULO" : "NULO") + "]");
+        logger.debug("Nombre: [{}], Email: [{}], Password: [{}]", 
+            nombre, 
+            email, 
+            password != null ? "NO NULO" : "NULO"
+        );
         
         if (nombre == null || email == null || password == null || 
             nombre.isEmpty() || email.isEmpty() || password.isEmpty()) {
@@ -57,29 +50,21 @@ public class RegistroServlet extends HttpServlet {
             usuario.setContraseña(password);
             usuario.setRol("cliente");
             
-            System.out.println("\nIntentando registrar usuario:");
-            System.out.println("Email: " + email);
-            System.out.println("Rol: " + usuario.getRol());
+            logger.debug("Intentando registrar usuario: {}", email);
             
-            usuarioDAO.registrarUsuario(usuario);
-            System.out.println("Usuario registrado exitosamente");
+            usuarioService.registrarUsuario(usuario);
+            logger.info("Usuario registrado exitosamente: {}", email);
             
-            // Agregar mensaje de éxito y redirigir a Intranet.jsp
+            // Agregar mensaje de éxito y redirigir
             request.getSession().setAttribute("mensaje", "Registro exitoso. Por favor, inicie sesión.");
             response.sendRedirect(request.getContextPath() + "/views/Intranet/Intranet.jsp");
             
-        } catch (SQLException e) {
-            System.out.println("Error SQL: " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("Error al registrar usuario", e);
             String mensaje = e.getMessage().contains("email ya está registrado") ? 
                 "El email ya está registrado" : "Error al registrar usuario";
                 
             request.getSession().setAttribute("error", mensaje);
-            response.sendRedirect(request.getContextPath() + "/views/Intranet/Intranet.jsp");
-            
-        } catch (Exception e) {
-            System.out.println("Error inesperado: " + e.getMessage());
-            e.printStackTrace();
-            request.getSession().setAttribute("error", "Error inesperado al registrar usuario");
             response.sendRedirect(request.getContextPath() + "/views/Intranet/Intranet.jsp");
         }
     }
@@ -87,7 +72,6 @@ public class RegistroServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        // Redirigir GET requests al formulario de registro
         response.sendRedirect(request.getContextPath() + "/views/Intranet/Intranet.jsp");
     }
 }

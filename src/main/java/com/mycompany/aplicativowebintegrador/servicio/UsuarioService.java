@@ -49,7 +49,13 @@ public class UsuarioService {
     }
 
     public void actualizarUsuario(Usuario usuario) throws Exception {
-        validador.validarRegistro(usuario);
+        validador.validarActualizacion(usuario);
+        
+        if (usuario.getContraseña() != null && !usuario.getContraseña().isEmpty()) {
+            String hashedPassword = BCrypt.hashpw(usuario.getContraseña(), BCrypt.gensalt());
+            usuario.setContraseña(hashedPassword);
+        }
+        
         usuarioDAO.actualizar(usuario);
         logger.info("Usuario actualizado: {}", usuario.getEmail());
     }

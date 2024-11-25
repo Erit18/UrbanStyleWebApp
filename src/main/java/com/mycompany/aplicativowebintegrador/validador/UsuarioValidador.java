@@ -14,6 +14,16 @@ public class UsuarioValidador {
         validarRol(usuario.getRol());
     }
 
+    public void validarActualizacion(Usuario usuario) {
+        validarNombre(usuario.getNombre());
+        validarEmail(usuario.getEmail());
+        validarRol(usuario.getRol());
+        
+        if (usuario.getContraseña() != null && !usuario.getContraseña().isEmpty()) {
+            validarPassword(usuario.getContraseña());
+        }
+    }
+
     private void validarNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre es requerido");

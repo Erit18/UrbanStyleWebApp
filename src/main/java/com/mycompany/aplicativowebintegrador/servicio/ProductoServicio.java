@@ -1,6 +1,7 @@
 package com.mycompany.aplicativowebintegrador.servicio;
 
 import com.mycompany.aplicativowebintegrador.dao.ProductoDAO;
+import com.mycompany.aplicativowebintegrador.dao.IProductoDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Producto;
 import com.mycompany.aplicativowebintegrador.validador.ProductoValidador;
 import java.sql.SQLException;
@@ -11,11 +12,16 @@ import org.slf4j.LoggerFactory;
 public class ProductoServicio {
     private static final Logger logger = LoggerFactory.getLogger(ProductoServicio.class);
     
-    private final ProductoDAO productoDAO;
+    private final IProductoDAO productoDAO;
     private final ProductoValidador validador;
 
     public ProductoServicio() {
         this.productoDAO = new ProductoDAO();
+        this.validador = new ProductoValidador();
+    }
+
+    public ProductoServicio(IProductoDAO productoDAO) {
+        this.productoDAO = productoDAO;
         this.validador = new ProductoValidador();
     }
 

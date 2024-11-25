@@ -1,5 +1,6 @@
 package com.mycompany.aplicativowebintegrador.servlet;
 
+import com.mycompany.aplicativowebintegrador.dao.IProveedorDAO;
 import com.mycompany.aplicativowebintegrador.dao.ProveedorDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Proveedor;
 import com.google.gson.Gson;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 
 @WebServlet("/api/proveedores/*")
 public class ProveedorServlet extends HttpServlet {
-    private ProveedorDAO proveedorDAO;
+    private IProveedorDAO proveedorDAO;
     private Gson gson;
 
     @Override

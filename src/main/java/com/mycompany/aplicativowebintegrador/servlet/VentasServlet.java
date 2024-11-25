@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycompany.aplicativowebintegrador.modelo.Venta;
 import com.mycompany.aplicativowebintegrador.servicio.VentaService;
+import com.mycompany.aplicativowebintegrador.dao.VentaDAO;
+import com.mycompany.aplicativowebintegrador.dao.IVentaDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -27,7 +29,8 @@ public class VentasServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        this.ventaService = new VentaService();
+        IVentaDAO ventaDAO = new VentaDAO();
+        this.ventaService = new VentaService(ventaDAO);
         this.gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd")
             .create();

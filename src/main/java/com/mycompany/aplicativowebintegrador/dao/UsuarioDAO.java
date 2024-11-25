@@ -1,8 +1,8 @@
 package com.mycompany.aplicativowebintegrador.dao;
 
+import com.mycompany.aplicativowebintegrador.dao.IUsuarioDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Usuario;
 import com.mycompany.aplicativowebintegrador.util.DatabaseConnection;
-import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,9 +10,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsuarioDAO {
+public class UsuarioDAO implements IUsuarioDAO {
     private static final Logger logger = LoggerFactory.getLogger(UsuarioDAO.class);
 
+    @Override
     public Usuario buscarPorEmail(String email) throws SQLException {
         String sql = "SELECT * FROM Usuarios WHERE email = ?";
         
@@ -36,6 +37,7 @@ public class UsuarioDAO {
         return null;
     }
 
+    @Override
     public boolean existeEmail(String email) throws SQLException {
         String sql = "SELECT COUNT(*) FROM Usuarios WHERE email = ?";
         
@@ -53,6 +55,7 @@ public class UsuarioDAO {
         return false;
     }
 
+    @Override
     public void registrarUsuario(Usuario usuario) throws SQLException {
         String sql = "INSERT INTO Usuarios (nombre, email, contraseña, rol) VALUES (?, ?, ?, ?)";
         
@@ -68,6 +71,7 @@ public class UsuarioDAO {
         }
     }
 
+    @Override
     public List<Usuario> obtenerTodos() throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
         String sql = "SELECT * FROM Usuarios";
@@ -89,6 +93,7 @@ public class UsuarioDAO {
         return usuarios;
     }
 
+    @Override
     public Usuario obtenerPorId(int id) throws SQLException {
         String sql = "SELECT * FROM Usuarios WHERE id_usuario = ?";
         
@@ -112,6 +117,7 @@ public class UsuarioDAO {
         return null;
     }
 
+    @Override
     public void actualizar(Usuario usuario) throws SQLException {
         String sql = usuario.getContraseña() != null && !usuario.getContraseña().isEmpty() ?
             "UPDATE Usuarios SET nombre = ?, email = ?, contraseña = ?, rol = ? WHERE id_usuario = ?" :
@@ -136,6 +142,7 @@ public class UsuarioDAO {
         }
     }
 
+    @Override
     public void eliminar(int id) throws SQLException {
         String sql = "DELETE FROM Usuarios WHERE id_usuario = ?";
         

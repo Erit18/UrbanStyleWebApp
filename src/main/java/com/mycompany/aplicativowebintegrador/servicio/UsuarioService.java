@@ -1,7 +1,8 @@
 package com.mycompany.aplicativowebintegrador.servicio;
 
-import com.mycompany.aplicativowebintegrador.modelo.Usuario;
+import com.mycompany.aplicativowebintegrador.dao.IUsuarioDAO;
 import com.mycompany.aplicativowebintegrador.dao.UsuarioDAO;
+import com.mycompany.aplicativowebintegrador.modelo.Usuario;
 import com.mycompany.aplicativowebintegrador.validador.UsuarioValidador;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
@@ -10,11 +11,16 @@ import java.util.List;
 
 public class UsuarioService {
     private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
-    private final UsuarioDAO usuarioDAO;
+    private final IUsuarioDAO usuarioDAO;
     private final UsuarioValidador validador;
 
     public UsuarioService() {
         this.usuarioDAO = new UsuarioDAO();
+        this.validador = new UsuarioValidador();
+    }
+
+    public UsuarioService(IUsuarioDAO usuarioDAO) {
+        this.usuarioDAO = usuarioDAO;
         this.validador = new UsuarioValidador();
     }
 

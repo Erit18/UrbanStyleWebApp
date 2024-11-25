@@ -2,14 +2,16 @@ package com.mycompany.aplicativowebintegrador.dao;
 
 import com.mycompany.aplicativowebintegrador.modelo.Producto;
 import com.mycompany.aplicativowebintegrador.util.DatabaseConnection;
+import com.mycompany.aplicativowebintegrador.dao.IProductoDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
 
-public class ProductoDAO {
+public class ProductoDAO implements IProductoDAO {
     
+    @Override
     public List<Producto> obtenerTodos() throws SQLException {
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT * FROM Ropa ORDER BY fecha_agregado ASC";
@@ -38,63 +40,7 @@ public class ProductoDAO {
         }
     }
     
-    public void insertar(Producto producto) throws SQLException {
-        String sql = "INSERT INTO Ropa (nombre, descripcion, precio, categoria, stock, fecha_caducidad, descuento, id_proveedor, fecha_agregado) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, producto.getNombre());
-            pstmt.setString(2, producto.getDescripcion());
-            pstmt.setBigDecimal(3, producto.getPrecio());
-            pstmt.setString(4, producto.getCategoria());
-            pstmt.setInt(5, producto.getStock());
-            
-            if (producto.getFecha_caducidad() != null) {
-                pstmt.setDate(6, new java.sql.Date(producto.getFecha_caducidad().getTime()));
-            } else {
-                pstmt.setNull(6, Types.DATE);
-            }
-            
-            pstmt.setBigDecimal(7, producto.getDescuento());
-            pstmt.setInt(8, producto.getId_proveedor());
-            
-            pstmt.executeUpdate();
-        }
-    }
-    
-    public void actualizar(Producto producto) throws SQLException {
-        String sql = "UPDATE Ropa SET nombre = ?, descripcion = ?, precio = ?, categoria = ?, stock = ?, fecha_caducidad = ?, descuento = ?, id_proveedor = ? WHERE id_ropa = ?";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, producto.getNombre());
-            pstmt.setString(2, producto.getDescripcion());
-            pstmt.setBigDecimal(3, producto.getPrecio());
-            pstmt.setString(4, producto.getCategoria());
-            pstmt.setInt(5, producto.getStock());
-            pstmt.setDate(6, new java.sql.Date(producto.getFecha_caducidad().getTime()));
-            pstmt.setBigDecimal(7, producto.getDescuento());
-            pstmt.setInt(8, producto.getId_proveedor());
-            pstmt.setInt(9, producto.getId_ropa());
-            
-            pstmt.executeUpdate();
-        }
-    }
-    
-    public void eliminar(int id) throws SQLException {
-        String sql = "DELETE FROM Ropa WHERE id_ropa = ?";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
-        }
-    }
-
+    @Override
     public Producto obtenerPorId(int id) throws SQLException {
         String sql = "SELECT * FROM Ropa WHERE id_ropa = ?";
         
@@ -121,7 +67,99 @@ public class ProductoDAO {
         }
         return null; // Retorna null si no se encuentra el producto
     }
+    
+    @Override
+    public void insertar(Producto producto) throws SQLException {
+        String sql = "INSERT INTO Ropa (nombre, descripcion, precio, categoria, stock, fecha_caducidad, descuento, id_proveedor, fecha_agregado) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, producto.getNombre());
+            pstmt.setString(2, producto.getDescripcion());
+            pstmt.setBigDecimal(3, producto.getPrecio());
+            pstmt.setString(4, producto.getCategoria());
+            pstmt.setInt(5, producto.getStock());
+            
+            if (producto.getFecha_caducidad() != null) {
+                pstmt.setDate(6, new java.sql.Date(producto.getFecha_caducidad().getTime()));
+            } else {
+                pstmt.setNull(6, Types.DATE);
+            }
+            
+            pstmt.setBigDecimal(7, producto.getDescuento());
+            pstmt.setInt(8, producto.getId_proveedor());
+            
+            pstmt.executeUpdate();
+        }
+    }
+    
+    @Override
+    public void actualizar(Producto producto) throws SQLException {
+        String sql = "UPDATE Ropa SET nombre = ?, descripcion = ?, precio = ?, categoria = ?, stock = ?, fecha_caducidad = ?, descuento = ?, id_proveedor = ? WHERE id_ropa = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, producto.getNombre());
+            pstmt.setString(2, producto.getDescripcion());
+            pstmt.setBigDecimal(3, producto.getPrecio());
+            pstmt.setString(4, producto.getCategoria());
+            pstmt.setInt(5, producto.getStock());
+            pstmt.setDate(6, new java.sql.Date(producto.getFecha_caducidad().getTime()));
+            pstmt.setBigDecimal(7, producto.getDescuento());
+            pstmt.setInt(8, producto.getId_proveedor());
+            pstmt.setInt(9, producto.getId_ropa());
+            
+            pstmt.executeUpdate();
+        }
+    }
+    
+    @Override
+    public void eliminar(int id) throws SQLException {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            conn.setAutoCommit(false); // Iniciamos transacción
+            
+            // Primero eliminamos las alertas asociadas
+            String deleteAlertas = "DELETE FROM alertas WHERE id_ropa = ?";
+            try (PreparedStatement pstmtAlertas = conn.prepareStatement(deleteAlertas)) {
+                pstmtAlertas.setInt(1, id);
+                pstmtAlertas.executeUpdate();
+            }
+            
+            // Luego eliminamos el producto
+            String deleteProducto = "DELETE FROM ropa WHERE id_ropa = ?";
+            try (PreparedStatement pstmtProducto = conn.prepareStatement(deleteProducto)) {
+                pstmtProducto.setInt(1, id);
+                pstmtProducto.executeUpdate();
+            }
+            
+            conn.commit(); // Confirmamos la transacción
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Si hay error, revertimos los cambios
+                } catch (SQLException ex) {
+                    throw new SQLException("Error al hacer rollback: " + ex.getMessage());
+                }
+            }
+            throw new SQLException("Error al eliminar el producto: " + e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true); // Restauramos autoCommit
+                    conn.close();
+                } catch (SQLException e) {
+                    // Log error
+                }
+            }
+        }
+    }
 
+    @Override
     public List<Producto> obtenerProductosDestacados(int limite) throws SQLException {
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT * FROM Ropa ORDER BY fecha_agregado ASC LIMIT ?";
@@ -152,6 +190,7 @@ public class ProductoDAO {
         }
     }
 
+    @Override
     public String obtenerRutaImagen(Producto producto) {
         String baseImagePath = "views/Intranet/imagenes/";
         String defaultImage = baseImagePath + "default-product.jpg";

@@ -3,6 +3,7 @@ package com.mycompany.aplicativowebintegrador.servlet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycompany.aplicativowebintegrador.dao.ProductoDAO;
+import com.mycompany.aplicativowebintegrador.dao.IProductoDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,10 +14,15 @@ import java.sql.SQLException;
 
 @WebServlet("/api/productos-lista")
 public class ProductoListaServlet extends HttpServlet {
-    private final ProductoDAO productoDAO = new ProductoDAO();
-    private final Gson gson = new GsonBuilder()
-        .setDateFormat("yyyy-MM-dd HH:mm:ss")
-        .create();
+    private final IProductoDAO productoDAO;
+    private final Gson gson;
+
+    public ProductoListaServlet() {
+        this.productoDAO = new ProductoDAO();
+        this.gson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+            .create();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 

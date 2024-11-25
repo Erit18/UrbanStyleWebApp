@@ -1,7 +1,6 @@
 package com.mycompany.aplicativowebintegrador.dao;
 
 import com.mycompany.aplicativowebintegrador.modelo.Venta;
-import com.mycompany.aplicativowebintegrador.modelo.Usuario;
 import com.mycompany.aplicativowebintegrador.util.DatabaseConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
-public class VentaDAO {
+public class VentaDAO implements IVentaDAO {
     private static final Logger logger = LoggerFactory.getLogger(VentaDAO.class);
 
+    @Override
     public List<Venta> buscarVentas(Date fechaInicio, Date fechaFin, String categoria) throws SQLException {
         List<Venta> ventas = new ArrayList<>();
         StringBuilder sql = new StringBuilder("""

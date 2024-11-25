@@ -2,13 +2,15 @@ package com.mycompany.aplicativowebintegrador.dao;
 
 import com.mycompany.aplicativowebintegrador.modelo.Proveedor;
 import com.mycompany.aplicativowebintegrador.util.DatabaseConnection;
+import com.mycompany.aplicativowebintegrador.dao.IProveedorDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProveedorDAO {
+public class ProveedorDAO implements IProveedorDAO {
     
+    @Override
     public List<Proveedor> obtenerTodos() throws SQLException {
         List<Proveedor> proveedores = new ArrayList<>();
         String sql = "SELECT * FROM Proveedores";
@@ -44,6 +46,7 @@ public class ProveedorDAO {
         return proveedores;
     }
     
+    @Override
     public Proveedor obtenerPorId(int id) throws SQLException {
         String sql = "SELECT * FROM Proveedores WHERE id_proveedor = ?";
         
@@ -67,6 +70,7 @@ public class ProveedorDAO {
         return null;
     }
     
+    @Override
     public void insertar(Proveedor proveedor) throws SQLException {
         String sql = "INSERT INTO Proveedores (nombre, contacto, telefono, email, direccion) VALUES (?, ?, ?, ?, ?)";
         
@@ -83,6 +87,7 @@ public class ProveedorDAO {
         }
     }
     
+    @Override
     public void actualizar(Proveedor proveedor) throws SQLException {
         String sql = "UPDATE Proveedores SET nombre = ?, contacto = ?, telefono = ?, email = ?, direccion = ? WHERE id_proveedor = ?";
         
@@ -100,6 +105,7 @@ public class ProveedorDAO {
         }
     }
     
+    @Override
     public void eliminar(int id) throws SQLException {
         String sql = "DELETE FROM Proveedores WHERE id_proveedor = ?";
         

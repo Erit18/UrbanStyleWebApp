@@ -1,5 +1,6 @@
 package com.mycompany.aplicativowebintegrador.servicio;
 
+import com.mycompany.aplicativowebintegrador.dao.IVentaDAO;
 import com.mycompany.aplicativowebintegrador.dao.VentaDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Venta;
 import org.slf4j.Logger;
@@ -10,10 +11,14 @@ import java.util.List;
 
 public class VentaService {
     private static final Logger logger = LoggerFactory.getLogger(VentaService.class);
-    private final VentaDAO ventaDAO;
+    private final IVentaDAO ventaDAO;
 
     public VentaService() {
         this.ventaDAO = new VentaDAO();
+    }
+
+    public VentaService(IVentaDAO ventaDAO) {
+        this.ventaDAO = ventaDAO;
     }
 
     public List<Venta> buscarVentas(Date fechaInicio, Date fechaFin, String categoria) throws Exception {

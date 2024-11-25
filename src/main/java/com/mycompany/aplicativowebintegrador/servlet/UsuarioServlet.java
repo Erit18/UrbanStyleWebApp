@@ -1,6 +1,8 @@
 package com.mycompany.aplicativowebintegrador.servlet;
 
 import com.google.gson.Gson;
+import com.mycompany.aplicativowebintegrador.dao.IUsuarioDAO;
+import com.mycompany.aplicativowebintegrador.dao.UsuarioDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Usuario;
 import com.mycompany.aplicativowebintegrador.servicio.UsuarioService;
 import com.mycompany.aplicativowebintegrador.util.ResponseBuilder;
@@ -24,7 +26,8 @@ public class UsuarioServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        this.usuarioService = new UsuarioService();
+        IUsuarioDAO usuarioDAO = new UsuarioDAO();
+        this.usuarioService = new UsuarioService(usuarioDAO);
         this.responseBuilder = new ResponseBuilder();
         this.gson = new Gson();
     }

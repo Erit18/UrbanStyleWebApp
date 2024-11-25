@@ -4,6 +4,8 @@ import com.mycompany.aplicativowebintegrador.modelo.Producto;
 import com.mycompany.aplicativowebintegrador.servicio.ProductoServicio;
 import com.mycompany.aplicativowebintegrador.validador.ProductoValidador;
 import com.mycompany.aplicativowebintegrador.util.ResponseBuilder;
+import com.mycompany.aplicativowebintegrador.dao.ProductoDAO;
+import com.mycompany.aplicativowebintegrador.dao.IProductoDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,7 +28,8 @@ public class ProductoServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        this.productoServicio = new ProductoServicio();
+        IProductoDAO productoDAO = new ProductoDAO();
+        this.productoServicio = new ProductoServicio(productoDAO);
         this.validador = new ProductoValidador();
         this.responseBuilder = new ResponseBuilder();
     }

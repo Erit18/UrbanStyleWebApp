@@ -10,6 +10,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.BaseColor;
+import com.mycompany.aplicativowebintegrador.dao.IProductoDAO;
+import com.mycompany.aplicativowebintegrador.dao.IProveedorDAO;
 import com.mycompany.aplicativowebintegrador.dao.ProductoDAO;
 import com.mycompany.aplicativowebintegrador.dao.ProveedorDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Producto;
@@ -31,8 +33,14 @@ import java.util.Map;
 public class ExportProductosServlet extends HttpServlet {
     
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    private final ProveedorDAO proveedorDAO = new ProveedorDAO();
+    private final IProveedorDAO proveedorDAO;
+    private final IProductoDAO productoDAO;
     private Map<Integer, String> proveedoresCache;
+    
+    public ExportProductosServlet() {
+        this.proveedorDAO = new ProveedorDAO();
+        this.productoDAO = new ProductoDAO();
+    }
     
     private void cargarProveedores() throws SQLException {
         proveedoresCache = new HashMap<>();

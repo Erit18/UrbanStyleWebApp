@@ -1,4 +1,4 @@
--- Creación de la base de datosssssssssss
+-- Creación de la base de datosssssssssssaaaaaaa
 CREATE DATABASE UrbanStyleDB;
 USE UrbanStyleDB;
 

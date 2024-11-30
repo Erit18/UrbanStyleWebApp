@@ -44,38 +44,60 @@ function vaciarCarrito() {
     mostrarMensaje('Carrito vaciado'); // Mensaje visual
 }
 
+function actualizarTotales() {
+    let carrito = JSON.parse(localStorage.getItem('cart')) || [];
+    let subtotal = 0;
+    
+    carrito.forEach(producto => {
+        subtotal += producto.price * producto.quantity;
+    });
+
+    // Calcular descuento y total
+    const descuento = subtotal * 0.20;
+    const envio = 0;
+    const total = subtotal - descuento + envio;
+
+    // Formatear números a 2 decimales
+    const subtotalFormateado = subtotal.toFixed(2);
+    const descuentoFormateado = descuento.toFixed(2);
+    const envioFormateado = envio.toFixed(2);
+    const totalFormateado = total.toFixed(2);
+
+    // Actualizar el DOM con los valores formateados
+    document.querySelector('.resumen-detalles p:nth-child(1) span').textContent = `S/${subtotalFormateado}`;
+    document.querySelector('.resumen-detalles p:nth-child(2) span').textContent = `-S/${descuentoFormateado}`;
+    document.querySelector('.resumen-detalles p:nth-child(3) span').textContent = `S/${envioFormateado}`;
+    document.querySelector('h3 span').textContent = `S/${totalFormateado}`;
+}
+
 function renderCarrito() {
     let carrito = JSON.parse(localStorage.getItem('cart')) || [];
     const contenedorCarrito = document.querySelector('.productos');
-    if (!contenedorCarrito) return; // Agregar esta verificación
+    if (!contenedorCarrito) return;
 
     contenedorCarrito.innerHTML = '';
-    let subtotal = 0;
 
     if (carrito.length === 0) {
         contenedorCarrito.innerHTML = '<p>El carrito está vacío.</p>';
-        const finalizarBtn = document.getElementById('btnFinalizarCompra');
-        if (finalizarBtn) {
-            finalizarBtn.disabled = true;
-        }
-    } else {
-        carrito.forEach(producto => {
-            const productoHTML = `
-                <div class="producto">
-                    <h3>${producto.name}</h3>
-                    <p>Talla: ${producto.talla}</p>
-                    <p>Categoría: ${producto.color}</p>
-                    <p>Precio: S/${producto.price}</p>
-                    <p>Cantidad: ${producto.quantity}</p>
-                </div>
-            `;
-            contenedorCarrito.innerHTML += productoHTML;
-            subtotal += producto.price * producto.quantity;
-        });
+        actualizarTotales(); // Actualizar totales incluso si está vacío
+        return;
     }
 
-    document.querySelector('.resumen-detalles span').textContent = `S/${subtotal}`;
-    document.querySelector('.resumen h3 span').textContent = `S/${subtotal}`;
+    carrito.forEach(producto => {
+        const precioTotal = (producto.price * producto.quantity).toFixed(2); // Formatear precio total por producto
+        contenedorCarrito.innerHTML += `
+            <div class="producto">
+                <h3>${producto.name}</h3>
+                <p>Talla: ${producto.talla}</p>
+                <p>Categoría: ${producto.color || 'N/A'}</p>
+                <p>Precio: S/${producto.price.toFixed(2)}</p>
+                <p>Cantidad: ${producto.quantity}</p>
+                <p>Total: S/${precioTotal}</p>
+            </div>
+        `;
+    });
+
+    actualizarTotales();
 }
 
 // Agregar función para finalizar compra

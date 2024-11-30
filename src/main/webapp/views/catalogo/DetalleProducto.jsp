@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.mycompany.aplicativowebintegrador.modelo.Usuario" %>
 <%@ page import="com.mycompany.aplicativowebintegrador.dao.ProductoDAO" %>
 <%@ page import="com.mycompany.aplicativowebintegrador.modelo.Producto" %>
 <%@ page import="java.math.BigDecimal" %>
@@ -140,11 +141,130 @@
             align-items: center;
             gap: 10px;
         }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+        }
+
+        .dropdown:hover > .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-submenu {
+            position: absolute;
+            left: 100%;
+            top: 0;
+        }
+
+        .dropdown-item.dropdown-toggle {
+            position: relative;
+        }
+
+        .dropdown-item.dropdown-toggle::after {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .nav-item.dropdown:hover > .dropdown-menu,
+        .dropdown-item:hover > .dropdown-submenu {
+            display: block;
+        }
+
+        /* Ajustes específicos para submenús */
+        .dropdown-submenu {
+            top: 0;
+            left: 100%;
+            margin-top: -1px;
+        }
+
+        /* Estilos para el hover */
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Asegurar que los submenús permanezcan visibles durante el hover */
+        .dropdown-menu li:hover > .dropdown-submenu {
+            display: block;
+        }
     </style>
     <title>Detalle del Producto</title>
 </head>
 <body>
-    <div id="header-placeholder"></div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/index.jsp">
+                <img src="${pageContext.request.contextPath}/views/Intranet/imagenes/Logo.jpeg" alt="Logo" class="logo">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="#" id="catalogoDropdown">
+                            CATÁLOGO ▼
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="nav-item dropdown">
+                                <a class="dropdown-item dropdown-toggle" href="#">
+                                    Hombre
+                                </a>
+                                <ul class="dropdown-menu dropdown-submenu">
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolera.html">Poleras</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolos.html">Polos</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPantalones.html">Pantalones</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="dropdown-item dropdown-toggle" href="#">
+                                    Mujer
+                                </a>
+                                <ul class="dropdown-menu dropdown-submenu">
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolerasM.html">Poleras</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolosM.html">Polos</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPantalonesM.html">Pantalones</a></li>
+                                </ul>
+                            </li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatAccesorios.html">Accesorios</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/nosotros/Nosotros.html">NOSOTROS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/SCliente/Servicio-Cliente.html">SERVICIO AL CLIENTE</a>
+                    </li>
+                </ul>
+                
+                <form class="d-flex mx-auto" style="width: 35%;">
+                    <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
+                    <button class="btn" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+
+                <ul class="navbar-nav ms-auto">
+                    <% if (session.getAttribute("usuario") != null) { %>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="userDropdown">
+                                Bienvenido, <%= ((Usuario)session.getAttribute("usuario")).getNombre() %>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Cerrar sesión</a>
+                            </div>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/views/Intranet/Intranet.jsp">Log In</a>
+                        </li>
+                    <% } %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/views/catalogo/CarritoCompras.jsp">Carrito</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     
     <div class="envio-bar d-flex justify-content-center align-items-center">
         <span class="mx-2">

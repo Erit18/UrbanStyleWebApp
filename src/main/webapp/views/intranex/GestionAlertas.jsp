@@ -46,8 +46,8 @@
             </a>
             <a href="${pageContext.request.contextPath}/views/intranex/GestionAlertas.jsp" class="active">
                 <i class="bi bi-exclamation-triangle"></i> Alertas de Inventario
-            </a>
-            <a href="#"><i class="bi bi-bar-chart-line"></i> Reportes de Ventas</a>
+            <a href="${pageContext.request.contextPath}/views/intranex/ReporteVentas.jsp">
+                <i class="bi bi-bar-chart-line"></i> Reportes de Ventas
         </nav>
         <div class="sidebar-footer">
             <div class="user-info">

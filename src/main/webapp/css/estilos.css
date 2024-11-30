@@ -5,19 +5,32 @@
     box-sizing: border-box;
 }
 
+/* Mejoras generales */
+:root {
+    --primary-color: #000000;
+    --secondary-color: #1a1a1a;
+    --accent-color: #333333;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --text-light: #ffffff;
+    --text-gray: #888888;
+    --sidebar-width: 250px;
+}
+
 /* Sidebar */
 .sidebar {
-    width: 250px;
+    width: var(--sidebar-width);
     height: 100vh;
     position: fixed;
     left: 0;
     top: 0;
-    background-color: #040404;
+    background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
     color: #faf9f9;
     padding: 20px;
     z-index: 1000;
     display: flex;
     flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.3);
 }
 
 /* Estilos para el header del sidebar */
@@ -51,17 +64,17 @@
 .menu a {
     display: flex;
     align-items: center;
-    padding: 12px 15px;
+    padding: 12px 20px;
     color: #fff;
     text-decoration: none;
-    border-radius: 5px;
-    margin-bottom: 5px;
+    border-radius: 8px;
+    margin: 5px 0;
     transition: all 0.3s ease;
 }
 
 .menu a:hover {
-    background-color: #333;
-    color: #fff;
+    background-color: var(--accent-color);
+    transform: translateX(5px);
 }
 
 .menu a i {
@@ -88,7 +101,7 @@
 }
 
 .btn-logout:hover {
-    background-color: #dc3545;
+    background-color: var(--danger-color);
     color: #fff;
 }
 
@@ -98,14 +111,15 @@
 
 /* Estilo para el enlace activo */
 .menu a.active {
-    background-color: #333;
-    color: #fff;
+    background-color: var(--accent-color);
+    color: var(--text-light);
 }
 
 /* Contenedor principal */
 .main-content {
-    margin-left: 250px;
-    padding: 20px;
+    background-color: #f8f9fa;
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
     min-height: 100vh;
 }
 
@@ -125,14 +139,20 @@
 .dashboard-cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 1.5rem;
 }
 
 .card {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+}
+
+.card:hover {
+    transform: translateY(-5px);
 }
 
 .card-title {
@@ -189,4 +209,99 @@ h1 {
 canvas {
     width: 100% !important;
     height: 100% !important;
+}
+
+/* Mejoras para las tablas */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.table thead th {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    font-weight: 500;
+    border: none;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(51, 51, 51, 0.05);
+}
+
+/* Mejoras para los botones */
+.btn {
+    border-radius: 6px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+/* Mejoras para los modales */
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+}
+
+.modal-header {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--accent-color);
+}
+
+/* Mejoras para los formularios */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid var(--accent-color);
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+}
+
+.form-control:focus {
+    border-color: var(--text-light);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.alert-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.alert-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* Personalización adicional */
+.user-role {
+    color: var(--text-gray);
+}
+
+.btn-logout:hover {
+    background-color: var(--danger-color);
 }

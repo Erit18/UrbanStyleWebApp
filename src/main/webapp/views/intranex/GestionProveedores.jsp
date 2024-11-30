@@ -44,7 +44,7 @@
             <a href="${pageContext.request.contextPath}/views/intranex/GestionAlertas.jsp">
                 <i class="bi bi-exclamation-triangle"></i> Alertas de Inventario
             </a>
-            <a href="#">
+            <a href="${pageContext.request.contextPath}/views/intranex/ReporteVentas.jsp">
                 <i class="bi bi-bar-chart-line"></i> Reportes de Ventas
             </a>
         </nav>

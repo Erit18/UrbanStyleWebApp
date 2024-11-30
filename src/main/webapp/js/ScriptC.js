@@ -1,7 +1,14 @@
 function añadirAlCarrito(nombre, precio, talla, color) {
     // Verificar que se haya seleccionado una talla
     if (!talla) {
-        return; // La función se detiene si no hay talla seleccionada
+        Swal.fire({
+            title: '¡Atención!',
+            text: 'Por favor, selecciona una talla',
+            icon: 'warning',
+            showConfirmButton: false,
+            timer: 1500
+        });
+        return;
     }
 
     let carrito = JSON.parse(localStorage.getItem('cart')) || [];
@@ -23,7 +30,29 @@ function añadirAlCarrito(nombre, precio, talla, color) {
     }
 
     localStorage.setItem('cart', JSON.stringify(carrito));
-    mostrarMensaje(`${nombre} (Talla: ${talla}) añadido al carrito`);
+
+    // Mostrar notificación animada
+    Swal.fire({
+        title: '¡Añadido al carrito!',
+        text: `${nombre} (Talla: ${talla})`,
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+        position: 'top-end',
+        toast: true,
+        background: '#1a1a1a',
+        color: '#fff',
+        iconColor: '#28a745',
+        customClass: {
+            popup: 'animated slideInRight'
+        },
+        showClass: {
+            popup: 'animate__animated animate__fadeInRight'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutRight'
+        }
+    });
 }
 
 function mostrarMensaje(mensaje) {
@@ -185,3 +214,13 @@ function confirmarPago() {
     // Redirigir a la página principal o de confirmación
     window.location.href = '../catalogo/index.html';
 }
+
+// Asegurarse de que los estilos de animate.css estén disponibles
+document.addEventListener('DOMContentLoaded', function() {
+    if (!document.querySelector('link[href*="animate.css"]')) {
+        const animateCss = document.createElement('link');
+        animateCss.rel = 'stylesheet';
+        animateCss.href = 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
+        document.head.appendChild(animateCss);
+    }
+});

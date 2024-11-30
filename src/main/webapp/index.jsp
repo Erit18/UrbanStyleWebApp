@@ -157,30 +157,28 @@
     <div class="container-fluid best-sellers">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-left bold-text">PRODUCTOS DESTACADOS</h2>
-            <h2 class="text-right bold-text" style="font-size: 1.25rem;">
+            <h2 class="text-right bold-text">
                 <a href="${pageContext.request.contextPath}/views/catalogo/TodosProductos.jsp" 
                    style="text-decoration: none; color: black;">Ver Todo</a>
             </h2>
         </div>
-        <div class="row product-container">
+        <div class="product-container">
             <% 
                 ProductoDAO productoDAO = new ProductoDAO();
-                List<Producto> productos = productoDAO.obtenerProductosDestacados(3);
+                List<Producto> productos = productoDAO.obtenerProductosDestacados(5);
                 for (Producto producto : productos) {
                     String imagePath = productoDAO.obtenerRutaImagen(producto);
             %>
-            <div class="product-wrapper">
-                <div class="product-item">
-                    <a href="views/catalogo/DetalleProducto.jsp?id=<%= producto.getId_ropa() %>" 
-                       style="text-decoration: none; color: #000;">
-                        <img src="${pageContext.request.contextPath}/<%= imagePath %>" 
-                             class="img-fluid" 
-                             alt="<%= producto.getNombre() %>"
-                             onerror="this.src='${pageContext.request.contextPath}/views/Intranet/imagenes/default-product.jpg'">
-                        <h5><%= producto.getNombre() %></h5>
-                        <h6>S/<%= String.format("%.2f", producto.getPrecio()) %></h6>
-                    </a>
-                </div>
+            <div class="product-item">
+                <a href="views/catalogo/DetalleProducto.jsp?id=<%= producto.getId_ropa() %>" 
+                   style="text-decoration: none; color: #000;">
+                    <img src="${pageContext.request.contextPath}/<%= imagePath %>" 
+                         class="img-fluid" 
+                         alt="<%= producto.getNombre() %>"
+                         onerror="this.src='${pageContext.request.contextPath}/views/Intranet/imagenes/default-product.jpg'">
+                    <h5><%= producto.getNombre() %></h5>
+                    <h6>S/<%= String.format("%.2f", producto.getPrecio()) %></h6>
+                </a>
             </div>
             <% } %>
         </div>

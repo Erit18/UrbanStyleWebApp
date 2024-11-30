@@ -14,22 +14,56 @@ body{
     flex-direction: column;
 }
 /* Evita la superposición y asegura el correcto posicionamiento */
-.nav-item .dropdown-menu .dropdown-menu {
-  display: none; /* Por defecto oculto */
-  position: absolute; /* Asegura que se posicionen relativos al menú principal */
-  left: 100%; /* Despliega los submenús a la derecha del menú principal */
-  top: 0; /* Alinea el submenú en la parte superior */
-  z-index: 1; /* Asegura que no se superpongan los submenús */
+.nav-item .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    z-index: 1000;
 }
 
-/* Muestra el submenú cuando se hace hover en "Hombre" o "Mujer" */
-.nav-item .dropdown-menu .nav-item:hover > .dropdown-menu {
-  display: block; /* Muestra el submenú */
+/* Solo mostrar el menú cuando se hace hover en el elemento padre */
+.nav-item:hover > .dropdown-menu {
+    display: block;
 }
 
-/* Asegura que los menús "Hombre" y "Mujer" no se tapan entre sí */
-.nav-item .dropdown-menu .nav-item {
-  position: relative;
+/* Ocultar los submenús por defecto */
+.dropdown-menu .dropdown-menu {
+    display: none;
+    left: 100%;
+    top: 0;
+}
+
+/* Mostrar submenús solo cuando se hace hover en su elemento padre */
+.dropdown-menu .nav-item:hover > .dropdown-menu {
+    display: block;
+}
+
+/* Asegurar que el menú se oculte cuando pierde el foco */
+.dropdown-menu:not(:hover) {
+    display: none;
+}
+
+/* Ajustar el z-index para evitar superposiciones */
+.navbar {
+    z-index: 1000;
+}
+
+.dropdown-menu {
+    z-index: 1001;
+}
+
+/* Añadir transición suave */
+.dropdown-menu {
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.nav-item:hover > .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
 }
 
 .card {

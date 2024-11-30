@@ -164,30 +164,32 @@
           </div>
     </main>
  <footer class="footer-distributed">
+    <div class="footer-content">
         <div class="footer-left">
             <img src="imagenes/Logo.jpeg" alt="Logo" class="logo">
-            <h3>Urban<span>Style</span></h3>
             <p class="footer-company-name">Copyright © 2024 <strong>UrbanStyle</strong> Reservados todos los derechos</p>
         </div>
+        
         <div class="footer-center">
-            <div>
+            <div class="footer-info">
                 <i class="fa fa-map-marker"></i>
-                <p><span>Ubicación</span> Los Olivos, UTP 2024</p>
+                <p>Los Olivos, UTP 2024</p>
             </div>
-            <div>
+            <div class="footer-info">
                 <i class="fa fa-phone"></i>
                 <p>+51 957 789 067</p>
             </div>
-            <div>
+            <div class="footer-info">
                 <i class="fa fa-envelope"></i>
-                <p><a href="mailto:sagar00001.co@gmail.com">UrbanStyle@empresa.com</a></p>
+                <p><a href="mailto:UrbanStyle@empresa.com">UrbanStyle@empresa.com</a></p>
             </div>
         </div>
+        
         <div class="footer-right">
-            <p class="footer-company-about">
+            <div class="footer-company-about">
                 <span>Sobre la empresa</span>
-                <strong>UrbanStyle</strong> Descubre las ropas en tendencia de este año 2024
-            </p>
+                <p>UrbanStyle - Descubre las ropas en tendencia de este año 2024</p>
+            </div>
             <div class="footer-icons">
                 <a href="#"><i class="fa fa-facebook"></i></a>
                 <a href="#"><i class="fa fa-instagram"></i></a>
@@ -196,7 +198,8 @@
                 <a href="#"><i class="fa fa-youtube"></i></a>
             </div>
         </div>
-    </footer>
+    </div>
+</footer>
         
 
         <script src="../../js/script.js"></script>

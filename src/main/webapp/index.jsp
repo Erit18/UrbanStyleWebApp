@@ -163,33 +163,26 @@
             </h2>
         </div>
         <div class="row product-container">
-            <%
+            <% 
                 ProductoDAO productoDAO = new ProductoDAO();
                 List<Producto> productos = productoDAO.obtenerProductosDestacados(3);
                 for (Producto producto : productos) {
                     String imagePath = productoDAO.obtenerRutaImagen(producto);
             %>
-            <div class="col-md-4 product-wrapper">
+            <div class="product-wrapper">
                 <div class="product-item">
-                    <a href="views/catalogo/DetalleProducto.jsp?id=<%= producto.getId_ropa() %>" style="text-decoration: none; color: #000;">
+                    <a href="views/catalogo/DetalleProducto.jsp?id=<%= producto.getId_ropa() %>" 
+                       style="text-decoration: none; color: #000;">
                         <img src="${pageContext.request.contextPath}/<%= imagePath %>" 
                              class="img-fluid" 
                              alt="<%= producto.getNombre() %>"
                              onerror="this.src='${pageContext.request.contextPath}/views/Intranet/imagenes/default-product.jpg'">
-                        <div class="rating">
-                            <span>5/5</span>
-                            <span class="star">&#9733;</span><span class="star">&#9733;</span>
-                            <span class="star">&#9733;</span><span class="star">&#9733;</span>
-                            <span class="star">&#9733;</span>
-                        </div>
                         <h5><%= producto.getNombre() %></h5>
                         <h6>S/<%= String.format("%.2f", producto.getPrecio()) %></h6>
                     </a>
                 </div>
             </div>
-            <%
-                }
-            %>
+            <% } %>
         </div>
     </div>
 

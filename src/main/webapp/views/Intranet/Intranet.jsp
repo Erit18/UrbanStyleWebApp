@@ -127,23 +127,17 @@
                     </div>
                     <input type="email" name="email" placeholder="Email" required>
                     <input type="password" name="password" placeholder="Password" required>
-                    <% 
-                    String error = (String) session.getAttribute("error");
-                    String mensaje = (String) session.getAttribute("mensaje");
-                    session.removeAttribute("error");
-                    session.removeAttribute("mensaje");
                     
-                    if (error != null) { 
+                    <% 
+                        String error = (String) session.getAttribute("error");
+                        if (error != null) { 
+                            session.removeAttribute("error"); // Limpiar el mensaje después de mostrarlo
                     %>
-                        <div class="alert alert-danger" id="errorAlert">
+                        <div class="alert alert-danger" role="alert">
                             <%= error %>
                         </div>
                     <% } %>
-                    <% if (mensaje != null) { %>
-                        <div class="alert alert-success" id="mensajeAlert">
-                            <%= mensaje %>
-                        </div>
-                    <% } %>
+                    
                     <button type="submit">Iniciar Sesión</button>
                 </form>
             </div>

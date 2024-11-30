@@ -55,8 +55,9 @@ public class LoginServlet extends HttpServlet {
             
         } catch (Exception e) {
             logger.error("Error en login", e);
-            request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher("/views/Intranet/Intranet.jsp").forward(request, response);
+            HttpSession session = request.getSession();
+            session.setAttribute("error", "Email o contraseña incorrectos");
+            response.sendRedirect(request.getContextPath() + "/views/Intranet/Intranet.jsp");
         }
     }
 

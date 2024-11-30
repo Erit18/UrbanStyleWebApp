@@ -14,10 +14,11 @@ import com.zaxxer.hikari.HikariDataSource;
 public class DatabaseConnection {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
     private static HikariDataSource dataSource;
+    private static final DatabaseConfig dbConfig = new DatabaseConfig();
 
     static {
         try {
-            Class.forName(DatabaseConfig.getDriver());
+            Class.forName(dbConfig.getDriver());
             initializeDataSource();
         } catch (ClassNotFoundException e) {
             logger.error("Error al cargar el driver de MySQL", e);
@@ -27,15 +28,14 @@ public class DatabaseConnection {
 
     private static void initializeDataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(DatabaseConfig.getUrl());
-        config.setUsername(DatabaseConfig.getUser());
-        config.setPassword(DatabaseConfig.getPassword());
+        config.setJdbcUrl(dbConfig.getUrl());
+        config.setUsername(dbConfig.getUser());
+        config.setPassword(dbConfig.getPassword());
         
-        // Configuración del pool de conexiones
-        config.setMaximumPoolSize(10);
-        config.setMinimumIdle(5);
-        config.setIdleTimeout(300000);
-        config.setConnectionTimeout(20000);
+        config.setMaximumPoolSize(dbConfig.getMaxPoolSize());
+        config.setMinimumIdle(dbConfig.getMinIdle());
+        config.setIdleTimeout(dbConfig.getIdleTimeout());
+        config.setConnectionTimeout(dbConfig.getConnectionTimeout());
         
         dataSource = new HikariDataSource(config);
     }
@@ -49,7 +49,6 @@ public class DatabaseConnection {
         }
     }
 
-    // Método para cerrar el pool de conexiones
     public static void closePool() {
         if (dataSource != null && !dataSource.isClosed()) {
             dataSource.close();

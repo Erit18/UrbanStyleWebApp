@@ -2,97 +2,106 @@ package com.mycompany.aplicativowebintegrador.dao;
 
 import com.mycompany.aplicativowebintegrador.modelo.Producto;
 import com.mycompany.aplicativowebintegrador.util.DatabaseConnection;
-import com.mycompany.aplicativowebintegrador.dao.IProductoDAO;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
 
-public class ProductoDAO implements IProductoDAO {
+public class ProductoDAO extends BaseDAO implements IProductoDAO {
+    
+    private Producto mapearProducto(ResultSet rs) throws SQLException {
+        Producto producto = new Producto();
+        producto.setId_ropa(rs.getInt("id_ropa"));
+        producto.setNombre(rs.getString("nombre"));
+        producto.setDescripcion(rs.getString("descripcion"));
+        producto.setPrecio(rs.getBigDecimal("precio"));
+        producto.setCategoria(rs.getString("categoria"));
+        producto.setStock(rs.getInt("stock"));
+        producto.setFecha_caducidad(rs.getDate("fecha_caducidad"));
+        producto.setDescuento(rs.getBigDecimal("descuento"));
+        producto.setId_proveedor(rs.getInt("id_proveedor"));
+        producto.setFecha_agregado(rs.getTimestamp("fecha_agregado"));
+        return producto;
+    }
     
     @Override
     public List<Producto> obtenerTodos() throws SQLException {
         List<Producto> productos = new ArrayList<>();
-        String sql = "SELECT * FROM Ropa ORDER BY fecha_agregado ASC";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Ropa ORDER BY id_ropa");
+            rs = stmt.executeQuery();
             
             while (rs.next()) {
-                Producto producto = new Producto();
-                producto.setId_ropa(rs.getInt("id_ropa"));
-                producto.setNombre(rs.getString("nombre"));
-                producto.setDescripcion(rs.getString("descripcion"));
-                producto.setPrecio(rs.getBigDecimal("precio"));
-                producto.setCategoria(rs.getString("categoria"));
-                producto.setStock(rs.getInt("stock"));
-                producto.setFecha_caducidad(rs.getDate("fecha_caducidad"));
-                producto.setDescuento(rs.getBigDecimal("descuento"));
-                producto.setId_proveedor(rs.getInt("id_proveedor"));
-                producto.setFecha_agregado(rs.getTimestamp("fecha_agregado"));
-                
-                productos.add(producto);
+                productos.add(mapearProducto(rs));
             }
             
             return productos;
+        } finally {
+            closeResources(conn, stmt, rs);
         }
     }
     
     @Override
     public Producto obtenerPorId(int id) throws SQLException {
-        String sql = "SELECT * FROM Ropa WHERE id_ropa = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Ropa WHERE id_ropa = ?");
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
             
-            pstmt.setInt(1, id);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Producto(
-                        rs.getInt("id_ropa"),
-                        rs.getString("nombre"),
-                        rs.getString("descripcion"),
-                        rs.getBigDecimal("precio"),
-                        rs.getString("categoria"),
-                        rs.getInt("stock"),
-                        rs.getDate("fecha_caducidad"),
-                        rs.getBigDecimal("descuento"),
-                        rs.getInt("id_proveedor"),
-                        rs.getTimestamp("fecha_agregado")
-                    );
-                }
+            if (rs.next()) {
+                return mapearProducto(rs);
             }
+            return null;
+        } finally {
+            closeResources(conn, stmt, rs);
         }
-        return null; // Retorna null si no se encuentra el producto
     }
     
     @Override
     public void insertar(Producto producto) throws SQLException {
-        String sql = "INSERT INTO Ropa (nombre, descripcion, precio, categoria, stock, fecha_caducidad, descuento, id_proveedor, fecha_agregado) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
         
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement(
+                "INSERT INTO Ropa (nombre, descripcion, precio, categoria, stock, " +
+                "fecha_caducidad, descuento, id_proveedor, fecha_agregado) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)"
+            );
             
-            pstmt.setString(1, producto.getNombre());
-            pstmt.setString(2, producto.getDescripcion());
-            pstmt.setBigDecimal(3, producto.getPrecio());
-            pstmt.setString(4, producto.getCategoria());
-            pstmt.setInt(5, producto.getStock());
-            
-            if (producto.getFecha_caducidad() != null) {
-                pstmt.setDate(6, new java.sql.Date(producto.getFecha_caducidad().getTime()));
-            } else {
-                pstmt.setNull(6, Types.DATE);
-            }
-            
-            pstmt.setBigDecimal(7, producto.getDescuento());
-            pstmt.setInt(8, producto.getId_proveedor());
-            
-            pstmt.executeUpdate();
+            setearParametrosProducto(stmt, producto);
+            stmt.executeUpdate();
+        } finally {
+            closeResources(conn, stmt);
         }
+    }
+    
+    private void setearParametrosProducto(PreparedStatement stmt, Producto producto) throws SQLException {
+        stmt.setString(1, producto.getNombre());
+        stmt.setString(2, producto.getDescripcion());
+        stmt.setBigDecimal(3, producto.getPrecio());
+        stmt.setString(4, producto.getCategoria());
+        stmt.setInt(5, producto.getStock());
+        
+        if (producto.getFecha_caducidad() != null) {
+            stmt.setDate(6, new java.sql.Date(producto.getFecha_caducidad().getTime()));
+        } else {
+            stmt.setNull(6, Types.DATE);
+        }
+        
+        stmt.setBigDecimal(7, producto.getDescuento());
+        stmt.setInt(8, producto.getId_proveedor());
     }
     
     @Override

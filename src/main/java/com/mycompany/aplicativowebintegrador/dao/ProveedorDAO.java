@@ -1,119 +1,128 @@
 package com.mycompany.aplicativowebintegrador.dao;
 
 import com.mycompany.aplicativowebintegrador.modelo.Proveedor;
-import com.mycompany.aplicativowebintegrador.util.DatabaseConnection;
-import com.mycompany.aplicativowebintegrador.dao.IProveedorDAO;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProveedorDAO implements IProveedorDAO {
+public class ProveedorDAO extends BaseDAO implements IProveedorDAO {
+    
+    private Proveedor mapearProveedor(ResultSet rs) throws SQLException {
+        Proveedor proveedor = new Proveedor();
+        proveedor.setId_proveedor(rs.getInt("id_proveedor"));
+        proveedor.setNombre(rs.getString("nombre"));
+        proveedor.setContacto(rs.getString("contacto"));
+        proveedor.setTelefono(rs.getString("telefono"));
+        proveedor.setEmail(rs.getString("email"));
+        proveedor.setDireccion(rs.getString("direccion"));
+        return proveedor;
+    }
     
     @Override
     public List<Proveedor> obtenerTodos() throws SQLException {
         List<Proveedor> proveedores = new ArrayList<>();
-        String sql = "SELECT * FROM Proveedores";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         
-        System.out.println("DEBUG - ProveedorDAO.obtenerTodos() - Iniciando consulta");
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            
-            System.out.println("DEBUG - ProveedorDAO.obtenerTodos() - Conexión establecida");
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Proveedores ORDER BY nombre");
+            rs = stmt.executeQuery();
             
             while (rs.next()) {
-                Proveedor proveedor = new Proveedor(
-                    rs.getInt("id_proveedor"),
-                    rs.getString("nombre"),
-                    rs.getString("contacto"),
-                    rs.getString("telefono"),
-                    rs.getString("email"),
-                    rs.getString("direccion")
-                );
-                System.out.println("DEBUG - Proveedor cargado -> ID: " + proveedor.getId_proveedor() + 
-                                 ", Nombre: " + proveedor.getNombre());
-                proveedores.add(proveedor);
+                proveedores.add(mapearProveedor(rs));
             }
             
-            System.out.println("DEBUG - Total proveedores cargados: " + proveedores.size());
-        } catch (SQLException e) {
-            System.err.println("ERROR - ProveedorDAO.obtenerTodos(): " + e.getMessage());
-            e.printStackTrace();
-            throw e;
+            return proveedores;
+        } finally {
+            closeResources(conn, stmt, rs);
         }
-        return proveedores;
     }
     
     @Override
     public Proveedor obtenerPorId(int id) throws SQLException {
-        String sql = "SELECT * FROM Proveedores WHERE id_proveedor = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Proveedores WHERE id_proveedor = ?");
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
             
-            pstmt.setInt(1, id);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Proveedor(
-                        rs.getInt("id_proveedor"),
-                        rs.getString("nombre"),
-                        rs.getString("contacto"),
-                        rs.getString("telefono"),
-                        rs.getString("email"),
-                        rs.getString("direccion")
-                    );
-                }
+            if (rs.next()) {
+                return mapearProveedor(rs);
             }
+            return null;
+        } finally {
+            closeResources(conn, stmt, rs);
         }
-        return null;
     }
     
     @Override
     public void insertar(Proveedor proveedor) throws SQLException {
-        String sql = "INSERT INTO Proveedores (nombre, contacto, telefono, email, direccion) VALUES (?, ?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement stmt = null;
         
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement(
+                "INSERT INTO Proveedores (nombre, contacto, telefono, email, direccion) " +
+                "VALUES (?, ?, ?, ?, ?)"
+            );
             
-            pstmt.setString(1, proveedor.getNombre());
-            pstmt.setString(2, proveedor.getContacto());
-            pstmt.setString(3, proveedor.getTelefono());
-            pstmt.setString(4, proveedor.getEmail());
-            pstmt.setString(5, proveedor.getDireccion());
+            stmt.setString(1, proveedor.getNombre());
+            stmt.setString(2, proveedor.getContacto());
+            stmt.setString(3, proveedor.getTelefono());
+            stmt.setString(4, proveedor.getEmail());
+            stmt.setString(5, proveedor.getDireccion());
             
-            pstmt.executeUpdate();
+            stmt.executeUpdate();
+        } finally {
+            closeResources(conn, stmt);
         }
     }
     
     @Override
     public void actualizar(Proveedor proveedor) throws SQLException {
-        String sql = "UPDATE Proveedores SET nombre = ?, contacto = ?, telefono = ?, email = ?, direccion = ? WHERE id_proveedor = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
         
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement(
+                "UPDATE Proveedores SET nombre = ?, contacto = ?, telefono = ?, " +
+                "email = ?, direccion = ? WHERE id_proveedor = ?"
+            );
             
-            pstmt.setString(1, proveedor.getNombre());
-            pstmt.setString(2, proveedor.getContacto());
-            pstmt.setString(3, proveedor.getTelefono());
-            pstmt.setString(4, proveedor.getEmail());
-            pstmt.setString(5, proveedor.getDireccion());
-            pstmt.setInt(6, proveedor.getId_proveedor());
+            stmt.setString(1, proveedor.getNombre());
+            stmt.setString(2, proveedor.getContacto());
+            stmt.setString(3, proveedor.getTelefono());
+            stmt.setString(4, proveedor.getEmail());
+            stmt.setString(5, proveedor.getDireccion());
+            stmt.setInt(6, proveedor.getId_proveedor());
             
-            pstmt.executeUpdate();
+            stmt.executeUpdate();
+        } finally {
+            closeResources(conn, stmt);
         }
     }
     
     @Override
     public void eliminar(int id) throws SQLException {
-        String sql = "DELETE FROM Proveedores WHERE id_proveedor = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
         
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("DELETE FROM Proveedores WHERE id_proveedor = ?");
+            stmt.setInt(1, id);
             
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
+            stmt.executeUpdate();
+        } finally {
+            closeResources(conn, stmt);
         }
     }
 }

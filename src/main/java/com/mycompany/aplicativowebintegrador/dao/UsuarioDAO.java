@@ -3,6 +3,9 @@ package com.mycompany.aplicativowebintegrador.dao;
 import com.mycompany.aplicativowebintegrador.dao.IUsuarioDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Usuario;
 import com.mycompany.aplicativowebintegrador.util.DatabaseConnection;
+import com.mycompany.aplicativowebintegrador.config.IDatabaseConfig;
+import com.mycompany.aplicativowebintegrador.config.DatabaseConfig;
+import com.mycompany.aplicativowebintegrador.dao.BaseDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,31 +13,28 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsuarioDAO implements IUsuarioDAO {
+public class UsuarioDAO extends BaseDAO implements IUsuarioDAO {
     private static final Logger logger = LoggerFactory.getLogger(UsuarioDAO.class);
 
     @Override
     public Usuario buscarPorEmail(String email) throws SQLException {
-        String sql = "SELECT * FROM Usuarios WHERE email = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Usuarios WHERE email = ?");
             stmt.setString(1, email);
+            rs = stmt.executeQuery();
             
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    Usuario usuario = new Usuario();
-                    usuario.setId(rs.getInt("id_usuario"));
-                    usuario.setNombre(rs.getString("nombre"));
-                    usuario.setEmail(rs.getString("email"));
-                    usuario.setContraseña(rs.getString("contraseña"));
-                    usuario.setRol(rs.getString("rol"));
-                    return usuario;
-                }
+            if (rs.next()) {
+                return mapearUsuario(rs);
             }
+            return null;
+        } finally {
+            closeResources(conn, stmt, rs);
         }
-        return null;
     }
 
     @Override
@@ -74,23 +74,23 @@ public class UsuarioDAO implements IUsuarioDAO {
     @Override
     public List<Usuario> obtenerTodos() throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
-        String sql = "SELECT * FROM Usuarios";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM Usuarios ORDER BY nombre");
+            rs = stmt.executeQuery();
             
             while (rs.next()) {
-                Usuario usuario = new Usuario();
-                usuario.setId(rs.getInt("id_usuario"));
-                usuario.setNombre(rs.getString("nombre"));
-                usuario.setEmail(rs.getString("email"));
-                usuario.setRol(rs.getString("rol"));
-                // No incluimos la contraseña por seguridad
-                usuarios.add(usuario);
+                usuarios.add(mapearUsuario(rs));
             }
+            
+            return usuarios;
+        } finally {
+            closeResources(conn, stmt, rs);
         }
-        return usuarios;
     }
 
     @Override
@@ -152,5 +152,15 @@ public class UsuarioDAO implements IUsuarioDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }
+    }
+
+    private Usuario mapearUsuario(ResultSet rs) throws SQLException {
+        Usuario usuario = new Usuario();
+        usuario.setId(rs.getInt("id_usuario"));
+        usuario.setNombre(rs.getString("nombre"));
+        usuario.setEmail(rs.getString("email"));
+        usuario.setContraseña(rs.getString("contraseña"));
+        usuario.setRol(rs.getString("rol"));
+        return usuario;
     }
 }

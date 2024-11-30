@@ -1,22 +1,24 @@
 package com.mycompany.aplicativowebintegrador.modelo;
 
-public class Usuario {
-    private int id;
+public class Usuario extends EntidadBase {
+    private int id_usuario;
     private String nombre;
     private String email;
     private String contraseña;
     private String rol;
 
     // Constructor
-    public Usuario() {}
-
-    // Getters y setters
-    public int getId() {
-        return id;
+    public Usuario() {
+        super();
     }
 
-    public void setId(int id) {
-        this.id = id;
+    // Getters y setters específicos de Usuario
+    public int getId_usuario() {
+        return id_usuario;
+    }
+
+    public void setId_usuario(int id_usuario) {
+        this.id_usuario = id_usuario;
     }
 
     public String getNombre() {
@@ -32,10 +34,7 @@ public class Usuario {
     }
 
     public void setEmail(String email) {
-        if (email == null || !email.contains("@")) {
-            throw new IllegalArgumentException("Email inválido");
-        }
-        this.email = email.toLowerCase().trim();
+        this.email = email;
     }
 
     public String getContraseña() {
@@ -43,9 +42,6 @@ public class Usuario {
     }
 
     public void setContraseña(String contraseña) {
-        if (contraseña != null && contraseña.length() < 6) {
-            throw new IllegalArgumentException("La contraseña debe tener al menos 6 caracteres");
-        }
         this.contraseña = contraseña;
     }
 
@@ -54,12 +50,6 @@ public class Usuario {
     }
 
     public void setRol(String rol) {
-        if (rol != null) {
-            rol = rol.toLowerCase().trim();
-            if (!"administrador".equals(rol) && !"cliente".equals(rol)) {
-                throw new IllegalArgumentException("Rol inválido");
-            }
-            this.rol = rol;
-        }
+        this.rol = rol;
     }
 }

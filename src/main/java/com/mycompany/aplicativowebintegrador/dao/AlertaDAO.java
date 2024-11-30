@@ -1,101 +1,12 @@
 package com.mycompany.aplicativowebintegrador.dao;
 
 import com.mycompany.aplicativowebintegrador.modelo.Alerta;
-import com.mycompany.aplicativowebintegrador.util.DatabaseConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlertaDAO implements IAlertaDAO {
-    private static final Logger logger = LoggerFactory.getLogger(AlertaDAO.class);
-
-    @Override
-    public List<Alerta> listarTodas() throws SQLException {
-        List<Alerta> alertas = new ArrayList<>();
-        String sql = "SELECT a.*, r.nombre as nombre_producto, " +
-                     "CASE " +
-                     "  WHEN a.tipo_alerta = 'stock_bajo' THEN r.stock " +
-                     "  WHEN a.tipo_alerta = 'caducidad_proxima' THEN DATEDIFF(r.fecha_caducidad, CURDATE()) " +
-                     "END as valor_actual " +
-                     "FROM Alertas a " +
-                     "INNER JOIN Ropa r ON a.id_ropa = r.id_ropa " +
-                     "WHERE a.estado = 'activa' " +
-                     "ORDER BY a.fecha_alerta DESC";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            
-            while (rs.next()) {
-                alertas.add(mapearAlerta(rs));
-            }
-        }
-        return alertas;
-    }
-
-    @Override
-    public Alerta obtenerPorId(int id) throws SQLException {
-        String sql = "SELECT a.*, r.nombre as nombre_producto FROM Alertas a " +
-                    "INNER JOIN Ropa r ON a.id_ropa = r.id_ropa " +
-                    "WHERE a.id_alerta = ?";
-                    
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapearAlerta(rs);
-                }
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public boolean crear(Alerta alerta) throws SQLException {
-        String sql = "INSERT INTO Alertas (id_ropa, mensaje) VALUES (?, ?)";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setInt(1, alerta.getId_ropa());
-            stmt.setString(2, alerta.getMensaje());
-            
-            return stmt.executeUpdate() > 0;
-        }
-    }
-
-    @Override
-    public boolean actualizar(Alerta alerta) throws SQLException {
-        String sql = "UPDATE Alertas SET mensaje = ?, id_ropa = ? WHERE id_alerta = ?";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setString(1, alerta.getMensaje());
-            stmt.setInt(2, alerta.getId_ropa());
-            stmt.setInt(3, alerta.getId_alerta());
-            
-            return stmt.executeUpdate() > 0;
-        }
-    }
-
-    @Override
-    public boolean eliminar(int id) throws SQLException {
-        String sql = "DELETE FROM Alertas WHERE id_alerta = ?";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setInt(1, id);
-            return stmt.executeUpdate() > 0;
-        }
-    }
-
+public class AlertaDAO extends BaseDAO implements IAlertaDAO {
+    
     private Alerta mapearAlerta(ResultSet rs) throws SQLException {
         Alerta alerta = new Alerta();
         alerta.setId_alerta(rs.getInt("id_alerta"));
@@ -108,4 +19,127 @@ public class AlertaDAO implements IAlertaDAO {
         alerta.setUmbral(rs.getInt("umbral"));
         return alerta;
     }
+    
+    @Override
+    public List<Alerta> listarTodas() throws SQLException {
+        List<Alerta> alertas = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement(
+                "SELECT a.*, r.nombre as nombre_producto " +
+                "FROM Alertas a " +
+                "INNER JOIN Ropa r ON a.id_ropa = r.id_ropa " +
+                "ORDER BY a.fecha_alerta DESC"
+            );
+            rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                alertas.add(mapearAlerta(rs));
+            }
+            
+            return alertas;
+        } finally {
+            closeResources(conn, stmt, rs);
+        }
+    }
+    
+    @Override
+    public boolean eliminar(int id) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement("DELETE FROM Alertas WHERE id_alerta = ?");
+            stmt.setInt(1, id);
+            
+            return stmt.executeUpdate() > 0;
+        } finally {
+            closeResources(conn, stmt);
+        }
+    }
+    
+    @Override
+    public boolean actualizar(Alerta alerta) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement(
+                "UPDATE Alertas SET mensaje = ?, tipo_alerta = ?, " +
+                "estado = ?, umbral = ?, id_ropa = ? " +
+                "WHERE id_alerta = ?"
+            );
+            
+            stmt.setString(1, alerta.getMensaje());
+            stmt.setString(2, alerta.getTipo_alerta());
+            stmt.setString(3, alerta.getEstado());
+            stmt.setInt(4, alerta.getUmbral());
+            stmt.setInt(5, alerta.getId_ropa());
+            stmt.setInt(6, alerta.getId_alerta());
+            
+            return stmt.executeUpdate() > 0;
+        } finally {
+            closeResources(conn, stmt);
+        }
+    }
+    
+    @Override
+    public boolean crear(Alerta alerta) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement(
+                "INSERT INTO Alertas (id_ropa, mensaje, tipo_alerta, " +
+                "estado, umbral, fecha_alerta) " +
+                "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)"
+            );
+            
+            stmt.setInt(1, alerta.getId_ropa());
+            stmt.setString(2, alerta.getMensaje());
+            stmt.setString(3, alerta.getTipo_alerta());
+            stmt.setString(4, alerta.getEstado());
+            stmt.setInt(5, alerta.getUmbral());
+            
+            return stmt.executeUpdate() > 0;
+        } finally {
+            closeResources(conn, stmt);
+        }
+    }
+    
+    @Override
+    public Alerta obtenerPorId(int id) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement(
+                "SELECT a.*, r.nombre as nombre_producto " +
+                "FROM Alertas a " +
+                "INNER JOIN Ropa r ON a.id_ropa = r.id_ropa " +
+                "WHERE a.id_alerta = ?"
+            );
+            
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return mapearAlerta(rs);
+            }
+            return null;
+        } finally {
+            closeResources(conn, stmt, rs);
+        }
+    }
+    
+    // ... resto de métodos siguiendo el mismo patrón
 }

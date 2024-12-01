@@ -1,3 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.mycompany.aplicativowebintegrador.modelo.Producto" %>
+<%@ page import="com.mycompany.aplicativowebintegrador.dao.ProductoDAO" %>
+<%@ page import="com.mycompany.aplicativowebintegrador.dao.IProductoDAO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.sql.SQLException" %>
+<%@ page import="java.math.BigDecimal" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,12 +39,53 @@
       </div>
     <div class="container-fluid">
         <div class="row">
-           
-            <div class="col-md-3"> 
+            <% 
+                try {
+                    ProductoDAO productoDAO = new ProductoDAO();
+                    List<Producto> pantalones = productoDAO.obtenerProductosPorTipoYCategoria("pantalon", "hombre");
+                    
+                    for (Producto pantalon : pantalones) {
+                        String imagePath = productoDAO.obtenerRutaImagen(pantalon);
+            %>
+            <div class="col-md-3">
                 <div class="card full-width">
-                    <a href="DetalleProducto.html">
+                    <a href="DetalleProducto.jsp?id=<%= pantalon.getId_ropa() %>">
+                        <img src="${pageContext.request.contextPath}/<%= imagePath %>" 
+                             class="card-img-top" 
+                             alt="<%= pantalon.getNombre() %>"
+                             onerror="this.src='${pageContext.request.contextPath}/views/Intranet/imagenes/default-product.jpg'">
+                    </a>
+                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
+                        <center><span>5/5</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                        </center>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><%= pantalon.getNombre() %></h5>
+                        <p class="card-text">S/ <%= String.format("%.2f", pantalon.getPrecio()) %></p>
+                    </div>
+                </div>
+            </div>
+            <% 
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+            %>
+                    <div class="alert alert-danger" role="alert">
+                        Error al cargar los productos. Por favor, intente más tarde.
+                    </div>
+            <%
+                }
+            %>
+
+            <!-- Mantener el resto de los pantalones estáticos aquí -->
+            <div class="col-md-3">
+                <div class="card full-width">
                     <img src="imagenes/CatPantalones/40.JPG" class="card-img-top" alt="Producto 1">
-                </a>
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
                    <center><span>5/5</span>
                     <span class="star">&#9733;</span>
@@ -50,7 +100,6 @@
                     </div>
                 </div>
             </div>
-           
             <div class="col-md-3">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/41.JPG" class="card-img-top" alt="Producto 2">

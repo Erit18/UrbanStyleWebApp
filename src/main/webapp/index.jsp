@@ -44,7 +44,7 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="views/catalogo/CatPolera.jsp">Poleras</a></li>
                 <li><a class="dropdown-item" href="views/catalogo/CatPolos.jsp">Polos</a></li>
-                <li><a class="dropdown-item" href="views/catalogo/CatPantalones.html">Pantalones</a></li>
+                <li><a class="dropdown-item" href="views/catalogo/CatPantalones.jsp">Pantalones</a></li>
                 </ul>
                 </li>
                 <li class="nav-item dropdown mx-4">

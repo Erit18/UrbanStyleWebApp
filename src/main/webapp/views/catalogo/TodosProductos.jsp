@@ -45,12 +45,6 @@
                              class="img-fluid" 
                              alt="<%= producto.getNombre() %>"
                              onerror="this.src='${pageContext.request.contextPath}/views/Intranet/imagenes/default-product.jpg'">
-                        <div class="rating">
-                            <span>5/5</span>
-                            <span class="star">&#9733;</span><span class="star">&#9733;</span>
-                            <span class="star">&#9733;</span><span class="star">&#9733;</span>
-                            <span class="star">&#9733;</span>
-                        </div>
                         <h5><%= producto.getNombre() %></h5>
                         <h6>S/<%= String.format("%.2f", producto.getPrecio()) %></h6>
                     </a>

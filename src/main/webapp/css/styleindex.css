@@ -144,10 +144,28 @@ body{
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px;
-  padding: 15px;
-  height: auto;
-  margin-bottom: 30px;
+  margin: 15px;
+  padding: 20px;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.product-item img {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
 }
 
 .product-item h5 {
@@ -887,6 +905,109 @@ html {
     
     .product-container {
         gap: 15px;
+    }
+}
+
+/* Ajustes para las tarjetas de productos */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    margin: 10px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card-img-top {
+    height: 300px;
+    object-fit: contain;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 12px 12px 0 0;
+}
+
+.card-body {
+    padding: 15px;
+    text-align: left;
+}
+
+.card-title {
+    font-size: 1rem;
+    margin: 10px 0;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 1.1rem;
+    color: #000;
+    font-weight: bold;
+}
+
+.rating {
+    font-size: 0.9rem;
+    color: #ffd700;
+    margin-bottom: 10px;
+}
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+    .card-img-top {
+        height: 250px;
+    }
+}
+
+/* Actualización del contenedor de productos */
+.product-item {
+    flex: 0 1 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 15px;
+    padding: 20px;
+    height: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Actualización del estilo de las imágenes */
+.product-item img {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+/* Ajustes responsive para las imágenes */
+@media (max-width: 1200px) {
+    .product-item img {
+        height: 350px;
+    }
+}
+
+@media (max-width: 992px) {
+    .product-item img {
+        height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-item img {
+        height: 250px;
     }
 }
 

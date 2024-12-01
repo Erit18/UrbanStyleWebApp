@@ -165,7 +165,7 @@
         <div class="product-container">
             <% 
                 ProductoDAO productoDAO = new ProductoDAO();
-                List<Producto> productos = productoDAO.obtenerProductosDestacados(5);
+                List<Producto> productos = productoDAO.obtenerProductosDestacados(6);
                 for (Producto producto : productos) {
                     String imagePath = productoDAO.obtenerRutaImagen(producto);
             %>

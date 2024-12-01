@@ -212,7 +212,7 @@
                 }
                 
                 console.log('Redirigiendo...'); // Debug
-                window.location.href = 'FinalizarCompra.html';
+                window.location.href = 'FinalizarCompra.jsp';
             });
         }
     });

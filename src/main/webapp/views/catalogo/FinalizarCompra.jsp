@@ -55,6 +55,28 @@
     <div class="container my-5">
         <h2 class="mb-4">Pagar</h2>
         
+        <!-- Nueva sección de productos seleccionados -->
+        <div class="card p-4 mb-4">
+            <h4 class="mb-3">PRODUCTOS SELECCIONADOS</h4>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Tipo</th>
+                            <th>Talla</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unit.</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productos-tabla">
+                        <!-- Los productos se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="row">
             <!-- Información de envío -->
             <div class="col-md-6">
@@ -374,6 +396,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM Cargado');
+        cargarProductosSeleccionados(); // Cargar los productos
         cargarResumenPedido();
         
         // Event listener para el método de envío

@@ -20,17 +20,20 @@ function añadirAlCarrito(nombre, precio, talla, categoria, tipo_producto) {
     if (productoExistente) {
         productoExistente.quantity += 1;
     } else {
-        carrito.push({
+        const nuevoProducto = {
             name: nombre,
-            price: precio,
-            talla: talla,
-            categoria: categoria,
-            tipo_producto: tipo_producto,
+            price: parseFloat(precio),
+            talla: talla || 'No especificada',
+            categoria: categoria || 'No especificada',
+            tipo_producto: tipo_producto || 'No especificado',
             quantity: 1
-        });
+        };
+        carrito.push(nuevoProducto);
+        console.log('Producto añadido:', nuevoProducto); // Debug
     }
 
     localStorage.setItem('cart', JSON.stringify(carrito));
+    console.log('Carrito actualizado:', carrito); // Debug
     
     // Mostrar notificación
     Swal.fire({
@@ -124,15 +127,13 @@ function renderCarrito() {
 // Agregar función para finalizar compra
 function finalizarCompra() {
     const carrito = JSON.parse(localStorage.getItem('cart')) || [];
-    console.log('Carrito:', carrito); // Debug
     
     if (carrito.length === 0) {
         mostrarMensaje('El carrito está vacío');
         return;
     }
     
-    console.log('Redirigiendo...'); // Debug
-    window.location.href = './FinalizarCompra.html';
+    window.location.href = '${pageContext.request.contextPath}/views/catalogo/FinalizarCompra.jsp';
 }
 
 // Simplificar el DOMContentLoaded
@@ -248,3 +249,65 @@ function actualizarCostoEnvio() {
     if (entregaElement) entregaElement.textContent = `S/${costoEnvio.toFixed(2)}`;
     if (totalElement) totalElement.textContent = `S/${resumenGuardado.total.toFixed(2)}`;
 }
+
+function cargarProductosSeleccionados() {
+    // Debug para verificar que la función se está ejecutando
+    console.log('Cargando productos seleccionados...');
+    
+    // Obtener el carrito del localStorage
+    const carrito = JSON.parse(localStorage.getItem('cart')) || [];
+    console.log('Contenido del carrito:', carrito); // Debug para ver el contenido
+    
+    // Obtener la referencia a la tabla
+    const tbody = document.getElementById('productos-tabla');
+    if (!tbody) {
+        console.error('No se encontró el elemento productos-tabla');
+        return;
+    }
+    
+    // Limpiar la tabla antes de agregar nuevos datos
+    tbody.innerHTML = '';
+    
+    // Verificar si hay productos
+    if (carrito.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center">No hay productos en el carrito</td>
+            </tr>
+        `;
+        return;
+    }
+    
+    // Agregar cada producto a la tabla
+    carrito.forEach(producto => {
+        const subtotal = producto.price * producto.quantity;
+        const row = `
+            <tr>
+                <td>${producto.name || 'Sin nombre'}</td>
+                <td>${producto.tipo_producto || 'No especificado'}</td>
+                <td>${producto.talla || 'No especificada'}</td>
+                <td>${producto.quantity || 0}</td>
+                <td>S/${(producto.price || 0).toFixed(2)}</td>
+                <td>S/${subtotal.toFixed(2)}</td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+}
+
+// Asegurarse de que la función se ejecute cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Cargado'); // Debug
+    
+    // Verificar el contenido del carrito al cargar
+    const carrito = JSON.parse(localStorage.getItem('cart')) || [];
+    console.log('Contenido inicial del carrito:', carrito);
+    
+    cargarProductosSeleccionados();
+    cargarResumenPedido();
+    
+    const shippingMethod = document.getElementById('shippingMethod');
+    if (shippingMethod) {
+        shippingMethod.addEventListener('change', actualizarCostoEnvio);
+    }
+});

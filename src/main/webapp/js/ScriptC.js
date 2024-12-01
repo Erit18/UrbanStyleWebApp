@@ -179,15 +179,118 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Agregar función para confirmar pago
-function confirmarPago() {
-    // Mostrar mensaje de éxito
-    alert('¡Pago confirmado! Gracias por tu compra.');
-    
-    // Limpiar el carrito
-    localStorage.removeItem('cart');
-    
-    // Redirigir a la página principal o de confirmación
-    window.location.href = '../catalogo/index.html';
+async function confirmarPago() {
+    // Verificar campos según el método de envío seleccionado
+    const shippingMethod = document.getElementById('shippingMethod').value;
+    if (!shippingMethod) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Por favor seleccione un método de envío'
+        });
+        return;
+    }
+
+    // Verificar campos de envío
+    if (shippingMethod === 'delivery') {
+        const camposDelivery = ['department', 'province', 'district', 'address'];
+        for (let campo of camposDelivery) {
+            const elemento = document.getElementById(campo);
+            if (!elemento || !elemento.value.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campos incompletos',
+                    text: 'Por favor complete todos los campos de envío'
+                });
+                return;
+            }
+        }
+    } else if (shippingMethod === 'store-pickup') {
+        const camposPickup = ['storeBranch', 'pickupDate', 'pickupTime'];
+        for (let campo of camposPickup) {
+            const elemento = document.getElementById(campo);
+            if (!elemento || !elemento.value.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campos incompletos',
+                    text: 'Por favor complete todos los campos de recojo en tienda'
+                });
+                return;
+            }
+        }
+    }
+
+    // Verificar campos de facturación
+    const tipoDocumento = document.getElementById('shippingOpcion').value;
+    if (!tipoDocumento) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Por favor seleccione tipo de documento (Boleta/RUC)'
+        });
+        return;
+    }
+
+    if (tipoDocumento === 'boleta') {
+        if (!document.getElementById('dni').value.trim()) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo requerido',
+                text: 'Por favor ingrese su DNI'
+            });
+            return;
+        }
+    } else if (tipoDocumento === 'ruc') {
+        const camposRuc = ['ruc', 'direccion', 'razonsocial', 'email'];
+        for (let campo of camposRuc) {
+            const elemento = document.getElementById(campo);
+            if (!elemento || !elemento.value.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campos incompletos',
+                    text: 'Por favor complete todos los campos de facturación'
+                });
+                return;
+            }
+        }
+    }
+
+    // Verificar método de pago
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    if (!paymentMethod) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Por favor seleccione un método de pago'
+        });
+        return;
+    }
+
+    // Mostrar animación de procesamiento
+    Swal.fire({
+        title: 'Procesando pago',
+        html: 'Por favor espere...',
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    }).then(() => {
+        // Mostrar mensaje de éxito
+        Swal.fire({
+            icon: 'success',
+            title: '¡Pago exitoso!',
+            text: 'Gracias por tu compra',
+            showConfirmButton: false,
+            timer: 1500
+        }).then(() => {
+            // Limpiar el carrito
+            localStorage.removeItem('cart');
+            
+            // Redirigir al index
+            window.location.href = '../../index.jsp';
+        });
+    });
 }
 
 // Asegurarse de que los estilos de animate.css estén disponibles

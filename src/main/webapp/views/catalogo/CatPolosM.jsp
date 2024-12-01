@@ -1,3 +1,10 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.mycompany.aplicativowebintegrador.modelo.Producto" %>
+<%@ page import="com.mycompany.aplicativowebintegrador.dao.ProductoDAO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.sql.SQLException" %>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,9 +23,9 @@
     
 </head>
 <body>
-        <!--HEADER-->
-        <div id="header-placeholder"></div>
-        
+    <!--HEADER-->
+    <div id="header-placeholder"></div>
+    
     <div class="envio-bar d-flex justify-content-center align-items-center">
         <span class="mx-2">
           <img src="../Intranet/imagenes/peru.png" alt="Perú" width="24">
@@ -30,11 +37,53 @@
       </div>
     <div class="container-fluid">
         <div class="row">
-           
+            <% 
+                try {
+                    ProductoDAO productoDAO = new ProductoDAO();
+                    List<Producto> polos = productoDAO.obtenerProductosPorTipoYCategoria("polo", "mujer");
+                    
+                    for (Producto polo : polos) {
+                        String imagePath = productoDAO.obtenerRutaImagen(polo);
+            %>
+            <div class="col-md-3">
+                <div class="card full-width">
+                    <a href="DetalleProducto.jsp?id=<%= polo.getId_ropa() %>">
+                        <img src="${pageContext.request.contextPath}/<%= imagePath %>" 
+                             class="card-img-top" 
+                             alt="<%= polo.getNombre() %>"
+                             onerror="this.src='${pageContext.request.contextPath}/views/Intranet/imagenes/default-product.jpg'">
+                    </a>
+                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
+                        <center><span>5/5</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                        </center>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><%= polo.getNombre() %></h5>
+                        <p class="card-text">S/ <%= String.format("%.2f", polo.getPrecio()) %></p>
+                    </div>
+                </div>
+            </div>
+            <% 
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+            %>
+                    <div class="alert alert-danger" role="alert">
+                        Error al cargar los productos. Por favor, intente más tarde.
+                    </div>
+            <%
+                }
+            %>
+
             <div class="col-md-3"> 
                 <div class="card full-width">
-                    <a href="DetalleProducto.html">
-                    <img src="imagenes/CatPantalones/100.JPG" class="card-img-top" alt="Producto 1">
+                    <a href="DetalleProducto.html" >
+                    <img src="imagenes/CatPolos/80.JPG" class="card-img-top" alt="Producto 1">
                 </a>
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
                    <center><span>5/5</span>
@@ -45,15 +94,16 @@
                     <span class="star">&#9733;</span></center> 
                   </div>
                     <div class="card-body">
-                        <h5 class="card-title"> BUZO OVERSIZED</h5>
-                        <p class="card-text">S/ 109.00</p>
+                        <h5 class="card-title">POLO BOXY FIT</h5>
+                        <p class="card-text">S/ 39.00</p>
+                        
                     </div>
                 </div>
             </div>
            
             <div class="col-md-3">
                 <div class="card full-width">
-                    <img src="imagenes/CatPantalones/101.JPG" class="card-img-top" alt="Producto 2">
+                    <img src="imagenes/CatPolos/81.JPG" class="card-img-top" alt="Producto 2">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
                         <center><span>5/5</span>
                          <span class="star">&#9733;</span>
@@ -63,19 +113,16 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">BUZO OVERSIZED
-
-
-                        </h5>
-                        <p class="card-text">S/109.00
-                        </p>
+                        <h5 class="card-title">POLO CORTO BOXY FIT</h5>
+                        <p class="card-text">S/ 49.00</p>
+                            <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
                     </div>
                 </div>
             </div>
           
             <div class="col-md-3">
                 <div class="card full-width">
-                    <img src="imagenes/CatPantalones/102.JPG" class="card-img-top" alt="Producto 3">
+                    <img src="imagenes/CatPolos/82.JPG" class="card-img-top" alt="Producto 3">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
                         <center><span>5/5</span>
                          <span class="star">&#9733;</span>
@@ -85,16 +132,16 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">PANTALON CARGO
-                        </h5>
-                        <p class="card-text">S/99.00</p>
+                        <h5 class="card-title">POLO MANGA LARGA SYBILLA</h5>
+                        <p class="card-text">S/ 59.00</p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
                     </div>
                 </div>
             </div>
           
             <div class="col-md-3">
                 <div class="card full-width">
-                    <img src="imagenes/CatPantalones/103.JPG" class="card-img-top" alt="Producto 4">
+                    <img src="imagenes/CatPolos/84.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
                         <center><span>5/5</span>
                          <span class="star">&#9733;</span>
@@ -104,16 +151,16 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">PANTALON CARGO
-
+                        <h5 class="card-title">POLO OVERSIZE 
                         </h5>
-                        <p class="card-text">S/99.00</p>
+                        <p class="card-text">S/ 49.00</p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card full-width">
-                    <img src="imagenes/CatPantalones/104.JPG" class="card-img-top" alt="Producto 4">
+                    <img src="imagenes/CatPolos/83.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
                         <center><span>5/5</span>
                          <span class="star">&#9733;</span>
@@ -123,15 +170,112 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">PANTALON CARGO
+                        <h5 class="card-title">POLO CORP BOXY
+                        </h5>
+                        <p class="card-text">S/ 39.00</p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card full-width">
+                    <img src="imagenes/CatPolos/85.JPG" class="card-img-top" alt="Producto 4">
+                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
+                        <center><span>5/5</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span></center> 
+                       </div>
+                    <div class="card-body">
+                        <h5 class="card-title">POLO OVERSIZE 
+                        </h5>
+                        <p class="card-text">S/ 49.00 </p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card full-width">
+                    <img src="imagenes/CatPolos/86.JPG" class="card-img-top" alt="Producto 4">
+                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
+                        <center><span>5/5</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span></center> 
+                       </div>
+                    <div class="card-body">
+                        <h5 class="card-title">POLO OVERSIZE 
+                        </h5>
+                        <p class="card-text">S/ 49.00</p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card full-width">
+                    <img src="imagenes/CatPolos/87.JPG" class="card-img-top" alt="Producto 4">
+                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
+                        <center><span>5/5</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span></center> 
+                       </div>
+                    <div class="card-body">
+                        <h5 class="card-title">POLO OVERSIZE THEY KILLED KENNY
+                        </h5>
+                        <p class="card-text">S/ 89.00</p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card full-width">
+                    <img src="imagenes/CatPolos/88.JPG" class="card-img-top" alt="Producto 4">
+                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
+                        <center><span>5/5</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span></center> 
+                       </div>
+                    <div class="card-body">
+                        <h5 class="card-title">POLO OVERSIZE ACID WASH WORK - POLO PARA EL GYM
+
+                        </h5>
+                        <p class="card-text">S/ S/ 59.90</p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card full-width">
+                    <img src="imagenes/CatPolos/89.JPG" class="card-img-top" alt="Producto 1" data-hover="imagenes/1.avif">
+                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
+                        <center><span>5/5</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span></center> 
+                       </div>
+                    <div class="card-body">
+                        <h5 class="card-title">TOP ASIMETRICO CREMA TRANSPARENTE
                         </h5>
                         <p class="card-text">S/ 99.00</p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card full-width">
-                    <img src="imagenes/CatPantalones/105.JPG" class="card-img-top" alt="Producto 4">
+                    <img src="imagenes/CatPolos/90.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
                         <center><span>5/5</span>
                          <span class="star">&#9733;</span>
@@ -141,15 +285,52 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">PANTALONES DENIM
+                        <h5 class="card-title">POLO BOXY/OVERSIZE</h5>
+                        <p class="card-text">S/39.00</p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card full-width">
+                    <img src="imagenes/CatPolos/91.JPG" class="card-img-top" alt="Producto 4">
+                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
+                        <center><span>5/5</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span></center> 
+                       </div>
+                    <div class="card-body">
+                        <h5 class="card-title">POLO OVERSIZE ESTAMPADO</h5>
+                        <p class="card-text">S/ 49.00</p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card full-width">
+                    <img src="imagenes/CatPolos/92.JPG" class="card-img-top" alt="Producto 4">
+                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
+                        <center><span>5/5</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span>
+                         <span class="star">&#9733;</span></center> 
+                       </div>
+                    <div class="card-body">
+                        <h5 class="card-title">POLO BASICO
                         </h5>
-                        <p class="card-text">S/ 119.00 </p>
+                        <p class="card-text">S/ 39.00</p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card full-width">
-                    <img src="imagenes/CatPantalones/106.JPG" class="card-img-top" alt="Producto 4">
+                    <img src="imagenes/CatPolos/93.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
                         <center><span>5/5</span>
                          <span class="star">&#9733;</span>
@@ -159,137 +340,14 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">PANTALONES DENIM
-                        </h5>
-                        <p class="card-text">S/ 119.00</p>
+                        <h5 class="card-title">POLO OVERSIZE ESTAMPADO </h5>
+                        <p class="card-text">S/ 39.00</p>                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card full-width">
-                    <img src="imagenes/CatPantalones/107.JPG" class="card-img-top" alt="Producto 4">
-                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
-                        <center><span>5/5</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span></center> 
-                       </div>
-                    <div class="card-body">
-                        <h5 class="card-title">PANTALONES DENIM </h5>
-                        <p class="card-text">S/ 119.00</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card full-width">
-                    <img src="imagenes/CatPantalones/108.JPG" class="card-img-top" alt="Producto 4">
-                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
-                        <center><span>5/5</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span></center> 
-                       </div>
-                    <div class="card-body">
-                        <h5 class="card-title">PANTALONES DENIM
-                        </h5>
-                        <p class="card-text">S/ S/ 119.00</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card full-width">
-                    <img src="imagenes/CatPantalones/109.JPG" class="card-img-top" alt="Producto 1" data-hover="imagenes/1.avif">
-                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
-                        <center><span>5/5</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span></center> 
-                       </div>
-                    <div class="card-body">
-                        <h5 class="card-title">JEAN WIDE LEG ALGODÓN MUJER SYBILLA
-                        </h5>
-                        <p class="card-text">S/ 79.00</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card full-width">
-                    <img src="imagenes/CatPantalones/200.JPG" class="card-img-top" alt="Producto 4">
-                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
-                        <center><span>5/5</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span></center> 
-                       </div>
-                    <div class="card-body">
-                        <h5 class="card-title">JEAN WIDE LEG ALGODÓN MUJER SYBILLA</h5>
-                        <p class="card-text">S/79.00</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card full-width">
-                    <img src="imagenes/CatPantalones/201.JPG" class="card-img-top" alt="Producto 4">
-                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
-                        <center><span>5/5</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span></center> 
-                       </div>
-                    <div class="card-body">
-                        <h5 class="card-title">BUZO JOGGER </h5>
-                        <p class="card-text">S/ 69.00</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card full-width">
-                    <img src="imagenes/CatPantalones/202.JPG" class="card-img-top" alt="Producto 4">
-                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
-                        <center><span>5/5</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span></center> 
-                       </div>
-                    <div class="card-body">
-                        <h5 class="card-title">BUZO JOGGER CARGO
-                        </h5>
-                        <p class="card-text">S/ 79.00</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card full-width">
-                    <img src="imagenes/CatPantalones/203.JPG" class="card-img-top" alt="Producto 4">
-                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
-                        <center><span>5/5</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span>
-                         <span class="star">&#9733;</span></center> 
-                       </div>
-                    <div class="card-body">
-                        <h5 class="card-title">BUZO CARGO</h5>
-                        <p class="card-text">S/ 59.00</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card full-width">
-                    <img src="imagenes/CatPantalones/204.JPG" class="card-img-top" alt="Producto 4">
+                    <img src="imagenes/CatPolos/94.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
                         <center><span>5/5</span>
                          <span class="star">&#9733;</span>
@@ -300,15 +358,16 @@
                        </div>
                     <div class="card-body">
                         <h5 class="card-title">
-                            PANTALON CARGO
+                            PLO BASICO
                             </h5>
-                        <p class="card-text"> S/ 69.00</p>
+                        <p class="card-text"> S/ 29.00</p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card full-width">
-                    <img src="imagenes/CatPantalones/205.JPG" class="card-img-top" alt="Producto 4">  
+                    <img src="imagenes/CatPolos/95.JPG" class="card-img-top" alt="Producto 4">  
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
                         <center><span>5/5</span>
                          <span class="star">&#9733;</span>
@@ -319,10 +378,11 @@
                        </div>                 
                     <div class="card-body">
                         <h5 class="card-title">
-                            PANTALÓN PALAZZO EN RIB
+                            POLO BASICO
 
                           </h5>
-                        <p class="card-text">  S/ 109.00 </p>
+                        <p class="card-text">  S/ 29.00 </p>
+                        <button type="button" class="btn btn-detalles" data-bs-toggle="modal" data-bs-target="#detalleModal-82">Detalles</button>
                         
                     </div>
                 </div>
@@ -330,9 +390,8 @@
             </div>
         </div>
 
-    <!--FOOTER (pie de página)-->
-    <div id="footer-placeholder"></div>
-
+<!--FOOTER (pie de página)-->
+<div id="footer-placeholder"></div>
 
 <script>
     // Cargar el header
@@ -346,7 +405,6 @@
         .then(data => document.getElementById("footer-placeholder").innerHTML = data);
 </script>
     
-
     <script src="../../js/script.js"></script>
 </body>
 

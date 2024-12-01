@@ -368,11 +368,11 @@
                 
                 <button class="btn btn-dark btn-carrito" 
                         onclick="añadirAlCarrito(
-                            '<%= producto.getNombre() %>', 
+                            `<%= producto.getNombre().replace("\"", "&quot;") %>`, 
                             <%= precioFinal %>, 
                             <%= mostrarTallas ? "obtenerTallaSeleccionada()" : "null" %>, 
-                            '<%= producto.getCategoria() %>', 
-                            '<%= producto.getTipo_producto() != null ? producto.getTipo_producto() : "No especificado" %>'
+                            `<%= producto.getCategoria() %>`, 
+                            `<%= producto.getTipo_producto() != null ? producto.getTipo_producto() : "No especificado" %>`
                         )">
                     <i class="fas fa-shopping-cart"></i> Añadir al Carrito
                 </button>

@@ -96,7 +96,18 @@
             font-size: 1.1rem;
             color: #666;
             line-height: 1.6;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: 10px;
             margin: 1.5rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .producto-descripcion-titulo {
+            font-size: 1.3rem;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
 
         .tallas-container {
@@ -356,7 +367,13 @@
                 <% } %>
                 
                 <button class="btn btn-dark btn-carrito" 
-                        onclick="añadirAlCarrito('<%= producto.getNombre() %>', <%= precioFinal %>, <%= mostrarTallas ? "obtenerTallaSeleccionada()" : "null" %>, '<%= producto.getCategoria() %>')">
+                        onclick="añadirAlCarrito(
+                            '<%= producto.getNombre() %>', 
+                            <%= precioFinal %>, 
+                            <%= mostrarTallas ? "obtenerTallaSeleccionada()" : "null" %>, 
+                            '<%= producto.getCategoria() %>', 
+                            '<%= producto.getTipo_producto() != null ? producto.getTipo_producto() : "No especificado" %>'
+                        )">
                     <i class="fas fa-shopping-cart"></i> Añadir al Carrito
                 </button>
                 
@@ -366,6 +383,11 @@
                         ¡Últimas <%= producto.getStock() %> unidades disponibles!
                     </div>
                 <% } %>
+
+                <div class="producto-descripcion">
+                    <div class="producto-descripcion-titulo">Descripción del Producto</div>
+                    <%= producto.getDescripcion() %>
+                </div>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-function añadirAlCarrito(nombre, precio, talla, color) {
+function añadirAlCarrito(nombre, precio, talla, categoria, tipo_producto) {
     // Verificar talla solo si es necesario
     if (talla !== null && !talla) {
         Swal.fire({
@@ -12,29 +12,30 @@ function añadirAlCarrito(nombre, precio, talla, color) {
     }
 
     let carrito = JSON.parse(localStorage.getItem('cart')) || [];
-    // Buscar producto con el mismo nombre Y talla (si aplica)
     const productoExistente = carrito.find(item => 
-        item.name === nombre && (talla === null || item.talla === talla)
+        item.name === nombre && 
+        (talla === null || item.talla === talla)
     );
 
     if (productoExistente) {
         productoExistente.quantity += 1;
     } else {
-        carrito.push({ 
-            name: nombre, 
-            price: precio, 
-            quantity: 1, 
-            talla: talla || 'N/A', 
-            color: color 
+        carrito.push({
+            name: nombre,
+            price: precio,
+            talla: talla,
+            categoria: categoria,
+            tipo_producto: tipo_producto,
+            quantity: 1
         });
     }
 
     localStorage.setItem('cart', JSON.stringify(carrito));
-
-    // Mostrar notificación animada
+    
+    // Mostrar notificación
     Swal.fire({
-        title: '¡Añadido al carrito!',
-        text: talla ? `${nombre} (Talla: ${talla})` : nombre,
+        title: '¡Producto agregado!',
+        text: `${nombre} se agregó al carrito`,
         icon: 'success',
         showConfirmButton: false,
         timer: 1500,
@@ -42,16 +43,7 @@ function añadirAlCarrito(nombre, precio, talla, color) {
         toast: true,
         background: '#1a1a1a',
         color: '#fff',
-        iconColor: '#28a745',
-        customClass: {
-            popup: 'animated slideInRight'
-        },
-        showClass: {
-            popup: 'animate__animated animate__fadeInRight'
-        },
-        hideClass: {
-            popup: 'animate__animated animate__fadeOutRight'
-        }
+        iconColor: '#28a745'
     });
 }
 
@@ -101,32 +93,32 @@ function actualizarTotales() {
 
 function renderCarrito() {
     let carrito = JSON.parse(localStorage.getItem('cart')) || [];
-    const contenedorCarrito = document.querySelector('.productos');
+    const contenedorCarrito = document.getElementById('productos');
     if (!contenedorCarrito) return;
 
     contenedorCarrito.innerHTML = '';
 
     if (carrito.length === 0) {
         contenedorCarrito.innerHTML = '<p>El carrito está vacío.</p>';
-        actualizarTotales(); // Actualizar totales incluso si está vacío
         return;
     }
 
     carrito.forEach(producto => {
-        const precioTotal = (producto.price * producto.quantity).toFixed(2); // Formatear precio total por producto
+        const precioTotal = (producto.price * producto.quantity).toFixed(2);
         contenedorCarrito.innerHTML += `
             <div class="producto">
                 <h3>${producto.name}</h3>
-                <p>Talla: ${producto.talla}</p>
-                <p>Categoría: ${producto.color || 'N/A'}</p>
-                <p>Precio: S/${producto.price.toFixed(2)}</p>
-                <p>Cantidad: ${producto.quantity}</p>
-                <p>Total: S/${precioTotal}</p>
+                <p><strong>Tipo:</strong> ${producto.tipo_producto || 'No especificado'}</p>
+                <p><strong>Talla:</strong> ${producto.talla || 'No especificado'}</p>
+                <p><strong>Categoría:</strong> ${producto.categoria || 'No especificado'}</p>
+                <p><strong>Precio:</strong> S/ ${producto.price.toFixed(2)}</p>
+                <p><strong>Cantidad:</strong> ${producto.quantity}</p>
+                <p><strong>Total:</strong> S/ ${precioTotal}</p>
             </div>
         `;
     });
 
-    actualizarTotales();
+    actualizarResumen(carrito);
 }
 
 // Agregar función para finalizar compra
@@ -224,3 +216,25 @@ document.addEventListener('DOMContentLoaded', function() {
         document.head.appendChild(animateCss);
     }
 });
+
+function actualizarResumen(carrito) {
+    // Calcular subtotal
+    const subtotal = carrito.reduce((total, producto) => {
+        return total + (producto.price * producto.quantity);
+    }, 0);
+
+    // Calcular descuento (20%)
+    const descuento = subtotal * 0.20;
+
+    // Costo de entrega fijo
+    const entrega = subtotal > 0 ? 10 : 0; // S/10 de entrega si hay productos
+
+    // Calcular total
+    const total = subtotal - descuento + entrega;
+
+    // Actualizar los valores en el HTML
+    document.querySelector('.resumen-detalles p:nth-child(1) span').textContent = `S/${subtotal.toFixed(2)}`;
+    document.querySelector('.resumen-detalles p:nth-child(2) span').textContent = `-S/${descuento.toFixed(2)}`;
+    document.querySelector('.resumen-detalles p:nth-child(3) span').textContent = `S/${entrega.toFixed(2)}`;
+    document.querySelector('.resumen h3 span').textContent = `S/${total.toFixed(2)}`;
+}

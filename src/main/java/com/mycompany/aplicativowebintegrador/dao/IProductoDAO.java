@@ -12,4 +12,5 @@ public interface IProductoDAO {
     void eliminar(int id) throws SQLException;
     List<Producto> obtenerProductosDestacados(int limite) throws SQLException;
     String obtenerRutaImagen(Producto producto);
+    List<Producto> obtenerProductosPorTipoYCategoria(String tipo, String categoria) throws SQLException;
 } 

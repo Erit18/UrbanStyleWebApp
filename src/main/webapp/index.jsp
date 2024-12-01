@@ -42,7 +42,7 @@
                     Hombre    
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="views/catalogo/CatPolera.html">Poleras</a></li>
+                <li><a class="dropdown-item" href="views/catalogo/CatPolera.jsp">Poleras</a></li>
                 <li><a class="dropdown-item" href="views/catalogo/CatPolos.html">Polos</a></li>
                 <li><a class="dropdown-item" href="views/catalogo/CatPantalones.html">Pantalones</a></li>
                 </ul>

@@ -204,4 +204,24 @@ public class ProductoDAO extends BaseDAO implements IProductoDAO {
         // La verificación de si existe el archivo se hará en el JSP
         return imagePath;
     }
+
+    @Override
+    public List<Producto> obtenerProductosPorTipoYCategoria(String tipo, String categoria) throws SQLException {
+        List<Producto> productos = new ArrayList<>();
+        String sql = "SELECT * FROM Ropa WHERE tipo_producto = ? AND categoria = ? ORDER BY fecha_agregado DESC";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, tipo);
+            stmt.setString(2, categoria);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                productos.add(mapearProducto(rs));
+            }
+            
+            return productos;
+        }
+    }
 }

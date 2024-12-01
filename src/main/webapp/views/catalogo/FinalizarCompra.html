@@ -376,12 +376,10 @@
         console.log('DOM Cargado');
         cargarResumenPedido();
         
-        // Event listener para el método de envío si existe
+        // Event listener para el método de envío
         const shippingMethod = document.getElementById('shippingMethod');
         if (shippingMethod) {
-            shippingMethod.addEventListener('change', function() {
-                cargarResumenPedido(); // Actualizar totales cuando cambie el método de envío
-            });
+            shippingMethod.addEventListener('change', actualizarCostoEnvio);
         }
     });
 </script>

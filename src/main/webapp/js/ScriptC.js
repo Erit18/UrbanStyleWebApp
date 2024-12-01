@@ -147,43 +147,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Función para cargar el resumen en FinalizarCompra.html
 function cargarResumenPedido() {
-    console.log('Cargando resumen del pedido...'); // Debug
-    const carrito = JSON.parse(localStorage.getItem('cart')) || [];
-    console.log('Carrito cargado:', carrito); // Debug
+    const resumenGuardado = JSON.parse(localStorage.getItem('resumenPedido'));
+    if (!resumenGuardado) return;
 
-    // Calcular subtotal
-    let subtotal = 0;
-    carrito.forEach(producto => {
-        subtotal += producto.price * producto.quantity;
-        console.log(`Producto: ${producto.name}, Precio: ${producto.price}, Cantidad: ${producto.quantity}`); // Debug
-    });
-
-    console.log('Subtotal calculado:', subtotal); // Debug
-
-    // Obtener elementos del DOM
+    // Actualizar elementos en FinalizarCompra.html
     const subtotalElement = document.getElementById('subtotal');
     const descuentoElement = document.getElementById('descuento');
-    const envioElement = document.getElementById('entrega');
+    const entregaElement = document.getElementById('entrega');
     const totalElement = document.getElementById('total');
 
-    console.log('Elemento subtotal encontrado:', subtotalElement); // Debug
+    if (subtotalElement) subtotalElement.textContent = `S/${resumenGuardado.subtotal.toFixed(2)}`;
+    if (descuentoElement) descuentoElement.textContent = `-S/${resumenGuardado.descuento.toFixed(2)}`;
+    if (entregaElement) entregaElement.textContent = `S/${resumenGuardado.entrega.toFixed(2)}`;
+    if (totalElement) totalElement.textContent = `S/${resumenGuardado.total.toFixed(2)}`;
 
-    // Actualizar valores
-    if (subtotalElement) {
-        subtotalElement.textContent = `S/${subtotal.toFixed(2)}`;
-    } else {
-        console.error('No se encontró el elemento subtotal');
+    // Agregar event listener para el método de envío
+    const shippingMethod = document.getElementById('shippingMethod');
+    if (shippingMethod) {
+        shippingMethod.addEventListener('change', actualizarCostoEnvio);
     }
-
-    // Calcular otros valores
-    const descuento = subtotal * 0.20;
-    const envio = 0;
-    const total = subtotal - descuento + envio;
-
-    // Actualizar otros elementos
-    if (descuentoElement) descuentoElement.textContent = `-S/${descuento.toFixed(2)}`;
-    if (envioElement) envioElement.textContent = `S/${envio.toFixed(2)}`;
-    if (totalElement) totalElement.textContent = `S/${total.toFixed(2)}`;
 }
 
 // Asegurarse de que la función se ejecute cuando se carga la página
@@ -226,15 +208,43 @@ function actualizarResumen(carrito) {
     // Calcular descuento (20%)
     const descuento = subtotal * 0.20;
 
-    // Costo de entrega fijo
-    const entrega = subtotal > 0 ? 10 : 0; // S/10 de entrega si hay productos
+    // Guardar subtotal y descuento en localStorage
+    const resumen = {
+        subtotal: subtotal,
+        descuento: descuento,
+        entrega: 0, // Valor inicial, se actualizará según la selección
+        total: subtotal - descuento // Se actualizará con el costo de envío
+    };
+    localStorage.setItem('resumenPedido', JSON.stringify(resumen));
 
-    // Calcular total
-    const total = subtotal - descuento + entrega;
-
-    // Actualizar los valores en el HTML
+    // Actualizar los valores en el HTML del carrito
     document.querySelector('.resumen-detalles p:nth-child(1) span').textContent = `S/${subtotal.toFixed(2)}`;
     document.querySelector('.resumen-detalles p:nth-child(2) span').textContent = `-S/${descuento.toFixed(2)}`;
-    document.querySelector('.resumen-detalles p:nth-child(3) span').textContent = `S/${entrega.toFixed(2)}`;
-    document.querySelector('.resumen h3 span').textContent = `S/${total.toFixed(2)}`;
+    document.querySelector('.resumen-detalles p:nth-child(3) span').textContent = `S/0.00`;
+    document.querySelector('.resumen h3 span').textContent = `S/${(subtotal - descuento).toFixed(2)}`;
+}
+
+function actualizarCostoEnvio() {
+    const shippingMethod = document.getElementById('shippingMethod');
+    if (!shippingMethod) return;
+
+    const resumenGuardado = JSON.parse(localStorage.getItem('resumenPedido'));
+    if (!resumenGuardado) return;
+
+    // Actualizar costo de envío según método seleccionado
+    const costoEnvio = shippingMethod.value === 'delivery' ? 10.00 : 0.00;
+    
+    // Actualizar resumen con nuevo costo de envío
+    resumenGuardado.entrega = costoEnvio;
+    resumenGuardado.total = resumenGuardado.subtotal - resumenGuardado.descuento + costoEnvio;
+    
+    // Guardar actualización
+    localStorage.setItem('resumenPedido', JSON.stringify(resumenGuardado));
+
+    // Actualizar elementos en la página
+    const entregaElement = document.getElementById('entrega');
+    const totalElement = document.getElementById('total');
+    
+    if (entregaElement) entregaElement.textContent = `S/${costoEnvio.toFixed(2)}`;
+    if (totalElement) totalElement.textContent = `S/${resumenGuardado.total.toFixed(2)}`;
 }

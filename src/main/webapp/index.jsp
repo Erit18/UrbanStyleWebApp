@@ -52,9 +52,9 @@
                       Mujer   
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="views/catalogo/CatPolerasM.html">Poleras</a></li>
-                  <li><a class="dropdown-item" href="views/catalogo/CatPolosM.html">Polos</a></li>
-                  <li><a class="dropdown-item" href="views/catalogo/CatPantalonesM.html">Pantalones</a></li>
+                  <li><a class="dropdown-item" href="views/catalogo/CatPolerasM.jsp">Poleras</a></li>
+                  <li><a class="dropdown-item" href="views/catalogo/CatPolosM.jsp">Polos</a></li>
+                  <li><a class="dropdown-item" href="views/catalogo/CatPantalonesM.jsp">Pantalones</a></li>
                   </ul>
                   </li>
                   <li class="nav-item dropdown mx-4">

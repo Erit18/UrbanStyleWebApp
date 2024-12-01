@@ -1,3 +1,9 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.mycompany.aplicativowebintegrador.modelo.Producto" %>
+<%@ page import="com.mycompany.aplicativowebintegrador.dao.ProductoDAO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.sql.SQLException" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,7 +36,49 @@
       </div>
     <div class="container-fluid">
         <div class="row">
-           
+            <% 
+                try {
+                    ProductoDAO productoDAO = new ProductoDAO();
+                    List<Producto> poleras = productoDAO.obtenerProductosPorTipoYCategoria("polera", "mujer");
+                    
+                    for (Producto polera : poleras) {
+                        String imagePath = productoDAO.obtenerRutaImagen(polera);
+            %>
+            <div class="col-md-3">
+                <div class="card full-width">
+                    <a href="DetalleProducto.jsp?id=<%= polera.getId_ropa() %>">
+                        <img src="${pageContext.request.contextPath}/<%= imagePath %>" 
+                             class="card-img-top" 
+                             alt="<%= polera.getNombre() %>"
+                             onerror="this.src='${pageContext.request.contextPath}/views/Intranet/imagenes/default-product.jpg'">
+                    </a>
+                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
+                        <center><span>5/5</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                        </center>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><%= polera.getNombre() %></h5>
+                        <p class="card-text">S/ <%= String.format("%.2f", polera.getPrecio()) %></p>
+                    </div>
+                </div>
+            </div>
+            <% 
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+            %>
+                    <div class="alert alert-danger" role="alert">
+                        Error al cargar los productos. Por favor, intente más tarde.
+                    </div>
+            <%
+                }
+            %>
+
             <div class="col-md-3"> 
                 <div class="card full-width">
                     <a href="DetalleProducto.html">

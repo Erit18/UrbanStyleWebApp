@@ -27,7 +27,7 @@ async function cargarProductos() {
             tr.innerHTML = `
                 <td>${producto.id_ropa}</td>
                 <td>${producto.nombre}</td>
-                <td>${producto.categoria}</td>
+                <td>${producto.categoria} - ${producto.tipo_producto || 'No especificado'}</td>
                 <td>S/ ${producto.precio.toFixed(2)}</td>
                 <td>${producto.stock}</td>
                 <td class="no-print">
@@ -92,6 +92,7 @@ async function editarProducto(id) {
         document.getElementById('descripcion').value = productoActual.descripcion || '';
         document.getElementById('precio').value = productoActual.precio;
         document.getElementById('categoria').value = productoActual.categoria;
+        document.getElementById('tipoProducto').value = productoActual.tipo_producto;
         document.getElementById('stock').value = productoActual.stock;
         document.getElementById('fechaCaducidad').value = productoActual.fecha_caducidad ? 
             new Date(productoActual.fecha_caducidad).toISOString().split('T')[0] : '';
@@ -134,6 +135,7 @@ async function guardarProducto(event) {
         descripcion: document.getElementById('descripcion').value,
         precio: parseFloat(document.getElementById('precio').value),
         categoria: document.getElementById('categoria').value,
+        tipo_producto: document.getElementById('tipoProducto').value,
         stock: parseInt(document.getElementById('stock').value),
         fecha_caducidad: document.getElementById('fechaCaducidad').value || null,
         descuento: parseFloat(document.getElementById('descuento').value) || 0,

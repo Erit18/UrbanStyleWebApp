@@ -192,6 +192,18 @@
                                 <option value="">Seleccione un proveedor</option>
                             </select>
                         </div>
+                        
+                        <div class="mb-3">
+                            <label for="tipoProducto" class="form-label">Tipo de Producto</label>
+                            <select class="form-control" id="tipoProducto" required>
+                                <option value="">Seleccione un tipo</option>
+                                <option value="polo">Polo</option>
+                                <option value="pantalon">Pantalón</option>
+                                <option value="calzado">Calzado</option>
+                                <option value="accesorio">Accesorio</option>
+                                <option value="polera">Polera</option>
+                            </select>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">

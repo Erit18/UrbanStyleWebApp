@@ -16,6 +16,7 @@ public class ProductoDAO extends BaseDAO implements IProductoDAO {
         producto.setDescripcion(rs.getString("descripcion"));
         producto.setPrecio(rs.getBigDecimal("precio"));
         producto.setCategoria(rs.getString("categoria"));
+        producto.setTipo_producto(rs.getString("tipo_producto"));
         producto.setStock(rs.getInt("stock"));
         producto.setFecha_caducidad(rs.getDate("fecha_caducidad"));
         producto.setDescuento(rs.getBigDecimal("descuento"));
@@ -69,59 +70,45 @@ public class ProductoDAO extends BaseDAO implements IProductoDAO {
     
     @Override
     public void insertar(Producto producto) throws SQLException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
+        String sql = "INSERT INTO Ropa (nombre, descripcion, precio, categoria, tipo_producto, stock, fecha_caducidad, descuento, id_proveedor) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement(
-                "INSERT INTO Ropa (nombre, descripcion, precio, categoria, stock, " +
-                "fecha_caducidad, descuento, id_proveedor, fecha_agregado) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)"
-            );
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, producto.getNombre());
+            stmt.setString(2, producto.getDescripcion());
+            stmt.setBigDecimal(3, producto.getPrecio());
+            stmt.setString(4, producto.getCategoria());
+            stmt.setString(5, producto.getTipo_producto());
+            stmt.setInt(6, producto.getStock());
+            stmt.setDate(7, producto.getFecha_caducidad() != null ? new java.sql.Date(producto.getFecha_caducidad().getTime()) : null);
+            stmt.setBigDecimal(8, producto.getDescuento());
+            stmt.setInt(9, producto.getId_proveedor());
             
-            setearParametrosProducto(stmt, producto);
             stmt.executeUpdate();
-        } finally {
-            closeResources(conn, stmt);
         }
-    }
-    
-    private void setearParametrosProducto(PreparedStatement stmt, Producto producto) throws SQLException {
-        stmt.setString(1, producto.getNombre());
-        stmt.setString(2, producto.getDescripcion());
-        stmt.setBigDecimal(3, producto.getPrecio());
-        stmt.setString(4, producto.getCategoria());
-        stmt.setInt(5, producto.getStock());
-        
-        if (producto.getFecha_caducidad() != null) {
-            stmt.setDate(6, new java.sql.Date(producto.getFecha_caducidad().getTime()));
-        } else {
-            stmt.setNull(6, Types.DATE);
-        }
-        
-        stmt.setBigDecimal(7, producto.getDescuento());
-        stmt.setInt(8, producto.getId_proveedor());
     }
     
     @Override
     public void actualizar(Producto producto) throws SQLException {
-        String sql = "UPDATE Ropa SET nombre = ?, descripcion = ?, precio = ?, categoria = ?, stock = ?, fecha_caducidad = ?, descuento = ?, id_proveedor = ? WHERE id_ropa = ?";
+        String sql = "UPDATE Ropa SET nombre = ?, descripcion = ?, precio = ?, categoria = ?, " +
+                    "tipo_producto = ?, stock = ?, fecha_caducidad = ?, descuento = ?, id_proveedor = ? " +
+                    "WHERE id_ropa = ?";
         
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, producto.getNombre());
+            stmt.setString(2, producto.getDescripcion());
+            stmt.setBigDecimal(3, producto.getPrecio());
+            stmt.setString(4, producto.getCategoria());
+            stmt.setString(5, producto.getTipo_producto());
+            stmt.setInt(6, producto.getStock());
+            stmt.setDate(7, producto.getFecha_caducidad() != null ? new java.sql.Date(producto.getFecha_caducidad().getTime()) : null);
+            stmt.setBigDecimal(8, producto.getDescuento());
+            stmt.setInt(9, producto.getId_proveedor());
+            stmt.setInt(10, producto.getId_ropa());
             
-            pstmt.setString(1, producto.getNombre());
-            pstmt.setString(2, producto.getDescripcion());
-            pstmt.setBigDecimal(3, producto.getPrecio());
-            pstmt.setString(4, producto.getCategoria());
-            pstmt.setInt(5, producto.getStock());
-            pstmt.setDate(6, new java.sql.Date(producto.getFecha_caducidad().getTime()));
-            pstmt.setBigDecimal(7, producto.getDescuento());
-            pstmt.setInt(8, producto.getId_proveedor());
-            pstmt.setInt(9, producto.getId_ropa());
-            
-            pstmt.executeUpdate();
+            stmt.executeUpdate();
         }
     }
     
@@ -186,6 +173,7 @@ public class ProductoDAO extends BaseDAO implements IProductoDAO {
                 producto.setDescripcion(rs.getString("descripcion"));
                 producto.setPrecio(rs.getBigDecimal("precio"));
                 producto.setCategoria(rs.getString("categoria"));
+                producto.setTipo_producto(rs.getString("tipo_producto"));
                 producto.setStock(rs.getInt("stock"));
                 producto.setFecha_caducidad(rs.getDate("fecha_caducidad"));
                 producto.setDescuento(rs.getBigDecimal("descuento"));

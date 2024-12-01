@@ -322,25 +322,41 @@
                     <% } %>
                 </div>
                 
-                <% if (descuento != null && descuento.compareTo(BigDecimal.ZERO) > 0) { %>
-                    <div class="tiempo-limite">
-                        <i class="fas fa-clock"></i> ¡Oferta por tiempo limitado! 🔥
+                <% 
+                // Determinar si mostrar tallas y qué tipo de tallas mostrar
+                String tipoProducto = producto.getTipo_producto();
+                boolean mostrarTallas = tipoProducto != null && !tipoProducto.equals("accesorio");
+                String[] tallas = null;
+                String labelTallas = "Tallas disponibles";
+                
+                if (mostrarTallas) {
+                    switch(tipoProducto.toLowerCase()) {
+                        case "calzado":
+                            tallas = new String[]{"35", "36", "37", "38", "39", "40", "41", "42", "43"};
+                            labelTallas = "Tallas disponibles (EUR)";
+                            break;
+                        case "pantalon":
+                            tallas = new String[]{"28", "30", "32", "34", "36", "38", "40"};
+                            labelTallas = "Tallas disponibles (Cintura)";
+                            break;
+                        case "polo":
+                        case "polera":
+                            tallas = new String[]{"XS", "S", "M", "L", "XL", "XXL"};
+                            break;
+                    }
+                %>
+                    <div class="tallas-container">
+                        <label for="tallas" class="form-label"><%= labelTallas %></label>
+                        <div id="tallas" class="btn-group" role="group">
+                            <% for (String talla : tallas) { %>
+                                <button type="button" class="btn btn-outline-dark talla-btn" data-talla="<%= talla %>"><%= talla %></button>
+                            <% } %>
+                        </div>
                     </div>
                 <% } %>
                 
-                <p class="producto-descripcion"><%= producto.getDescripcion() %></p>
-                
-                <div class="tallas-container">
-                    <label for="tallas" class="form-label">Tallas disponibles</label>
-                    <div id="tallas" class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-dark talla-btn" data-talla="S">S</button>
-                        <button type="button" class="btn btn-outline-dark talla-btn" data-talla="M">M</button>
-                        <button type="button" class="btn btn-outline-dark talla-btn" data-talla="L">L</button>
-                    </div>
-                </div>
-                
                 <button class="btn btn-dark btn-carrito" 
-                        onclick="añadirAlCarrito('<%= producto.getNombre() %>', <%= precioFinal %>, obtenerTallaSeleccionada(), '<%= producto.getCategoria() %>')">
+                        onclick="añadirAlCarrito('<%= producto.getNombre() %>', <%= precioFinal %>, <%= mostrarTallas ? "obtenerTallaSeleccionada()" : "null" %>, '<%= producto.getCategoria() %>')">
                     <i class="fas fa-shopping-cart"></i> Añadir al Carrito
                 </button>
                 

@@ -14,6 +14,7 @@ public class Producto extends EntidadBase {
     private BigDecimal descuento;
     private int id_proveedor;
     private Date fecha_agregado;
+    private String tipo_producto;
     
     // Getters y Setters
     public int getId_ropa() {
@@ -94,5 +95,13 @@ public class Producto extends EntidadBase {
     
     public void setFecha_agregado(Date fecha_agregado) {
         this.fecha_agregado = fecha_agregado;
+    }
+    
+    public String getTipo_producto() {
+        return tipo_producto;
+    }
+    
+    public void setTipo_producto(String tipo_producto) {
+        this.tipo_producto = tipo_producto;
     }
 }

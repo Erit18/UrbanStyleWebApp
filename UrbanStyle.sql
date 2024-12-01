@@ -35,7 +35,8 @@ CREATE TABLE Ropa (
     descuento DECIMAL(5, 2) DEFAULT 0,
     id_proveedor INT,
     fecha_agregado DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_proveedor) REFERENCES Proveedores(id_proveedor)
+    FOREIGN KEY (id_proveedor) REFERENCES Proveedores(id_proveedor),
+    tipo_producto ENUM('polo', 'pantalon', 'calzado', 'accesorio', 'polera')
 );
 
 -- Tabla Pedidos

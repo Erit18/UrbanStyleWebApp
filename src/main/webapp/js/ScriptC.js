@@ -1,6 +1,6 @@
 function añadirAlCarrito(nombre, precio, talla, color) {
-    // Verificar que se haya seleccionado una talla
-    if (!talla) {
+    // Verificar talla solo si es necesario
+    if (talla !== null && !talla) {
         Swal.fire({
             title: '¡Atención!',
             text: 'Por favor, selecciona una talla',
@@ -12,9 +12,9 @@ function añadirAlCarrito(nombre, precio, talla, color) {
     }
 
     let carrito = JSON.parse(localStorage.getItem('cart')) || [];
-    // Buscar producto con el mismo nombre Y talla
+    // Buscar producto con el mismo nombre Y talla (si aplica)
     const productoExistente = carrito.find(item => 
-        item.name === nombre && item.talla === talla
+        item.name === nombre && (talla === null || item.talla === talla)
     );
 
     if (productoExistente) {
@@ -24,7 +24,7 @@ function añadirAlCarrito(nombre, precio, talla, color) {
             name: nombre, 
             price: precio, 
             quantity: 1, 
-            talla: talla, 
+            talla: talla || 'N/A', 
             color: color 
         });
     }
@@ -34,7 +34,7 @@ function añadirAlCarrito(nombre, precio, talla, color) {
     // Mostrar notificación animada
     Swal.fire({
         title: '¡Añadido al carrito!',
-        text: `${nombre} (Talla: ${talla})`,
+        text: talla ? `${nombre} (Talla: ${talla})` : nombre,
         icon: 'success',
         showConfirmButton: false,
         timer: 1500,

@@ -158,7 +158,7 @@ public class ProductoDAO extends BaseDAO implements IProductoDAO {
     @Override
     public List<Producto> obtenerProductosDestacados(int limite) throws SQLException {
         List<Producto> productos = new ArrayList<>();
-        String sql = "SELECT * FROM Ropa ORDER BY fecha_agregado ASC LIMIT ?";
+        String sql = "SELECT * FROM Ropa ORDER BY RAND() LIMIT ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -167,20 +167,7 @@ public class ProductoDAO extends BaseDAO implements IProductoDAO {
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
-                Producto producto = new Producto();
-                producto.setId_ropa(rs.getInt("id_ropa"));
-                producto.setNombre(rs.getString("nombre"));
-                producto.setDescripcion(rs.getString("descripcion"));
-                producto.setPrecio(rs.getBigDecimal("precio"));
-                producto.setCategoria(rs.getString("categoria"));
-                producto.setTipo_producto(rs.getString("tipo_producto"));
-                producto.setStock(rs.getInt("stock"));
-                producto.setFecha_caducidad(rs.getDate("fecha_caducidad"));
-                producto.setDescuento(rs.getBigDecimal("descuento"));
-                producto.setId_proveedor(rs.getInt("id_proveedor"));
-                producto.setFecha_agregado(rs.getTimestamp("fecha_agregado"));
-                
-                productos.add(producto);
+                productos.add(mapearProducto(rs));
             }
             
             return productos;
@@ -196,8 +183,11 @@ public class ProductoDAO extends BaseDAO implements IProductoDAO {
             return defaultImage;
         }
         
-        // Construir la ruta usando solo el ID
-        return baseImagePath + producto.getId_ropa() + ".jpg";
+        // Array de extensiones posibles
+        String[] extensiones = {".jpg", ".JPG", ".jpeg", ".JPEG"};
+        
+        // Devolver la primera ruta con extensión .jpg (la más común)
+        return baseImagePath + producto.getId_ropa() + extensiones[0];
     }
 
     @Override

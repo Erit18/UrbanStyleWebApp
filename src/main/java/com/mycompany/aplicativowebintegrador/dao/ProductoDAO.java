@@ -189,20 +189,15 @@ public class ProductoDAO extends BaseDAO implements IProductoDAO {
 
     @Override
     public String obtenerRutaImagen(Producto producto) {
-        String baseImagePath = "views/Intranet/imagenes/";
-        String defaultImage = baseImagePath + "default-product.jpg";
+        String baseImagePath = "views/Intranet/imagenes/productos/";
+        String defaultImage = "views/Intranet/imagenes/default-product.jpg";
         
-        if (producto == null || producto.getCategoria() == null) {
+        if (producto == null) {
             return defaultImage;
         }
         
-        // Construir la ruta según la categoría
-        String imagePath = baseImagePath + 
-                          producto.getCategoria().toLowerCase() + "/" + 
-                          producto.getId_ropa() + ".jpg";
-        
-        // La verificación de si existe el archivo se hará en el JSP
-        return imagePath;
+        // Construir la ruta usando solo el ID
+        return baseImagePath + producto.getId_ropa() + ".jpg";
     }
 
     @Override

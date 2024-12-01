@@ -1,3 +1,9 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.mycompany.aplicativowebintegrador.modelo.Producto" %>
+<%@ page import="com.mycompany.aplicativowebintegrador.dao.ProductoDAO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.sql.SQLException" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +17,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../css/catalogostyles.css">
-    <title>Intranet</title>
+    <title>Polos para Hombre</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     
 </head>
@@ -30,7 +36,48 @@
       </div>
     <div class="container-fluid">
         <div class="row">
-           
+            <% 
+                try {
+                    ProductoDAO productoDAO = new ProductoDAO();
+                    List<Producto> polos = productoDAO.obtenerProductosPorTipoYCategoria("polo", "hombre");
+                    
+                    for (Producto polo : polos) {
+                        String imagePath = productoDAO.obtenerRutaImagen(polo);
+            %>
+            <div class="col-md-3">
+                <div class="card full-width">
+                    <a href="DetalleProducto.jsp?id=<%= polo.getId_ropa() %>">
+                        <img src="${pageContext.request.contextPath}/<%= imagePath %>" 
+                             class="card-img-top" 
+                             alt="<%= polo.getNombre() %>"
+                             onerror="this.src='${pageContext.request.contextPath}/views/Intranet/imagenes/default-product.jpg'">
+                    </a>
+                    <div class="rating" style="font-size: 1.5rem; text-align: left;">
+                        <center><span>5/5</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                            <span class="star">&#9733;</span>
+                        </center>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><%= polo.getNombre() %></h5>
+                        <p class="card-text">S/ <%= String.format("%.2f", polo.getPrecio()) %></p>
+                    </div>
+                </div>
+            </div>
+            <% 
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+            %>
+                    <div class="alert alert-danger" role="alert">
+                        Error al cargar los productos. Por favor, intente más tarde.
+                    </div>
+            <%
+                }
+            %>
 
             <div class="col-md-3">
                 <div class="card full-width">
@@ -44,15 +91,13 @@
                          <span class="star">&#9733;</span>
                          <span class="star">&#9733;</span>
                          <span class="star">&#9733;</span></center> 
-                       </div>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">POLO OVERSIZE ESTAMPADO
-                        </h5>
+                        <h5 class="card-title">POLO OVERSIZE ESTAMPADO</h5>
                         <p class="card-text">S/ 49.00</p>
                     </div>
                 </div>
             </div>
-
 
             <div class="col-md-3"> 
                 <div class="card full-width">
@@ -84,11 +129,8 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">POLO OVERSIZE ESTAMPADO
-
-                        </h5>
-                        <p class="card-text">S/ 49.00
-                        </p>
+                        <h5 class="card-title">POLO OVERSIZE ESTAMPADO</h5>
+                        <p class="card-text">S/ 49.00</p>
                     </div>
                 </div>
             </div>
@@ -108,8 +150,7 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">POLO PIQUÉ FREEDOM
-                        </h5>
+                        <h5 class="card-title">POLO PIQUÉ FREEDOM</h5>
                         <p class="card-text">S/ 79.00</p>
                     </div>
                 </div>
@@ -126,8 +167,7 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">POLOS BOXY FIT
-                        </h5>
+                        <h5 class="card-title">POLOS BOXY FIT</h5>
                         <p class="card-text">S/ 59.00 </p>
                     </div>
                 </div>
@@ -144,8 +184,7 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">POLOS BOXY FIT
-                        </h5>
+                        <h5 class="card-title">POLOS BOXY FIT</h5>
                         <p class="card-text">S/ 59.00</p>
                     </div>
                 </div>
@@ -179,8 +218,7 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">POLO OVERSIZE ESTAMPADO
-                        </h5>
+                        <h5 class="card-title">POLO OVERSIZE ESTAMPADO</h5>
                         <p class="card-text">S/ S/ 49.90</p>
                     </div>
                 </div>
@@ -197,8 +235,7 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">POLO OVERSIZE ESTAMPADO
-                        </h5>
+                        <h5 class="card-title">POLO OVERSIZE ESTAMPADO</h5>
                         <p class="card-text">S/ 49.00</p>
                     </div>
                 </div>
@@ -249,8 +286,7 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">CAMISERO WAFFLE
-                        </h5>
+                        <h5 class="card-title">CAMISERO WAFFLE</h5>
                         <p class="card-text">S/ 59.00</p>
                     </div>
                 </div>

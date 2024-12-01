@@ -124,21 +124,21 @@
         <div class="row justify-content-center">
 
           <div class="col-6 col-md-3 category-item">
-            <a href="views/catalogo/CatPolos.html" style="color: black; text-decoration: none;" >
+            <a href="views/catalogo/CatPolos.jsp" style="color: black; text-decoration: none;" >
               <img src="views/Intranet/imagenes/Polo.png" class="img-fluid" alt="Polos" >
               <h5 >POLOS</h5>
             </a>
           </div>
 
           <div class="col-6 col-md-3 category-item ">
-            <a href="views/catalogo/CatPantalones.html" style="color: black; text-decoration: none;">
+            <a href="views/catalogo/CatPantalones.jsp" style="color: black; text-decoration: none;">
               <img src="views/Intranet/imagenes/Jean.png" class="img-fluid" alt="Pantalones">
               <h5>PANTALONES</h5>
             </a>
           </div>
 
           <div class="col-6 col-md-3 category-item">
-            <a href="views/catalogo/CatPolerasM.html" style="color: black; text-decoration: none;">
+            <a href="views/catalogo/CatPolerasM.jsp" style="color: black; text-decoration: none;">
               <img src="views/Intranet/imagenes/Polera.png" class="img-fluid" alt="Poleras">
               <h5>POLERAS</h5>
             </a>

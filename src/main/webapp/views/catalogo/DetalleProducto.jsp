@@ -221,9 +221,9 @@
                                     Hombre
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolera.html">Poleras</a></li>
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolos.html">Polos</a></li>
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPantalones.html">Pantalones</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolera.jsp">Poleras</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolos.jsp">Polos</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPantalones.jsp">Pantalones</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -231,9 +231,9 @@
                                     Mujer
                                 </a>
                                 <ul class="dropdown-menu dropdown-submenu">
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolerasM.html">Poleras</a></li>
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolosM.html">Polos</a></li>
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPantalonesM.html">Pantalones</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolerasM.jsp">Poleras</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolosM.jsp">Polos</a></li>
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPantalonesM.jsp">Pantalones</a></li>
                                 </ul>
                             </li>
                             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatAccesorios.html">Accesorios</a></li>

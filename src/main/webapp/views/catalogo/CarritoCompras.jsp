@@ -38,17 +38,17 @@
                         <div class="dropdown-item" id="hombreDropdown">
                             Hombre >
                             <div class="dropdown-menu submenu">
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolera.html">Poleras</a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolos.html">Polos</a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPantalones.html">Pantalones</a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolera.jsp">Poleras</a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolos.jsp">Polos</a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPantalones.jsp">Pantalones</a>
                             </div>
                         </div>
                         <div class="dropdown-item" id="mujerDropdown">
                             Mujer >
                             <div class="dropdown-menu submenu">
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolerasM.html">Poleras</a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolosM.html">Polos</a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPantalonesM.html">Pantalones</a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolerasM.jsp">Poleras</a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPolosM.jsp">Polos</a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatPantalonesM.jsp">Pantalones</a>
                             </div>
                         </div>
                         <a class="dropdown-item" href="${pageContext.request.contextPath}/views/catalogo/CatAccesorios.html">Accesorios</a>

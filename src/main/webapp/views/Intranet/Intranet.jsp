@@ -36,9 +36,9 @@
                                 Hombre
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownHombre">
-                                <li><a class="dropdown-item" href="../catalogo/CatPolera.html">Poleras</a></li>
-                                <li><a class="dropdown-item" href="../catalogo/CatPolos.html">Polos</a></li>
-                                <li><a class="dropdown-item" href="../catalogo/CatPantalones.html">Pantalones</a></li>
+                                <li><a class="dropdown-item" href="../catalogo/CatPolera.jsp">Poleras</a></li>
+                                <li><a class="dropdown-item" href="../catalogo/CatPolos.jsp">Polos</a></li>
+                                <li><a class="dropdown-item" href="../catalogo/CatPantalones.jsp">Pantalones</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown mx-4">
@@ -46,9 +46,9 @@
                                 Mujer
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMujer">
-                                <li><a class="dropdown-item" href="../catalogo/CatPolerasM.html">Poleras</a></li>
-                                <li><a class="dropdown-item" href="../catalogo/CatPolosM.html">Polos</a></li>
-                                <li><a class="dropdown-item" href="../catalogo/CatPantalonesM.html">Pantalones</a></li>
+                                <li><a class="dropdown-item" href="../catalogo/CatPolerasM.jsp">Poleras</a></li>
+                                <li><a class="dropdown-item" href="../catalogo/CatPolosM.jsp">Polos</a></li>
+                                <li><a class="dropdown-item" href="../catalogo/CatPantalonesM.jsp">Pantalones</a></li>
                             </ul>
                         </li>
                         <li class="nav-item mx-4">

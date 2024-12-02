@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import java.io.*;
 import java.util.Arrays;
+import java.lang.reflect.Field;
 import static org.mockito.Mockito.*;
 
 @DisplayName("Pruebas del Servlet de Proveedor")
@@ -34,6 +35,17 @@ public class ProveedorServletTest {
     void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
         servlet = new ProveedorServlet();
+        
+        // Inyectar el mock del DAO usando reflexión
+        Field proveedorDAOField = ProveedorServlet.class.getDeclaredField("proveedorDAO");
+        proveedorDAOField.setAccessible(true);
+        proveedorDAOField.set(servlet, proveedorDAO);
+        
+        // Inyectar el objeto Gson usando reflexión
+        Field gsonField = ProveedorServlet.class.getDeclaredField("gson");
+        gsonField.setAccessible(true);
+        gsonField.set(servlet, new Gson());
+        
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);

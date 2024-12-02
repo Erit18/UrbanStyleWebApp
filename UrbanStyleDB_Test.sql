@@ -13,13 +13,39 @@ DROP TABLE IF EXISTS Proveedores;
 DROP TABLE IF EXISTS Usuarios;
 
 -- Crear las tablas necesarias (versión simplificada para pruebas)
-CREATE TABLE Proveedores (
+CREATE TABLE IF NOT EXISTS Proveedores (
     id_proveedor INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100),
+    nombre VARCHAR(100) NOT NULL,
     contacto VARCHAR(100),
     telefono VARCHAR(20),
     email VARCHAR(100),
     direccion TEXT
+);
+
+CREATE TABLE IF NOT EXISTS Ropa (
+    id_ropa INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    precio DECIMAL(10,2) NOT NULL,
+    categoria VARCHAR(50),
+    tipo_producto VARCHAR(50),
+    stock INT NOT NULL DEFAULT 0,
+    fecha_caducidad DATE,
+    descuento DECIMAL(4,2),
+    id_proveedor INT,
+    fecha_agregado TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_proveedor) REFERENCES Proveedores(id_proveedor)
+);
+
+CREATE TABLE IF NOT EXISTS Alertas (
+    id_alerta INT AUTO_INCREMENT PRIMARY KEY,
+    id_ropa INT,
+    mensaje TEXT,
+    fecha_alerta TIMESTAMP,
+    tipo_alerta VARCHAR(50),
+    estado VARCHAR(20),
+    umbral INT,
+    FOREIGN KEY (id_ropa) REFERENCES Ropa(id_ropa)
 );
 
 -- Datos de prueba

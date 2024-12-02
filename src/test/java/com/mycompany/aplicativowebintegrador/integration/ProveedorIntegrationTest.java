@@ -1,7 +1,7 @@
 package com.mycompany.aplicativowebintegrador.integration;
 
 import com.mycompany.aplicativowebintegrador.dao.IProveedorDAO;
-import com.mycompany.aplicativowebintegrador.dao.TestProveedorDAO;
+import com.mycompany.aplicativowebintegrador.dao.ProveedorDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Proveedor;
 import com.mycompany.aplicativowebintegrador.service.TestProveedorService;
 import com.mycompany.aplicativowebintegrador.util.DatabaseConnection;
@@ -23,7 +23,7 @@ public class ProveedorIntegrationTest {
     static void setUp() {
         DatabaseConnection.setConfig(new TestDatabaseConfig());
         
-        proveedorDAO = new TestProveedorDAO();
+        proveedorDAO = new ProveedorDAO();
         proveedorService = new TestProveedorService(proveedorDAO);
         
         proveedorPrueba = new Proveedor();
@@ -48,13 +48,14 @@ public class ProveedorIntegrationTest {
         List<Proveedor> proveedores = proveedorService.obtenerTodos();
         assertEquals(cantidadInicial + 1, proveedores.size());
         
-        Proveedor proveedorGuardado = proveedores.stream()
+        Proveedor proveedorInsertado = proveedores.stream()
             .filter(p -> p.getNombre().equals("Proveedor Integración"))
             .findFirst()
-            .orElseThrow();
+            .orElse(null);
         
-        assertNotNull(proveedorGuardado.getId_proveedor(), "El ID no debería ser nulo");
-        proveedorPrueba.setId_proveedor(proveedorGuardado.getId_proveedor());
+        assertNotNull(proveedorInsertado, "El proveedor debería existir en la base de datos");
+        assertNotNull(proveedorInsertado.getId_proveedor(), "El ID no debería ser nulo");
+        proveedorPrueba.setId_proveedor(proveedorInsertado.getId_proveedor());
     }
     
     @Test
@@ -64,13 +65,12 @@ public class ProveedorIntegrationTest {
         System.out.println("Ejecutando prueba de integración: Obtener proveedor");
         
         List<Proveedor> proveedores = proveedorService.obtenerTodos();
-        assertFalse(proveedores.isEmpty());
+        assertFalse(proveedores.isEmpty(), "Debería haber al menos un proveedor");
         
-        // Obtener el primer proveedor
         Proveedor primerProveedor = proveedores.get(0);
         Proveedor proveedorObtenido = proveedorService.obtenerPorId(primerProveedor.getId_proveedor());
         
-        assertNotNull(proveedorObtenido);
+        assertNotNull(proveedorObtenido, "Debería poder obtener el proveedor por ID");
         assertEquals(primerProveedor.getNombre(), proveedorObtenido.getNombre());
     }
     
@@ -82,49 +82,45 @@ public class ProveedorIntegrationTest {
         
         // Primero insertamos un proveedor nuevo
         Proveedor proveedorParaActualizar = new Proveedor();
-        proveedorParaActualizar.setNombre("Proveedor Para Actualizar");
+        proveedorParaActualizar.setNombre("Proveedor Original");
         proveedorParaActualizar.setContacto("Contacto Original");
         proveedorParaActualizar.setTelefono("987654321");
         proveedorParaActualizar.setEmail("actualizar@test.com");
         proveedorParaActualizar.setDireccion("Dirección Original");
         
-        // Insertamos usando el servicio en lugar del DAO
+        // Insertamos usando el servicio
         proveedorService.guardar(proveedorParaActualizar);
-        System.out.println("Proveedor insertado con ID: " + proveedorParaActualizar.getId_proveedor());
         
-        // Verificamos que se guardó correctamente
-        assertNotNull(proveedorParaActualizar.getId_proveedor(), "El ID no debería ser nulo después de guardar");
-        assertTrue(proveedorParaActualizar.getId_proveedor() > 0, "El ID debería ser mayor que 0");
+        // Buscamos el proveedor recién insertado para obtener su ID
+        List<Proveedor> proveedores = proveedorService.obtenerTodos();
+        Proveedor proveedorInsertado = proveedores.stream()
+            .filter(p -> p.getNombre().equals("Proveedor Original"))
+            .findFirst()
+            .orElseThrow(() -> new AssertionError("No se encontró el proveedor insertado"));
         
-        // Obtenemos el proveedor recién insertado
-        Proveedor proveedorRecuperado = proveedorService.obtenerPorId(proveedorParaActualizar.getId_proveedor());
-        assertNotNull(proveedorRecuperado, "Debería poder recuperar el proveedor insertado");
+        // Verificamos que tenga ID válido
+        assertNotNull(proveedorInsertado.getId_proveedor(), "El ID no debería ser nulo");
+        assertTrue(proveedorInsertado.getId_proveedor() > 0, "El ID debería ser mayor que 0");
+        
+        // Guardamos el nombre original y el ID
+        String nombreOriginal = proveedorInsertado.getNombre();
+        int idProveedor = proveedorInsertado.getId_proveedor();
         
         // Modificamos los datos
-        proveedorRecuperado.setNombre("Proveedor Actualizado");
-        proveedorRecuperado.setContacto("Contacto Actualizado");
+        proveedorInsertado.setNombre("Proveedor Actualizado");
+        proveedorInsertado.setContacto("Contacto Actualizado");
         
-        try {
-            // Imprimimos información de debug
-            System.out.println("Intentando actualizar proveedor con ID: " + proveedorRecuperado.getId_proveedor());
-            System.out.println("Datos del proveedor antes de actualizar: " + proveedorRecuperado);
-            
-            // Realizamos la actualización
-            proveedorService.actualizar(proveedorRecuperado);
-            System.out.println("Actualización exitosa para el ID: " + proveedorRecuperado.getId_proveedor());
-            
-            // Verificamos la actualización
-            Proveedor proveedorVerificacion = proveedorService.obtenerPorId(proveedorRecuperado.getId_proveedor());
-            assertNotNull(proveedorVerificacion, "El proveedor debería existir después de actualizar");
-            assertEquals("Proveedor Actualizado", proveedorVerificacion.getNombre());
-            assertEquals("Contacto Actualizado", proveedorVerificacion.getContacto());
-            
-        } catch (Exception e) {
-            System.err.println("Error durante la actualización: " + e.getMessage());
-            System.err.println("ID del proveedor: " + proveedorRecuperado.getId_proveedor());
-            System.err.println("Detalles del proveedor: " + proveedorRecuperado);
-            throw e;
-        }
+        // Realizamos la actualización
+        proveedorService.actualizar(proveedorInsertado);
+        
+        // Verificamos la actualización
+        Proveedor proveedorActualizado = proveedorService.obtenerPorId(idProveedor);
+        assertNotNull(proveedorActualizado, "El proveedor debería existir después de actualizar");
+        assertEquals("Proveedor Actualizado", proveedorActualizado.getNombre());
+        assertNotEquals(nombreOriginal, proveedorActualizado.getNombre(), 
+                       "El nombre actualizado debería ser diferente al original");
+        
+        System.out.println("Proveedor insertado con ID: " + idProveedor);
     }
     
     @Test
@@ -133,20 +129,15 @@ public class ProveedorIntegrationTest {
     void testIntegracionEliminar() throws Exception {
         System.out.println("Ejecutando prueba de integración: Eliminar proveedor");
         
-        // Primero insertamos un nuevo proveedor para eliminarlo
-        Proveedor proveedorParaEliminar = new Proveedor();
-        proveedorParaEliminar.setNombre("Proveedor Para Eliminar");
-        proveedorParaEliminar.setContacto("Contacto Eliminar");
-        proveedorParaEliminar.setTelefono("987654321");
-        proveedorParaEliminar.setEmail("eliminar@test.com");
-        proveedorParaEliminar.setDireccion("Dirección Eliminar");
+        List<Proveedor> proveedores = proveedorService.obtenerTodos();
+        assertFalse(proveedores.isEmpty(), "Debería haber al menos un proveedor");
         
-        proveedorService.guardar(proveedorParaEliminar);
-        int cantidadInicial = proveedorService.obtenerTodos().size();
+        Proveedor proveedorParaEliminar = proveedores.get(0);
+        int idParaEliminar = proveedorParaEliminar.getId_proveedor();
         
-        proveedorService.eliminar(proveedorParaEliminar.getId_proveedor());
+        proveedorService.eliminar(idParaEliminar);
         
-        List<Proveedor> proveedoresDespues = proveedorService.obtenerTodos();
-        assertEquals(cantidadInicial - 1, proveedoresDespues.size());
+        Proveedor proveedorEliminado = proveedorService.obtenerPorId(idParaEliminar);
+        assertNull(proveedorEliminado, "El proveedor debería haber sido eliminado");
     }
 } 

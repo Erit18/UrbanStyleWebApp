@@ -1,47 +1,36 @@
- // Cargar el header
- fetch("../catalogo/fragments/header.html")
- .then(response => response.text())
- .then(data => {
-     document.getElementById("header-placeholder").innerHTML = data;
-     
-     // Inicializar la búsqueda después de que el header esté cargado
-     const searchInput = document.getElementById('searchInput');
-     
-     // Evento para el formulario de búsqueda
-     document.querySelector('form.d-flex').addEventListener('submit', function(event) {
-         event.preventDefault();
-         realizarBusqueda();
-     });
+document.addEventListener('DOMContentLoaded', function() {
+    const searchBox = document.getElementById('searchBox');
+    const productos = document.getElementsByClassName('producto-item');
+    const noResults = document.getElementById('noResults');
 
-     // Evento para búsqueda en tiempo real
-     searchInput.addEventListener('input', realizarBusqueda);
- });
+    searchBox.addEventListener('keyup', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        let encontrado = false;
 
-// Cargar el footer
-fetch("../catalogo/fragments/footer.html")
- .then(response => response.text())
- .then(data => document.getElementById("footer-placeholder").innerHTML = data);
+        Array.from(productos).forEach(producto => {
+            const titulo = producto.querySelector('.card-title').textContent.toLowerCase();
+            const precio = producto.querySelector('.card-text').textContent.toLowerCase();
+            
+            // Buscar en título y precio
+            if (titulo.includes(searchTerm) || precio.includes(searchTerm)) {
+                producto.style.display = '';
+                encontrado = true;
+            } else {
+                producto.style.display = 'none';
+            }
+        });
 
-// Función de búsqueda
-function realizarBusqueda() {
- const searchTerm = document.getElementById('searchInput').value.toLowerCase();
- const cards = document.querySelectorAll('.card');
- let hasResults = false;
+        // Mostrar/ocultar mensaje de no resultados
+        noResults.style.display = encontrado ? 'none' : 'block';
+    });
 
- cards.forEach(card => {
-     const title = card.querySelector('.card-title').textContent.toLowerCase();
-     const price = card.querySelector('.card-text').textContent.toLowerCase();
-     const cardContainer = card.closest('.col-md-3');
-
-     if (title.includes(searchTerm) || price.includes(searchTerm)) {
-         cardContainer.style.display = '';
-         hasResults = true;
-     } else {
-         cardContainer.style.display = 'none';
-     }
- });
-
- // Mostrar u ocultar mensaje de "no hay resultados"
- const noResultsMessage = document.getElementById('no-results-message');
- noResultsMessage.style.display = hasResults || searchTerm === '' ? 'none' : 'block';
-}
+    // Limpiar búsqueda cuando el campo está vacío
+    searchBox.addEventListener('input', function() {
+        if (this.value === '') {
+            Array.from(productos).forEach(producto => {
+                producto.style.display = '';
+            });
+            noResults.style.display = 'none';
+        }
+    });
+});

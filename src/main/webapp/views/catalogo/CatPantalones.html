@@ -18,15 +18,12 @@
 <body>
        <!--HEADER-->
        <div id="header-placeholder"></div>
-       
-
-       
-       
+         
     <div class="envio-bar d-flex justify-content-center align-items-center">
         <span class="mx-2">
           <img src="../Intranet/imagenes/peru.png" alt="Perú" width="24">
         </span>
-        <span class="envio-text">🛩️ENVÍOS GRATIS A TODO EL PERÚ🛩️</span>
+        <marquee class="envio-text">🛩️ENVÍOS GRATIS A TODO EL PERÚ🛩️</marquee>
         <span class="mx-2">
           <img src="../Intranet/imagenes/peru.png" alt="Avión" width="24">
         </span>
@@ -35,18 +32,19 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="search-box">
-                    <input type="text" id="searchBox" class="form-control" placeholder="Buscar producto...">
+                    <input type="text" id="searchBox" class="form-control" placeholder="Buscar por nombre o precio...">
                 </div>
             </div>
         </div>
     </div>
     
+    <div id="noResults" class="text-center mt-3" style="display: none;">
+        <p class="text-muted">Ningún producto  coincide con tu búsqueda</p>
+    </div>
+    
     <div class="container">
         <div class="row" id="productosContainer">
 
-            <div id="noResults" class="text-center mt-3" style="display: none;">
-                <p class="text-muted">No se encontraron productos que coincidan con tu búsqueda</p>
-            </div>
             <div class="col-md-3 producto-item"> 
                 <div class="card full-width">
                     <a href="DetalleProducto.html">
@@ -78,10 +76,7 @@
                          <span class="star">&#9733;</span></center> 
                        </div>
                     <div class="card-body">
-                        <h5 class="card-title">PARACHUTE DEPORTIVO 😎
-
-
-                        </h5>
+                        <h5 class="card-title">PARACHUTE DEPORTIVO 😎 </h5>
                         <p class="card-text">S/119.00
                         </p>
                     </div>
@@ -347,12 +342,23 @@
 <!--FOOTER (pie de página)-->
 <div id="footer-placeholder"></div>
 
+<script>
+    // Cargar el header
+    fetch("../catalogo/fragments/header.html")
+        .then(response => response.text())
+        .then(data => document.getElementById("header-placeholder").innerHTML = data);
 
+    // Cargar el footer
+    fetch("../catalogo/fragments/footer.html")
+        .then(response => response.text())
+        .then(data => document.getElementById("footer-placeholder").innerHTML = data);
+</script>
     
-<script src="../../js/busqueda.js"></script>
+
+
 <script src="../../js/script.js"></script>
 
-
+<script src="../../js/busqueda.js"></script>
 
 </body>
 

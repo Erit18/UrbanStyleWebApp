@@ -48,6 +48,15 @@ CREATE TABLE IF NOT EXISTS Alertas (
     FOREIGN KEY (id_ropa) REFERENCES Ropa(id_ropa)
 );
 
+CREATE TABLE IF NOT EXISTS Usuarios (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    contraseña VARCHAR(255) NOT NULL,
+    rol VARCHAR(20) NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Datos de prueba
 INSERT INTO Proveedores (nombre, contacto, telefono, email, direccion) VALUES 
 ('Proveedor Test 1', 'Contacto Test 1', '999888777', 'test1@test.com', 'Dirección Test 1'),

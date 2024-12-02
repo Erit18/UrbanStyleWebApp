@@ -19,7 +19,7 @@ class AlertaDAOTest {
     
     @BeforeAll
     static void setUp() throws SQLException {
-        DatabaseConnection.setDatabaseConfig(new TestDatabaseConfig());
+        DatabaseConnection.setConfig(new TestDatabaseConfig());
         alertaDAO = new AlertaDAO();
         conn = alertaDAO.getConnection();
         

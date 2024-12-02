@@ -21,8 +21,7 @@ public class ProveedorIntegrationTest {
     
     @BeforeAll
     static void setUp() {
-        // Configurar la base de datos de prueba
-        DatabaseConnection.setDatabaseConfig(new TestDatabaseConfig());
+        DatabaseConnection.setConfig(new TestDatabaseConfig());
         
         proveedorDAO = new TestProveedorDAO();
         proveedorService = new TestProveedorService(proveedorDAO);

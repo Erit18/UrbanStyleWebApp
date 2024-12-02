@@ -20,7 +20,7 @@ class ProductoDAOTest {
     
     @BeforeAll
     static void setUp() throws SQLException {
-        DatabaseConnection.setDatabaseConfig(new TestDatabaseConfig());
+        DatabaseConnection.setConfig(new TestDatabaseConfig());
         productoDAO = new ProductoDAO();
         conn = productoDAO.getConnection();
         

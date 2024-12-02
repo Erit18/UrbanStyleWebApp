@@ -92,6 +92,25 @@ CREATE TABLE Alertas (
     umbral INT DEFAULT NULL
 );
 
+-- Tabla LibroReclamos
+CREATE TABLE reclamos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo_documento VARCHAR(20),
+    numero_documento VARCHAR(20),
+    nombre VARCHAR(100),
+    apellido VARCHAR(100),
+    departamento VARCHAR(50),
+    provincia VARCHAR(50),
+    distrito VARCHAR(50),
+    telefono VARCHAR(20),
+    correo_electronico VARCHAR(100),
+    tipo_reclamo VARCHAR(50),
+    fecha_compra DATE,
+    numero_boleta VARCHAR(50),
+    detalle_reclamo TEXT,
+    fecha_registro DATETIME,
+    estado VARCHAR(20)
+);
 
 -- Desactivar temporalmente el modo seguro
 SET SQL_SAFE_UPDATES = 0;

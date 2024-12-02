@@ -63,9 +63,31 @@ function mostrarMensaje(mensaje) {
 }
 
 function vaciarCarrito() {
-    localStorage.removeItem('cart'); // Elimina el carrito del localStorage
-    renderCarrito(); // Actualiza la vista del carrito
-    mostrarMensaje('Carrito vaciado'); // Mensaje visual
+    // Eliminar el carrito del localStorage
+    localStorage.removeItem('cart');
+    
+    // Actualizar la vista del carrito
+    renderCarrito();
+    
+    // Actualizar los totales a 0
+    const resumen = {
+        subtotal: 0,
+        descuento: 0,
+        entrega: 0,
+        total: 0
+    };
+    
+    // Guardar el resumen actualizado en localStorage
+    localStorage.setItem('resumenPedido', JSON.stringify(resumen));
+    
+    // Actualizar los elementos en la página
+    document.querySelector('.resumen-detalles p:nth-child(1) span').textContent = 'S/0.00';
+    document.querySelector('.resumen-detalles p:nth-child(2) span').textContent = '-S/0.00';
+    document.querySelector('.resumen-detalles p:nth-child(3) span').textContent = 'S/0.00';
+    document.querySelector('.resumen h3 span').textContent = 'S/0.00';
+    
+    // Mostrar mensaje visual
+    mostrarMensaje('Carrito vaciado');
 }
 
 function actualizarTotales() {

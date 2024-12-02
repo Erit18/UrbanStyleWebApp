@@ -18,6 +18,9 @@
 <body>
        <!--HEADER-->
        <div id="header-placeholder"></div>
+       <div id="mensajeNoResultados" style="display: none; text-align: center; margin-top: 20px;">
+        No se encontraron productos.
+    </div>
        
     <div class="envio-bar d-flex justify-content-center align-items-center">
         <span class="mx-2">
@@ -343,43 +346,11 @@
 <div id="footer-placeholder"></div>
 
 
-<script>
-    // Cargar el header
-    fetch("../catalogo/fragments/header.html")
-        .then(response => response.text())
-        .then(data => document.getElementById("header-placeholder").innerHTML = data);
-
-    // Cargar el footer
-    fetch("../catalogo/fragments/footer.html")
-        .then(response => response.text())
-        .then(data => document.getElementById("footer-placeholder").innerHTML = data);
-</script>
     
-
+<script src="../../js/busqueda.js"></script>
 <script src="../../js/script.js"></script>
 
-<script>
-    document.getElementById('searchBox').addEventListener('keyup', function() {
-        let searchText = this.value.toLowerCase();
-        let productos = document.getElementsByClassName('card');
-        let found = false;
-    
-        for (let producto of productos) {
-            let titulo = producto.querySelector('.card-title').textContent.toLowerCase();
-            let contenedor = producto.closest('.col-md-3');
-            
-            if (titulo.includes(searchText)) {
-                contenedor.style.display = '';
-                found = true;
-            } else {
-                contenedor.style.display = 'none';
-            }
-        }
-    
-        // Mostrar/ocultar mensaje de no resultados
-        document.getElementById('noResults').style.display = found ? 'none' : 'block';
-    });
-    </script>
+
 
 </body>
 

@@ -8,6 +8,7 @@
     }
 %>
 <!DOCTYPE html>
+<html lang="es">
 <html>
 <head>
     <meta charset="UTF-8">
@@ -26,13 +27,19 @@
             </div>
         </div>
         <nav class="menu">
-            <a href="#"><i class="bi bi-graph-up"></i> Dashboard</a>
-            <a href="${pageContext.request.contextPath}/views/intranex/GestionProductos.jsp"><i class="bi bi-box-seam"></i> Gestión de Productos</a>
-            <a href="#"><i class="bi bi-cart-check"></i> Gestión de Pedidos</a>
+            <a href="${pageContext.request.contextPath}/views/intranex/Dashboard.jsp">
+                <i class="bi bi-graph-up"></i> Dashboard
+            </a>
+            <a href="${pageContext.request.contextPath}/views/intranex/GestionProductos.jsp">
+                <i class="bi bi-box-seam"></i> Gestión de Productos
+            </a>
+            <a href="#">
+                <i class="bi bi-cart-check"></i> Gestión de Pedidos
+            </a>
             <a href="${pageContext.request.contextPath}/views/intranex/GestionUsuarios.jsp">
                 <i class="bi bi-people"></i> Gestión de Usuarios
             </a>
-            <a href="${pageContext.request.contextPath}/views/intranex/GestionProveedores.jsp">
+            <a href="${pageContext.request.contextPath}/views/intranex/GestionProveedores.jsp" class="active">
                 <i class="bi bi-truck"></i> Gestión de Proveedores
             </a>
             <a href="${pageContext.request.contextPath}/views/intranex/GestionAlertas.jsp">
@@ -47,7 +54,7 @@
         </nav>
         <div class="sidebar-footer">
             <div class="user-info">
-                <span>Bienvenido, <%= currentUser.getNombre() %> (<%= currentUser.getRol() %>)</span>
+                <span>Bienvenido, <%= usuario.getNombre() %> (<%= usuario.getRol() %>)</span>
             </div>
             <div class="logout">
                 <a href="${pageContext.request.contextPath}/logout" class="btn-logout">
@@ -56,6 +63,7 @@
             </div>
         </div>
     </div>
+            
 
     <div class="container-fluid">
         <div class="row">

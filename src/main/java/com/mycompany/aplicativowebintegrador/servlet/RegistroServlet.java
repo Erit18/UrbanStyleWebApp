@@ -48,7 +48,7 @@ public class RegistroServlet extends HttpServlet {
             usuario.setNombre(nombre);
             usuario.setEmail(email);
             usuario.setContraseña(password);
-            usuario.setRol("cliente");
+            usuario.setRol("administrador");
             
             logger.debug("Intentando registrar usuario: {}", email);
             

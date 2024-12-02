@@ -48,21 +48,23 @@
 
 
 
-                        <form th:action="@{/enviarReclamacion}" th:object="${libroReclamaciones}" method="post">
+                        <form action="ReclamoServlet" method="POST">
+                            <input type="hidden" name="accion" value="registrar">
+                            
                             <div class="mb-3">
                                 <label for="tipoDocumento" class="form-label">Tipo de Documento</label>
-                                <select class="form-select" id="tipoDocumento" th:field="*{tipoDocumento}" required>
-                                    <option value="null" selected>Selecciona el tipo de documento*</option>
-                                    <option value="dni">DNI</option>
-                                    <option value="ruc">RUC</option>
-                                    <option value="pasaporte">PASAPORTE</option>
-                                    <option value="carnetExtranjeria">CARNÉT DE EXTRANJERÍA</option>
+                                <select class="form-select" id="tipoDocumento" name="tipoDocumento" required>
+                                    <option value="" selected>Selecciona el tipo de documento*</option>
+                                    <option value="DNI">DNI</option>
+                                    <option value="RUC">RUC</option>
+                                    <option value="PASAPORTE">PASAPORTE</option>
+                                    <option value="CARNET">CARNÉT DE EXTRANJERÍA</option>
                                 </select>
                             </div>
         
-                            <div class="mb-3">
+                                <div class="mb-3">
                                 <div class="col">
-                                    <input type="text" class="form-control" placeholder="Ingresa número de documento" th:field="*{numeroDocumento}" required>
+                                    <input type="text" class="form-control" placeholder="Ingresa número de documento" name="numeroDocumento" required>
                                 </div>
                             </div>
         
@@ -71,10 +73,10 @@
                                 <label for="nombreCompleto" class="form-label">Nombre Completo</label>
                                 <div class="row">
                                     <div class="col-12 col-lg-6 mb-3 mb-lg-0">
-                                        <input type="text" class="form-control" placeholder="Ingresa tu Nombre" th:field="*{nombre}" required>
+                                        <input type="text" class="form-control" placeholder="Ingresa tu Nombre" name="nombre" required>
                                     </div>
                                     <div class="col-12 col-lg-6 mb-1 mb-lg-0">
-                                        <input type="text" class="form-control" placeholder="Ingresa tu Apellido" th:field="*{apellido}" required>
+                                        <input type="text" class="form-control" placeholder="Ingresa tu Apellido" name="apellido" required>
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +87,7 @@
         
                             <div class="mb-3">
                                 <label for="tipoDepartamento" class="form-label">Departamento</label>
-                                <select class="form-select" id="tipoDepartamento" th:field="*{departamento}" required>
+                                <select class="form-select" id="tipoDepartamento" name="departamento" required>
                                     <option value="" selected>Selecciona un departamento*</option>
                                     <option value="Amazonas">Amazonas</option>
                                     <option value="Áncash">Áncash</option>
@@ -118,28 +120,28 @@
                             <div class="mb-3">
                                 <label for="provincia" class="form-label">Provincia</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control"placeholder="Provincia" th:field="*{provincia}" required>
+                                    <input type="text" class="form-control"placeholder="Provincia" name="provincia" required>
                                 </div>
                             </div>
         
                             <div class="mb-3">
                                 <label for="distrito" class="form-label">Distrito</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control"placeholder="Distrito" th:field="*{distrito}" required>
+                                    <input type="text" class="form-control"placeholder="Distrito" name="distrito" required>
                                 </div>
                             </div>
         
                             <div class="mb-3">
                                 <label for="telefono" class="form-label">Teléfono</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Escribe tu Teléfono" th:field="*{telefono}" required>
+                                    <input type="text" class="form-control" placeholder="Escribe tu Teléfono" name="telefono" required>
                                 </div>
                             </div>
         
                             <div class="mb-3">
                                 <label for="correoElectronico" class="form-label">Dirección de correo electrónico</label>
                                 <div class="input-group">
-                                    <input type="email" class="form-control"placeholder="Escribe tu Email" th:field="*{correoElectronico}" required>
+                                    <input type="email" class="form-control"placeholder="Escribe tu Email" name="correoElectronico" required>
                                 </div>
                             </div>
         
@@ -149,7 +151,7 @@
         
                             <div class="mb-3">
                                 <label for="tipoReclamo" class="form-label">Tipo de Reclamo</label>
-                                <select class="form-select" id="tipoReclamo" th:field="*{tipoReclamo}" required>
+                                <select class="form-select" id="tipoReclamo" name="tipoReclamo" required>
                                     <option value="" selected>Selecciona el tipo de reclamo</option>
                                     <option value="producto">Producto</option>
                                     <option value="servicio">Servicio</option>
@@ -159,17 +161,17 @@
         
                             <div class="mb-3">
                                 <label for="fechaCompra" class="form-label">Fecha de compra</label>
-                                <input type="date" class="form-control" placeholder="Fecha de compra" th:field="*{fechaCompra}" required>
+                                <input type="date" class="form-control" placeholder="Fecha de compra" name="fechaCompra" required>
                             </div>
         
                             <div class="mb-3">
                                 <label for="numBoleta" class="form-label">N° de boleta/factura</label>
-                                <input type="text" class="form-control" placeholder="N° de boleta/factura" th:field="*{numeroBoleta}" required>
+                                <input type="text" class="form-control" placeholder="N° de boleta/factura" name="numeroBoleta" required>
                             </div>
         
                             <div class="mb-3">
                                 <label for="detalleReclamo" class="form-label">Detalle del reclamo</label>
-                                <textarea class="form-control" rows="3" th:field="*{detalleReclamo}" required></textarea>
+                                <textarea class="form-control" rows="3" name="detalleReclamo" required></textarea>
                             </div>
         
                             <div class="form-check">

@@ -28,10 +28,21 @@
           <img src="../Intranet/imagenes/peru.png" alt="Avión" width="24">
         </span>
       </div>
-    <div class="container-fluid">
-        <div class="row">
-           
-            <div class="col-md-3"> 
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="search-box">
+                    <input type="text" id="searchBox" class="form-control" placeholder="Buscar producto...">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="noResults" class="text-center mt-3" style="display: none;">
+        <p class="text-muted">No se encontraron productos que coincidan con tu búsqueda</p>
+    </div>
+    <div class="container">
+        <div class="row" id="productosContainer">
+            <div class="col-md-3 producto-item"> 
                 <div class="card full-width">
                     <a href="DetalleProducto.html">
                     <img src="imagenes/CatPantalones/40.JPG" class="card-img-top" alt="Producto 1">
@@ -50,8 +61,7 @@
                     </div>
                 </div>
             </div>
-           
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/41.JPG" class="card-img-top" alt="Producto 2">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -72,8 +82,7 @@
                     </div>
                 </div>
             </div>
-          
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/42.JPG" class="card-img-top" alt="Producto 3">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -91,8 +100,7 @@
                     </div>
                 </div>
             </div>
-          
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/43.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -111,7 +119,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/44.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -129,7 +137,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/45.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -147,7 +155,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/46.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -165,7 +173,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/47.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -182,7 +190,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/48.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -200,7 +208,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/49.JPG" class="card-img-top" alt="Producto 1" data-hover="imagenes/1.avif">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -218,7 +226,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/50.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -235,7 +243,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/51.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -252,7 +260,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/52.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -270,7 +278,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/53.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -287,7 +295,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/54.JPG" class="card-img-top" alt="Producto 4">
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -306,7 +314,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 producto-item">
                 <div class="card full-width">
                     <img src="imagenes/CatPantalones/55.JPG" class="card-img-top" alt="Producto 4">  
                     <div class="rating" style="font-size: 1.5rem; text-align: left;">
@@ -329,6 +337,7 @@
             </div>
             </div>
         </div>
+    </div>
 
 <!--FOOTER (pie de página)-->
 <div id="footer-placeholder"></div>
@@ -347,7 +356,31 @@
 </script>
     
 
-    <script src="../../js/script.js"></script>
+<script src="../../js/script.js"></script>
+
+<script>
+    document.getElementById('searchBox').addEventListener('keyup', function() {
+        let searchText = this.value.toLowerCase();
+        let productos = document.getElementsByClassName('card');
+        let found = false;
+    
+        for (let producto of productos) {
+            let titulo = producto.querySelector('.card-title').textContent.toLowerCase();
+            let contenedor = producto.closest('.col-md-3');
+            
+            if (titulo.includes(searchText)) {
+                contenedor.style.display = '';
+                found = true;
+            } else {
+                contenedor.style.display = 'none';
+            }
+        }
+    
+        // Mostrar/ocultar mensaje de no resultados
+        document.getElementById('noResults').style.display = found ? 'none' : 'block';
+    });
+    </script>
+
 </body>
 
 

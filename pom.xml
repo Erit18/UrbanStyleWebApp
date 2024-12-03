@@ -1,19 +1,25 @@
+<!-- Definición del proyecto Maven -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
+    <!-- Información básica del proyecto -->
     <groupId>com.mycompany</groupId>
     <artifactId>AplicativoWebIntegrador</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>AplicativoWebIntegrador-1.0-SNAPSHOT</name>
     
+    <!-- Propiedades del proyecto -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
     
+    <!-- Dependencias del proyecto -->
     <dependencies>
+        <!-- API de Jakarta EE -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -21,27 +27,28 @@
             <scope>provided</scope>
         </dependency>
         
-        <!-- Google Guava -->
+        <!-- Utilidades de Google Guava-->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>31.1-jre</version>
         </dependency>
         
-        <!-- Apache Commons Lang -->
+        <!-- Utilidades de Apache Commons -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
         </dependency>
         
-        <!-- Logback -->
+        <!-- Sistema de logging Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.4.11</version>
         </dependency>
         
+        <!-- Bibliotecas para manejo de JSON -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -54,25 +61,28 @@
             <version>20210307</version>
         </dependency>
         
+        <!-- API de logging SLF4J -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>2.0.9</version>
         </dependency>
         
+        <!-- Conector MySQL -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
         
+        <!-- Biblioteca para encriptación de contraseñas -->
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
         </dependency>
         
-        <!-- JSTL -->
+        <!-- Dependencias JSTL para JSP -->
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
@@ -84,7 +94,7 @@
             <version>3.0.1</version>
         </dependency>
         
-        <!-- Apache POI para Excel -->
+        <!-- Apache POI para manejo de archivos Excel -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -96,19 +106,21 @@
             <version>5.2.3</version>
         </dependency>
         
-        <!-- iText para PDF -->
+        <!-- Biblioteca iText para generación de PDFs -->
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
             <version>5.5.13.3</version>
         </dependency>
         
+        <!-- Biblioteca para serialización/deserialización JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.15.2</version>
         </dependency>
         
+        <!-- API de Servlet de Jakarta -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -116,13 +128,14 @@
             <scope>provided</scope>
         </dependency>
         
+        <!-- Pool de conexiones HikariCP -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>5.0.1</version>
         </dependency>
         
-        <!-- JUnit 5 -->
+        <!-- Dependencias JUnit 5 para pruebas unitarias -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -136,7 +149,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Mockito -->
+        <!-- Framework de mockeo Mockito para pruebas -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -150,17 +163,26 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- H2 Database para pruebas -->
+        <!-- Base de datos en memoria para pruebas -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>2.1.214</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- OWASP Encoder para prevención de XSS -->
+        <dependency>
+            <groupId>org.owasp.encoder</groupId>
+            <artifactId>encoder</artifactId>
+            <version>1.2.3</version>
+        </dependency>
     </dependencies>
     
+    <!-- Configuración de construcción del proyecto -->
     <build>
         <plugins>
+            <!-- Plugin para compilación -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -169,6 +191,8 @@
                     <release>17</release>
                 </configuration>
             </plugin>
+            
+            <!-- Plugin para empaquetado WAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -182,6 +206,8 @@
                     </webResources>
                 </configuration>
             </plugin>
+            
+            <!-- Plugin para despliegue en Tomcat -->
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
@@ -193,6 +219,8 @@
                     <uriEncoding>UTF-8</uriEncoding>
                 </configuration>
             </plugin>
+            
+            <!-- Plugin para ejecución de pruebas -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

@@ -94,29 +94,6 @@ CREATE TABLE Alertas (
 );
 
 
--- Desactivar temporalmente el modo seguro
-SET SQL_SAFE_UPDATES = 0;
-
--- Limpiamos las tablas en orden para evitar problemas con las llaves foráneas
-DELETE FROM Alertas;
-DELETE FROM Pagos;
-DELETE FROM Detalle_Pedido;
-DELETE FROM Pedidos;
-DELETE FROM Carrito;
-DELETE FROM Ropa;
-DELETE FROM Proveedores;
-
--- Reiniciamos los auto_increment
-ALTER TABLE Alertas AUTO_INCREMENT = 1;
-ALTER TABLE Pagos AUTO_INCREMENT = 1;
-ALTER TABLE Detalle_Pedido AUTO_INCREMENT = 1;
-ALTER TABLE Pedidos AUTO_INCREMENT = 1;
-ALTER TABLE Carrito AUTO_INCREMENT = 1;
-ALTER TABLE Ropa AUTO_INCREMENT = 1;
-ALTER TABLE Proveedores AUTO_INCREMENT = 1;
-
--- Volver a activar el modo seguro
-SET SQL_SAFE_UPDATES = 1;
 
 -- Insertar Proveedores reales
 INSERT INTO Proveedores (nombre, contacto, telefono, email, direccion) VALUES 
@@ -219,17 +196,6 @@ INSERT INTO `ropa` (`id_ropa`, `nombre`, `descripcion`, `precio`, `categoria`, `
 (87, 'Polo Oversize  + Estampado', 'Este polo negro presenta un divertido y llamativo estampado inspirado en la serie \"South Park\", con la famosa frase \"Oh my God, they killed Kenny!\" y gráficos coloridos. Con un diseño de mangas amplias y un corte holgado, es perfecto para quienes buscan un estilo casual y desenfadado. Ideal para combinar con jeans o pantalones cortos, este polo es una excelente opción para los fanáticos de la serie y para quienes desean añadir un toque de humor a su vestuario.', 35.00, 'mujer', 'polo', 25, NULL, 0.00, 3, '2024-11-28 22:32:11')
 
 
--- Insertar pedidos de prueba usando los usuarios existentes
-INSERT INTO Pedidos (id_usuario, total, estado) VALUES 
-(33, 458.70, 'completado'),  -- José Martínez
-(34, 269.80, 'pagado');      -- Ana López
-
--- Insertar detalles de pedido
-INSERT INTO Detalle_Pedido (id_pedido, id_ropa, cantidad, precio_unitario) VALUES 
-(1, 1, 2, 159.90),  -- 2 Urban Hoodie Oversize para José Martínez
-(1, 5, 1, 179.90),  -- 1 Cargo Pants Urban para José Martínez
-(2, 7, 1, 189.90),  -- 1 Mom Jeans Vintage para Ana López
-(2, 10, 1, 79.90);  -- 1 Crop Top Urban Art para Ana López
 
 
 -- Consulta para obtener el reporte de ventas
@@ -259,13 +225,6 @@ GROUP BY
 ORDER BY 
     p.fecha_pedido DESC;
 
-
--- Consulta para ver las fechas actuales
-SELECT id_pedido, fecha_pedido FROM Pedidos;
-
--- Si necesitas actualizar las fechas:
-UPDATE Pedidos SET fecha_pedido = '2024-11-13' WHERE id_pedido = 1;
-UPDATE Pedidos SET fecha_pedido = '2024-11-14' WHERE id_pedido = 2;
 
 
 DELIMITER //
@@ -332,3 +291,64 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ignorar */
+
+-- Insertar pedidos de prueba usando los usuarios existentes
+INSERT INTO Pedidos (id_usuario, total, estado) VALUES 
+(33, 458.70, 'completado'),  -- José Martínez
+(34, 269.80, 'pagado');      -- Ana López
+
+-- Insertar detalles de pedido
+INSERT INTO Detalle_Pedido (id_pedido, id_ropa, cantidad, precio_unitario) VALUES 
+(1, 1, 2, 159.90),  -- 2 Urban Hoodie Oversize para José Martínez
+(1, 5, 1, 179.90),  -- 1 Cargo Pants Urban para José Martínez
+(2, 7, 1, 189.90),  -- 1 Mom Jeans Vintage para Ana López
+(2, 10, 1, 79.90);  -- 1 Crop Top Urban Art para Ana López
+
+
+-- Consulta para ver las fechas actuales
+SELECT id_pedido, fecha_pedido FROM Pedidos;
+
+-- Si necesitas actualizar las fechas:
+UPDATE Pedidos SET fecha_pedido = '2024-11-13' WHERE id_pedido = 1;
+UPDATE Pedidos SET fecha_pedido = '2024-11-14' WHERE id_pedido = 2;
+
+
+-- Desactivar temporalmente el modo seguro
+SET SQL_SAFE_UPDATES = 0;
+
+-- Limpiamos las tablas en orden para evitar problemas con las llaves foráneas
+DELETE FROM Alertas;
+DELETE FROM Pagos;
+DELETE FROM Detalle_Pedido;
+DELETE FROM Pedidos;
+DELETE FROM Carrito;
+DELETE FROM Ropa;
+DELETE FROM Proveedores;
+
+-- Reiniciamos los auto_increment
+ALTER TABLE Alertas AUTO_INCREMENT = 1;
+ALTER TABLE Pagos AUTO_INCREMENT = 1;
+ALTER TABLE Detalle_Pedido AUTO_INCREMENT = 1;
+ALTER TABLE Pedidos AUTO_INCREMENT = 1;
+ALTER TABLE Carrito AUTO_INCREMENT = 1;
+ALTER TABLE Ropa AUTO_INCREMENT = 1;
+ALTER TABLE Proveedores AUTO_INCREMENT = 1;
+
+-- Volver a activar el modo seguro
+SET SQL_SAFE_UPDATES = 1;

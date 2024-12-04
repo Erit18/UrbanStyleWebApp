@@ -8,19 +8,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/visita")
-public class VisitaServlet extends HttpServlet {
+@WebServlet("/tu-ruta")
+public class TuServlet extends HttpServlet {
     private final Counter visitasCounter = Counter
         .builder("pagina_visitas_total")
         .description("Número total de visitas")
-        .tag("pagina", "index")
         .register(MetricsConfig.getRegistry());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
             throws IOException {
-        String pagina = req.getParameter("pagina");
         visitasCounter.increment();
-        resp.setStatus(HttpServletResponse.SC_OK);
+        // ... resto de tu código
     }
-}
+} 

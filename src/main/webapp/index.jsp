@@ -225,9 +225,21 @@
     <script src="js/script.js"></script>
     <!-- Añade esto justo antes del cierre del body -->
     <script>
-        fetch('${pageContext.request.contextPath}/visita?pagina=index')
-            .then(response => console.log('Visita registrada'))
-            .catch(error => console.error('Error:', error));
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('${pageContext.request.contextPath}/visita?pagina=index', {
+                method: 'GET',
+                headers: {
+                    'Cache-Control': 'no-cache'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log('Visita registrada correctamente');
+            })
+            .catch(error => console.error('Error registrando visita:', error));
+        });
     </script>
 </body>
 

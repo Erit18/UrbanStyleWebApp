@@ -177,6 +177,20 @@
             <artifactId>encoder</artifactId>
             <version>1.2.3</version>
         </dependency>
+
+        <!-- Micrometer core -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+            <version>1.12.2</version>
+        </dependency>
+
+        <!-- Micrometer Registry para Prometheus -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>1.12.2</version>
+        </dependency>
     </dependencies>
     
     <!-- Configuración de construcción del proyecto -->

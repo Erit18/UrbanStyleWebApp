@@ -333,62 +333,63 @@ function generarBoleta() {
         const carrito = JSON.parse(localStorage.getItem('cart')) || [];
         const resumen = JSON.parse(localStorage.getItem('resumenPedido')) || {};
         
-        // Configuración de estilos
-        const colorPrimario = '#2c3e50';
-        const colorSecundario = '#7f8c8d';
+        // Colores de Urban Style
+        const colorPrimario = '#1a1a1a';
+        const colorSecundario = '#2c2c2c';
+        const colorAcento = '#007bff';
         
-        // Encabezado con estilo
+        // Encabezado con estilo Urban
         doc.setFillColor(colorPrimario);
-        doc.rect(0, 0, 210, 40, 'F');
+        doc.rect(0, 0, 210, 50, 'F');
+        
+        // Logo y título
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(28);
         doc.setFont('helvetica', 'bold');
-        doc.text('BOLETA DE VENTA', 105, 25, { align: 'center' });
+        doc.text('URBAN STYLE', 105, 25, { align: 'center' });
+        doc.setFontSize(14);
+        doc.text('BOLETA DE VENTA', 105, 35, { align: 'center' });
         
-        // Información de la empresa
+        // Barra de envío (similar a tu página)
+        doc.setFillColor(colorSecundario);
+        doc.rect(0, 50, 210, 12, 'F');
+        doc.setFontSize(10);
+        doc.text('ENVÍOS GRATIS A TODO EL PERÚ', 105, 58, { align: 'center' });
+        
+        // Datos del cliente con estilo moderno
         doc.setTextColor(colorPrimario);
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
-        doc.text('URBAN STYLE', 20, 50);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.setTextColor(colorSecundario);
-        doc.text('Dirección: Av. Principal 123, Lima', 20, 57);
-        doc.text('Teléfono: +51 999 888 777', 20, 63);
-        doc.text('Email: contacto@urbanstyle.com', 20, 69);
+        doc.text('DATOS DEL CLIENTE', 20, 80);
         
-        // Línea divisoria
-        doc.setDrawColor(colorSecundario);
-        doc.setLineWidth(0.5);
-        doc.line(20, 75, 190, 75);
-        
-        // Datos del cliente con mejor formato
-        doc.setTextColor(colorPrimario);
-        doc.setFontSize(11);
-        doc.setFont('helvetica', 'bold');
-        doc.text('DATOS DEL CLIENTE', 20, 85);
         doc.setFont('helvetica', 'normal');
-        doc.setTextColor(colorSecundario);
         const nombreCliente = document.getElementById('invoiceName')?.value || 'No especificado';
         const dniCliente = document.getElementById('dni')?.value || 'No especificado';
-        doc.text(`Nombre: ${nombreCliente}`, 20, 93);
-        doc.text(`DNI: ${dniCliente}`, 20, 100);
-        doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 107);
         
-        // Tabla de productos con estilo
-        doc.setFillColor(colorPrimario);
-        doc.rect(20, 115, 170, 8, 'F');
+        // Caja de datos del cliente con borde
+        doc.setDrawColor(colorSecundario);
+        doc.setLineWidth(0.1);
+        doc.rect(20, 85, 170, 25);
+        doc.setFontSize(11);
+        doc.text(`Nombre: ${nombreCliente}`, 25, 95);
+        doc.text(`DNI: ${dniCliente}`, 25, 102);
+        doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 25, 109);
+        
+        // Tabla de productos con estilo Urban
+        doc.setFillColor(colorSecundario);
+        doc.rect(20, 120, 170, 10, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
-        doc.text('Producto', 25, 120);
-        doc.text('Cantidad', 100, 120);
-        doc.text('Precio Unit.', 130, 120);
-        doc.text('Subtotal', 160, 120);
+        doc.text('PRODUCTO', 25, 126);
+        doc.text('TALLA', 85, 126);
+        doc.text('CANT.', 110, 126);
+        doc.text('PRECIO', 135, 126);
+        doc.text('SUBTOTAL', 165, 126);
         
-        // Productos
-        let y = 130;
-        doc.setTextColor(colorSecundario);
+        // Productos con diseño alternado
+        let y = 135;
+        doc.setTextColor(colorPrimario);
         doc.setFont('helvetica', 'normal');
         
         carrito.forEach((item, index) => {
@@ -397,60 +398,62 @@ function generarBoleta() {
                 y = 20;
             }
             
-            // Alternar colores de fondo para las filas
+            // Fondo alternado para las filas
             if (index % 2 === 0) {
                 doc.setFillColor(245, 245, 245);
                 doc.rect(20, y-5, 170, 8, 'F');
             }
             
-            const nombre = item.name.length > 30 ? item.name.substring(0, 30) + '...' : item.name;
+            const nombre = item.name.length > 25 ? item.name.substring(0, 25) + '...' : item.name;
             doc.text(nombre, 25, y);
-            doc.text(item.quantity.toString(), 100, y);
-            doc.text(`S/ ${item.price.toFixed(2)}`, 130, y);
-            doc.text(`S/ ${(item.price * item.quantity).toFixed(2)}`, 160, y);
+            doc.text(item.talla, 85, y);
+            doc.text(item.quantity.toString(), 110, y);
+            doc.text(`S/ ${item.price.toFixed(2)}`, 135, y);
+            doc.text(`S/ ${(item.price * item.quantity).toFixed(2)}`, 165, y);
             y += 8;
         });
         
-        // Resumen de totales con estilo
+        // Resumen de totales con estilo Urban
         y += 10;
         doc.setDrawColor(colorSecundario);
         doc.setLineWidth(0.5);
-        doc.line(130, y-5, 190, y-5);
+        doc.line(110, y, 190, y);
         
-        doc.setTextColor(colorSecundario);
-        doc.text(`Subtotal:`, 130, y);
-        doc.setTextColor(colorPrimario);
-        doc.text(`S/ ${resumen.subtotal?.toFixed(2) || '0.00'}`, 160, y);
-        
-        y += 8;
-        doc.setTextColor(colorSecundario);
-        doc.text(`Descuento:`, 130, y);
-        doc.setTextColor('#e74c3c');
-        doc.text(`-S/ ${resumen.descuento?.toFixed(2) || '0.00'}`, 160, y);
+        y += 10;
+        doc.setFont('helvetica', 'normal');
+        doc.text('Subtotal:', 135, y);
+        doc.text(`S/ ${resumen.subtotal?.toFixed(2) || '0.00'}`, 165, y);
         
         y += 8;
-        doc.setTextColor(colorSecundario);
-        doc.text(`Envío:`, 130, y);
+        doc.text('Descuento:', 135, y);
+        doc.setTextColor(colorAcento);
+        doc.text(`-S/ ${resumen.descuento?.toFixed(2) || '0.00'}`, 165, y);
+        
+        y += 8;
         doc.setTextColor(colorPrimario);
-        doc.text(`S/ ${resumen.entrega?.toFixed(2) || '0.00'}`, 160, y);
+        doc.text('Envío:', 135, y);
+        doc.text(`S/ ${resumen.entrega?.toFixed(2) || '0.00'}`, 165, y);
         
         // Total final con estilo destacado
         y += 12;
         doc.setFillColor(colorPrimario);
-        doc.rect(130, y-5, 60, 10, 'F');
+        doc.rect(110, y-5, 80, 12, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFont('helvetica', 'bold');
-        doc.text(`TOTAL: S/ ${resumen.total?.toFixed(2) || '0.00'}`, 160, y+2);
+        doc.text('TOTAL:', 135, y+2);
+        doc.text(`S/ ${resumen.total?.toFixed(2) || '0.00'}`, 165, y+2);
         
-        // Pie de página
-        doc.setTextColor(colorSecundario);
+        // Pie de página con estilo Urban
+        doc.setFillColor(colorSecundario);
+        doc.rect(0, 270, 210, 25, 'F');
+        doc.setTextColor(255, 255, 255);
         doc.setFontSize(8);
         doc.setFont('helvetica', 'normal');
-        doc.text('Gracias por tu compra en Urban Style', 105, 280, { align: 'center' });
-        doc.text('Este documento es una representación impresa de la boleta electrónica', 105, 285, { align: 'center' });
+        doc.text('URBAN STYLE - Descubre las ropas en tendencia de este año 2024', 105, 280, { align: 'center' });
+        doc.text('Los Olivos, UTP 2024 | +51 456 789 067 | DcStyle@empresa.com', 105, 285, { align: 'center' });
         
         // Guardar PDF
-        doc.save('boleta.pdf');
+        doc.save('urban_style_boleta.pdf');
     } catch (error) {
         console.error('Error generando boleta:', error);
         throw error;
@@ -463,67 +466,66 @@ function generarFactura() {
         const carrito = JSON.parse(localStorage.getItem('cart')) || [];
         const resumen = JSON.parse(localStorage.getItem('resumenPedido')) || {};
         
-        // Configuración de estilos
-        const colorPrimario = '#2c3e50';
-        const colorSecundario = '#7f8c8d';
+        // Colores de Urban Style
+        const colorPrimario = '#1a1a1a';
+        const colorSecundario = '#2c2c2c';
+        const colorAcento = '#007bff';
         
-        // Encabezado con estilo
+        // Encabezado con estilo Urban
         doc.setFillColor(colorPrimario);
-        doc.rect(0, 0, 210, 40, 'F');
+        doc.rect(0, 0, 210, 50, 'F');
+        
+        // Logo y título
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(28);
         doc.setFont('helvetica', 'bold');
-        doc.text('FACTURA', 105, 25, { align: 'center' });
+        doc.text('URBAN STYLE', 105, 25, { align: 'center' });
+        doc.setFontSize(14);
+        doc.text('FACTURA', 105, 35, { align: 'center' });
         
-        // Información de la empresa
+        // Barra de envío
+        doc.setFillColor(colorSecundario);
+        doc.rect(0, 50, 210, 12, 'F');
+        doc.setFontSize(10);
+        doc.text('ENVÍOS GRATIS A TODO EL PERÚ', 105, 58, { align: 'center' });
+        
+        // Datos de facturación
         doc.setTextColor(colorPrimario);
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
-        doc.text('URBAN STYLE', 20, 50);
+        doc.text('DATOS DE FACTURACIÓN', 20, 80);
+        
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.setTextColor(colorSecundario);
-        doc.text('Dirección: Av. Principal 123, Lima', 20, 57);
-        doc.text('Teléfono: +51 999 888 777', 20, 63);
-        doc.text('Email: contacto@urbanstyle.com', 20, 69);
-        
-        // Línea divisoria
-        doc.setDrawColor(colorSecundario);
-        doc.setLineWidth(0.5);
-        doc.line(20, 75, 190, 75);
-        
-        // Datos del cliente con mejor formato
-        doc.setTextColor(colorPrimario);
-        doc.setFontSize(11);
-        doc.setFont('helvetica', 'bold');
-        doc.text('DATOS DE FACTURACIÓN', 20, 85);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(colorSecundario);
-        
         const rucEmpresa = document.getElementById('ruc')?.value || 'No especificado';
         const razonSocial = document.getElementById('razonsocial')?.value || 'No especificado';
         const direccionEmpresa = document.getElementById('direccion')?.value || 'No especificado';
         const emailEmpresa = document.getElementById('email')?.value || 'No especificado';
         
-        doc.text(`RUC: ${rucEmpresa}`, 20, 93);
-        doc.text(`Razón Social: ${razonSocial}`, 20, 100);
-        doc.text(`Dirección: ${direccionEmpresa}`, 20, 107);
-        doc.text(`Email: ${emailEmpresa}`, 20, 114);
+        // Caja de datos de facturación
+        doc.setDrawColor(colorSecundario);
+        doc.setLineWidth(0.1);
+        doc.rect(20, 85, 170, 35);
+        doc.setFontSize(11);
+        doc.text(`RUC: ${rucEmpresa}`, 25, 95);
+        doc.text(`Razón Social: ${razonSocial}`, 25, 102);
+        doc.text(`Dirección: ${direccionEmpresa}`, 25, 109);
+        doc.text(`Email: ${emailEmpresa}`, 25, 116);
         
-        // Tabla de productos con estilo
-        doc.setFillColor(colorPrimario);
-        doc.rect(20, 122, 170, 8, 'F');
+        // Tabla de productos
+        doc.setFillColor(colorSecundario);
+        doc.rect(20, 130, 170, 10, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
-        doc.text('Producto', 25, 127);
-        doc.text('Cantidad', 100, 127);
-        doc.text('Precio Unit.', 130, 127);
-        doc.text('Subtotal', 160, 127);
+        doc.text('PRODUCTO', 25, 136);
+        doc.text('TALLA', 85, 136);
+        doc.text('CANT.', 110, 136);
+        doc.text('PRECIO', 135, 136);
+        doc.text('SUBTOTAL', 165, 136);
         
         // Productos
-        let y = 137;
-        doc.setTextColor(colorSecundario);
+        let y = 145;
+        doc.setTextColor(colorPrimario);
         doc.setFont('helvetica', 'normal');
         
         carrito.forEach((item, index) => {
@@ -532,66 +534,66 @@ function generarFactura() {
                 y = 20;
             }
             
-            // Alternar colores de fondo para las filas
             if (index % 2 === 0) {
                 doc.setFillColor(245, 245, 245);
                 doc.rect(20, y-5, 170, 8, 'F');
             }
             
-            const nombre = item.name.length > 30 ? item.name.substring(0, 30) + '...' : item.name;
+            const nombre = item.name.length > 25 ? item.name.substring(0, 25) + '...' : item.name;
             doc.text(nombre, 25, y);
-            doc.text(item.quantity.toString(), 100, y);
-            doc.text(`S/ ${item.price.toFixed(2)}`, 130, y);
-            doc.text(`S/ ${(item.price * item.quantity).toFixed(2)}`, 160, y);
+            doc.text(item.talla, 85, y);
+            doc.text(item.quantity.toString(), 110, y);
+            doc.text(`S/ ${item.price.toFixed(2)}`, 135, y);
+            doc.text(`S/ ${(item.price * item.quantity).toFixed(2)}`, 165, y);
             y += 8;
         });
         
-        // Resumen de totales con estilo
+        // Resumen de totales
         y += 10;
         doc.setDrawColor(colorSecundario);
         doc.setLineWidth(0.5);
-        doc.line(130, y-5, 190, y-5);
+        doc.line(110, y, 190, y);
         
-        doc.setTextColor(colorSecundario);
-        doc.text(`Subtotal:`, 130, y);
-        doc.setTextColor(colorPrimario);
-        doc.text(`S/ ${resumen.subtotal?.toFixed(2) || '0.00'}`, 160, y);
-        
-        y += 8;
-        doc.setTextColor(colorSecundario);
-        doc.text(`IGV (18%):`, 130, y);
-        doc.setTextColor(colorPrimario);
-        doc.text(`S/ ${(resumen.subtotal * 0.18)?.toFixed(2) || '0.00'}`, 160, y);
+        y += 10;
+        doc.setFont('helvetica', 'normal');
+        doc.text('Subtotal:', 135, y);
+        doc.text(`S/ ${resumen.subtotal?.toFixed(2) || '0.00'}`, 165, y);
         
         y += 8;
-        doc.setTextColor(colorSecundario);
-        doc.text(`Descuento:`, 130, y);
-        doc.setTextColor('#e74c3c');
-        doc.text(`-S/ ${resumen.descuento?.toFixed(2) || '0.00'}`, 160, y);
+        doc.text('IGV (18%):', 135, y);
+        const igv = (resumen.subtotal * 0.18) || 0;
+        doc.text(`S/ ${igv.toFixed(2)}`, 165, y);
         
         y += 8;
-        doc.setTextColor(colorSecundario);
-        doc.text(`Envío:`, 130, y);
-        doc.setTextColor(colorPrimario);
-        doc.text(`S/ ${resumen.entrega?.toFixed(2) || '0.00'}`, 160, y);
+        doc.text('Descuento:', 135, y);
+        doc.setTextColor(colorAcento);
+        doc.text(`-S/ ${resumen.descuento?.toFixed(2) || '0.00'}`, 165, y);
         
-        // Total final con estilo destacado
+        y += 8;
+        doc.setTextColor(colorPrimario);
+        doc.text('Envío:', 135, y);
+        doc.text(`S/ ${resumen.entrega?.toFixed(2) || '0.00'}`, 165, y);
+        
+        // Total final
         y += 12;
         doc.setFillColor(colorPrimario);
-        doc.rect(130, y-5, 60, 10, 'F');
+        doc.rect(110, y-5, 80, 12, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFont('helvetica', 'bold');
-        doc.text(`TOTAL: S/ ${resumen.total?.toFixed(2) || '0.00'}`, 160, y+2);
+        doc.text('TOTAL:', 135, y+2);
+        doc.text(`S/ ${resumen.total?.toFixed(2) || '0.00'}`, 165, y+2);
         
         // Pie de página
-        doc.setTextColor(colorSecundario);
+        doc.setFillColor(colorSecundario);
+        doc.rect(0, 270, 210, 25, 'F');
+        doc.setTextColor(255, 255, 255);
         doc.setFontSize(8);
         doc.setFont('helvetica', 'normal');
-        doc.text('Gracias por tu compra en Urban Style', 105, 280, { align: 'center' });
-        doc.text('Este documento es una representación impresa de la factura electrónica', 105, 285, { align: 'center' });
+        doc.text('URBAN STYLE - Descubre las ropas en tendencia de este año 2024', 105, 280, { align: 'center' });
+        doc.text('Los Olivos, UTP 2024 | +51 456 789 067 | DcStyle@empresa.com', 105, 285, { align: 'center' });
         
         // Guardar PDF
-        doc.save('factura.pdf');
+        doc.save('urban_style_factura.pdf');
     } catch (error) {
         console.error('Error generando factura:', error);
         throw error;

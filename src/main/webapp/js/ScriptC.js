@@ -242,7 +242,7 @@ async function confirmarPago() {
         }
     }
 
-    // Verificar campos de facturación
+    // Obtener el tipo de documento una sola vez
     const tipoDocumento = document.getElementById('shippingOpcion').value;
     if (!tipoDocumento) {
         Swal.fire({
@@ -288,31 +288,170 @@ async function confirmarPago() {
         return;
     }
 
-    // Mostrar animación de procesamiento
-    Swal.fire({
-        title: 'Procesando pago',
-        html: 'Por favor espere...',
-        timer: 2000,
-        timerProgressBar: true,
-        didOpen: () => {
-            Swal.showLoading();
+    try {
+        // Usar la variable tipoDocumento ya declarada
+        if (tipoDocumento === 'boleta') {
+            generarBoleta();
+        } else if (tipoDocumento === 'ruc') {
+            generarFactura();
         }
-    }).then(() => {
-        // Mostrar mensaje de éxito
+
+        // Continuar con el proceso de confirmación
         Swal.fire({
-            icon: 'success',
-            title: '¡Pago exitoso!',
-            text: 'Gracias por tu compra',
-            showConfirmButton: false,
-            timer: 1500
+            title: 'Procesando pago',
+            html: 'Por favor espere...',
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading();
+            }
         }).then(() => {
-            // Limpiar el carrito
-            localStorage.removeItem('cart');
-            
-            // Redirigir al index
-            window.location.href = '../../index.jsp';
+            Swal.fire({
+                icon: 'success',
+                title: '¡Pago exitoso!',
+                text: 'Se ha generado su comprobante de pago',
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                localStorage.removeItem('cart');
+                window.location.href = '../../index.jsp';
+            });
         });
-    });
+    } catch (error) {
+        console.error('Error al generar el PDF:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un problema al generar el comprobante'
+        });
+    }
+}
+
+function generarBoleta() {
+    try {
+        // Crear nueva instancia de jsPDF
+        const doc = new jsPDF();
+        const carrito = JSON.parse(localStorage.getItem('cart')) || [];
+        const resumen = JSON.parse(localStorage.getItem('resumenPedido')) || {};
+        
+        // Encabezado
+        doc.setFontSize(22);
+        doc.text('BOLETA DE VENTA', 105, 20, { align: 'center' });
+        
+        // Datos del cliente
+        doc.setFontSize(12);
+        const nombreCliente = document.getElementById('invoiceName')?.value || 'No especificado';
+        const dniCliente = document.getElementById('dni')?.value || 'No especificado';
+        
+        doc.text(`Nombre: ${nombreCliente}`, 20, 40);
+        doc.text(`DNI: ${dniCliente}`, 20, 50);
+        doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 60);
+        
+        // Tabla de productos
+        let y = 80;
+        doc.setFontSize(10);
+        doc.text('Producto', 20, y);
+        doc.text('Cantidad', 100, y);
+        doc.text('Precio Unit.', 130, y);
+        doc.text('Subtotal', 160, y);
+        
+        y += 10;
+        carrito.forEach(item => {
+            if (y > 250) {
+                doc.addPage();
+                y = 20;
+            }
+            const nombre = item.name.length > 30 ? item.name.substring(0, 30) + '...' : item.name;
+            doc.text(nombre, 20, y);
+            doc.text(item.quantity.toString(), 100, y);
+            doc.text(`S/ ${item.price.toFixed(2)}`, 130, y);
+            doc.text(`S/ ${(item.price * item.quantity).toFixed(2)}`, 160, y);
+            y += 10;
+        });
+        
+        // Totales
+        y += 10;
+        doc.text(`Subtotal: S/ ${resumen.subtotal?.toFixed(2) || '0.00'}`, 130, y);
+        y += 10;
+        doc.text(`Descuento: S/ ${resumen.descuento?.toFixed(2) || '0.00'}`, 130, y);
+        y += 10;
+        doc.text(`Envío: S/ ${resumen.entrega?.toFixed(2) || '0.00'}`, 130, y);
+        y += 10;
+        doc.setFontSize(12);
+        doc.text(`TOTAL: S/ ${resumen.total?.toFixed(2) || '0.00'}`, 130, y);
+        
+        // Guardar PDF
+        doc.save('boleta.pdf');
+    } catch (error) {
+        console.error('Error generando boleta:', error);
+        throw error;
+    }
+}
+
+function generarFactura() {
+    try {
+        const doc = new jsPDF();
+        const carrito = JSON.parse(localStorage.getItem('cart')) || [];
+        const resumen = JSON.parse(localStorage.getItem('resumenPedido')) || {};
+        
+        // Encabezado
+        doc.setFontSize(22);
+        doc.text('FACTURA', 105, 20, { align: 'center' });
+        
+        // Datos de la empresa
+        doc.setFontSize(12);
+        const rucEmpresa = document.getElementById('ruc')?.value || 'No especificado';
+        const razonSocial = document.getElementById('razonsocial')?.value || 'No especificado';
+        const direccionEmpresa = document.getElementById('direccion')?.value || 'No especificado';
+        const emailEmpresa = document.getElementById('email')?.value || 'No especificado';
+        
+        doc.text(`RUC: ${rucEmpresa}`, 20, 40);
+        doc.text(`Razón Social: ${razonSocial}`, 20, 50);
+        doc.text(`Dirección: ${direccionEmpresa}`, 20, 60);
+        doc.text(`Email: ${emailEmpresa}`, 20, 70);
+        doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 80);
+        
+        // Tabla de productos
+        let y = 100;
+        doc.setFontSize(10);
+        doc.text('Producto', 20, y);
+        doc.text('Cantidad', 100, y);
+        doc.text('Precio Unit.', 130, y);
+        doc.text('Subtotal', 160, y);
+        
+        y += 10;
+        carrito.forEach(item => {
+            if (y > 250) {
+                doc.addPage();
+                y = 20;
+            }
+            const nombre = item.name.length > 30 ? item.name.substring(0, 30) + '...' : item.name;
+            doc.text(nombre, 20, y);
+            doc.text(item.quantity.toString(), 100, y);
+            doc.text(`S/ ${item.price.toFixed(2)}`, 130, y);
+            doc.text(`S/ ${(item.price * item.quantity).toFixed(2)}`, 160, y);
+            y += 10;
+        });
+        
+        // Totales
+        y += 10;
+        doc.text(`Subtotal: S/ ${resumen.subtotal?.toFixed(2) || '0.00'}`, 130, y);
+        y += 10;
+        doc.text(`IGV (18%): S/ ${(resumen.subtotal * 0.18)?.toFixed(2) || '0.00'}`, 130, y);
+        y += 10;
+        doc.text(`Descuento: S/ ${resumen.descuento?.toFixed(2) || '0.00'}`, 130, y);
+        y += 10;
+        doc.text(`Envío: S/ ${resumen.entrega?.toFixed(2) || '0.00'}`, 130, y);
+        y += 10;
+        doc.setFontSize(12);
+        doc.text(`TOTAL: S/ ${resumen.total?.toFixed(2) || '0.00'}`, 130, y);
+        
+        // Guardar PDF
+        doc.save('factura.pdf');
+    } catch (error) {
+        console.error('Error generando factura:', error);
+        throw error;
+    }
 }
 
 // Asegurarse de que los estilos de animate.css estén disponibles

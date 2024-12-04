@@ -289,40 +289,46 @@ async function confirmarPago() {
     }
 
     try {
-        // Usar la variable tipoDocumento ya declarada
-        if (tipoDocumento === 'boleta') {
-            generarBoleta();
-        } else if (tipoDocumento === 'ruc') {
-            generarFactura();
-        }
-
-        // Continuar con el proceso de confirmación
-        Swal.fire({
+        // Primero mostrar la animación de procesamiento
+        await Swal.fire({
             title: 'Procesando pago',
             html: 'Por favor espere...',
             timer: 2000,
             timerProgressBar: true,
+            showConfirmButton: false,
             didOpen: () => {
                 Swal.showLoading();
             }
-        }).then(() => {
-            Swal.fire({
-                icon: 'success',
-                title: '¡Pago exitoso!',
-                text: 'Se ha generado su comprobante de pago',
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar'
-            }).then(() => {
-                localStorage.removeItem('cart');
-                window.location.href = '../../index.jsp';
-            });
         });
+
+        // Después mostrar el mensaje de éxito
+        const result = await Swal.fire({
+            icon: 'success',
+            title: '¡Pago exitoso!',
+            text: 'Se generará su comprobante de pago',
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar'
+        });
+
+        // Solo si el usuario hace clic en Aceptar, generamos y descargamos el PDF
+        if (result.isConfirmed) {
+            const tipoDocumento = document.getElementById('shippingOpcion').value;
+            if (tipoDocumento === 'boleta') {
+                generarBoleta();
+            } else if (tipoDocumento === 'ruc') {
+                generarFactura();
+            }
+
+            // Limpiar carrito y redirigir
+            localStorage.removeItem('cart');
+            window.location.href = '../../index.jsp';
+        }
     } catch (error) {
-        console.error('Error al generar el PDF:', error);
+        console.error('Error al procesar el pago:', error);
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Hubo un problema al generar el comprobante'
+            text: 'Hubo un problema al procesar el pago'
         });
     }
 }

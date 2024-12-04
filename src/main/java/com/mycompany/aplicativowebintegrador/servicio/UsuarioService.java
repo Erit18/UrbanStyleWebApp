@@ -64,4 +64,13 @@ public class UsuarioService {
         usuarioDAO.eliminar(id);
         logger.info("Usuario eliminado: {}", id);
     }
+
+    public long contarUsuariosActivos() {
+        try {
+            return usuarioDAO.contarUsuariosActivos();
+        } catch (Exception e) {
+            logger.error("Error al contar usuarios activos", e);
+            return 0;
+        }
+    }
 } 

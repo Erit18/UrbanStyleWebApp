@@ -6,6 +6,9 @@ import com.mycompany.aplicativowebintegrador.dao.UsuarioDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Usuario;
 import com.mycompany.aplicativowebintegrador.servicio.UsuarioService;
 import com.mycompany.aplicativowebintegrador.util.ResponseBuilder;
+import com.mycompany.aplicativowebintegrador.config.MetricsConfig;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Gauge;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,6 +25,22 @@ public class UsuarioServlet extends HttpServlet {
     private UsuarioService usuarioService;
     private ResponseBuilder responseBuilder;
     private Gson gson;
+    private final Counter userOperations = Counter
+        .builder("user_operations_total")
+        .description("Total de operaciones de usuarios")
+        .tag("operation", "unknown")
+        .register(MetricsConfig.getRegistry());
+        
+    private final Gauge activeUsers = Gauge
+        .builder("active_users_total", usuarioService, service -> {
+            try {
+                return service.contarUsuariosActivos();
+            } catch (Exception e) {
+                return 0.0;
+            }
+        })
+        .description("Número de usuarios activos")
+        .register(MetricsConfig.getRegistry());
 
     @Override
     public void init() throws ServletException {

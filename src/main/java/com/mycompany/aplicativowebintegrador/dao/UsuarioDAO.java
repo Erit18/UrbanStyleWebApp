@@ -13,9 +13,23 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementación DAO para la gestión de usuarios en la base de datos.
+ * Maneja operaciones CRUD y validaciones específicas de usuarios.
+ * 
+ * @author TuNombre
+ * @version 1.0
+ */
 public class UsuarioDAO extends BaseDAO implements IUsuarioDAO {
     private static final Logger logger = LoggerFactory.getLogger(UsuarioDAO.class);
 
+    /**
+     * Busca un usuario por su dirección de correo electrónico.
+     * 
+     * @param email Correo electrónico del usuario a buscar
+     * @return Usuario encontrado o null si no existe
+     * @throws SQLException si ocurre un error en la consulta
+     */
     @Override
     public Usuario buscarPorEmail(String email) throws SQLException {
         Connection conn = null;
@@ -151,6 +165,19 @@ public class UsuarioDAO extends BaseDAO implements IUsuarioDAO {
             
             stmt.setInt(1, id);
             stmt.executeUpdate();
+        }
+    }
+
+    @Override
+    public long contarUsuariosActivos() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM usuarios WHERE estado = 'activo'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getLong(1);
+            }
+            return 0;
         }
     }
 

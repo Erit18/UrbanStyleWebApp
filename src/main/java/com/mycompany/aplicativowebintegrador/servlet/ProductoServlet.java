@@ -16,6 +16,8 @@ import java.io.BufferedReader;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.micrometer.core.instrument.Counter;
+import com.mycompany.aplicativowebintegrador.config.MetricsConfig;
 
 @WebServlet("/api/productos/*")
 public class ProductoServlet extends HttpServlet {
@@ -24,6 +26,29 @@ public class ProductoServlet extends HttpServlet {
     private ProductoServicio productoServicio;
     private ProductoValidador validador;
     private ResponseBuilder responseBuilder;
+
+    private final Counter productViews = Counter
+        .builder("product_views_total")
+        .description("Total de vistas de productos")
+        .register(MetricsConfig.getRegistry());
+        
+    private final Counter productCreates = Counter
+        .builder("product_operations_total")
+        .tags("operation", "create")
+        .description("Operaciones de creación de productos")
+        .register(MetricsConfig.getRegistry());
+        
+    private final Counter productUpdates = Counter
+        .builder("product_operations_total")
+        .tags("operation", "update")
+        .description("Operaciones de actualización de productos")
+        .register(MetricsConfig.getRegistry());
+        
+    private final Counter productDeletes = Counter
+        .builder("product_operations_total")
+        .tags("operation", "delete")
+        .description("Operaciones de eliminación de productos")
+        .register(MetricsConfig.getRegistry());
 
     @Override
     public void init() throws ServletException {
@@ -52,6 +77,7 @@ public class ProductoServlet extends HttpServlet {
                     responseBuilder.enviarRespuestaError(response, new Exception("Producto no encontrado"));
                 }
             }
+            productViews.increment();
         } catch (Exception e) {
             logger.error("Error al obtener productos", e);
             responseBuilder.enviarRespuestaError(response, e);
@@ -66,6 +92,7 @@ public class ProductoServlet extends HttpServlet {
             validador.validar(producto);
             productoServicio.agregarProducto(producto);
             responseBuilder.enviarRespuestaCreada(response, "Producto creado exitosamente");
+            productCreates.increment();
         } catch (Exception e) {
             logger.error("Error al crear producto", e);
             responseBuilder.enviarRespuestaError(response, e);
@@ -80,6 +107,7 @@ public class ProductoServlet extends HttpServlet {
             validador.validar(producto);
             productoServicio.actualizarProducto(producto);
             responseBuilder.enviarRespuestaExitosa(response, "Producto actualizado exitosamente");
+            productUpdates.increment();
         } catch (Exception e) {
             logger.error("Error al actualizar producto", e);
             responseBuilder.enviarRespuestaError(response, e);
@@ -90,6 +118,7 @@ public class ProductoServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
+            productDeletes.increment();
             int id = Integer.parseInt(request.getPathInfo().substring(1));
             productoServicio.eliminarProducto(id);
             responseBuilder.enviarRespuestaExitosa(response, "Producto eliminado exitosamente");

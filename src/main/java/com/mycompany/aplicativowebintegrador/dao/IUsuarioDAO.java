@@ -12,4 +12,5 @@ public interface IUsuarioDAO {
     Usuario obtenerPorId(int id) throws SQLException;
     void actualizar(Usuario usuario) throws SQLException;
     void eliminar(int id) throws SQLException;
+    long contarUsuariosActivos() throws SQLException;
 } 

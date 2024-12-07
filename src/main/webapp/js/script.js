@@ -127,4 +127,53 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Agregar esta función al archivo existente
+    function validarContraseñas() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const errorElement = document.getElementById('passwordError');
+        
+        // Validar que la contraseña tenga al menos 6 caracteres
+        if (password.length < 6) {
+            errorElement.textContent = 'La contraseña debe tener al menos 6 caracteres';
+            errorElement.style.display = 'block';
+            return false;
+        }
+        
+        // Validar que las contraseñas coincidan
+        if (password !== confirmPassword) {
+            errorElement.textContent = 'Las contraseñas no coinciden';
+            errorElement.style.display = 'block';
+            return false;
+        }
+        
+        // Si todo está bien, ocultar el mensaje de error
+        errorElement.style.display = 'none';
+        return true;
+    }
+
+    // Agregar eventos para validación en tiempo real
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const errorElement = document.getElementById('passwordError');
+    
+    function validarEnTiempoReal() {
+        if (password.value && confirmPassword.value) {
+            if (password.value !== confirmPassword.value) {
+                errorElement.textContent = 'Las contraseñas no coinciden';
+                errorElement.style.display = 'block';
+            } else if (password.value.length < 6) {
+                errorElement.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                errorElement.style.display = 'block';
+            } else {
+                errorElement.style.display = 'none';
+            }
+        }
+    }
+    
+    if (password && confirmPassword) {
+        password.addEventListener('input', validarEnTiempoReal);
+        confirmPassword.addEventListener('input', validarEnTiempoReal);
+    }
 });

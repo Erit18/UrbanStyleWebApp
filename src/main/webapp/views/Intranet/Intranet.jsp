@@ -102,7 +102,7 @@
       <main>
          <div class="container" id="container">
             <div class="form-container sign-up">
-                <form action="${pageContext.request.contextPath}/registro" method="post" id="registroForm" onsubmit="console.log('Formulario enviado')">
+                <form action="${pageContext.request.contextPath}/registro" method="post" id="registroForm" onsubmit="return validarContraseñas()">
                     <h1>Registrarse</h1>
                     <div class="social-icons">
                         <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
@@ -112,8 +112,10 @@
                     </div>
                     <input type="text" name="nombre" placeholder="Nombre" required>
                     <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="password" placeholder="Password" required>
-                    <button type="submit" onclick="console.log('Botón clickeado')">Registrar</button>
+                    <input type="password" name="password" id="password" placeholder="Contraseña" required>
+                    <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirmar Contraseña" required>
+                    <div id="passwordError" class="error-message" style="display: none; color: red; font-size: 0.8em;"></div>
+                    <button type="submit">Registrar</button>
                 </form>
             </div>
             <div class="form-container sign-in">

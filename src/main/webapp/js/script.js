@@ -36,4 +36,95 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(`Calificaste la polera con ${rating} estrellas`);
         });
     });
+
+    // Manejar el modal de contraseña olvidada
+    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+    const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+    let forgotPasswordModal;
+
+    if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            forgotPasswordModal = new bootstrap.Modal(document.getElementById('forgotPasswordModal'));
+            forgotPasswordModal.show();
+        });
+    }
+
+    if (forgotPasswordForm) {
+        forgotPasswordForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('recoveryEmail').value;
+            const verificationCodeDiv = document.getElementById('verificationCodeDiv');
+            const verificationCode = document.getElementById('verificationCode').value;
+            const newPasswordDiv = document.getElementById('newPasswordDiv');
+            const newPassword = document.getElementById('newPassword')?.value;
+            const submitButton = this.querySelector('button[type="submit"]');
+
+            try {
+                // Si el campo de nueva contraseña está visible, cambiamos la contraseña
+                if (newPasswordDiv.style.display === 'block' && newPassword) {
+                    const response = await fetch(`${window.location.origin}${contextPath}/cambiar-password`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(newPassword)}`
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        alert('Contraseña cambiada exitosamente');
+                        // Cerrar el modal y limpiar el formulario
+                        bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal')).hide();
+                        forgotPasswordForm.reset();
+                        verificationCodeDiv.style.display = 'none';
+                        newPasswordDiv.style.display = 'none';
+                        submitButton.textContent = 'Enviar código de verificación';
+                    } else {
+                        alert(data.message || 'Error al cambiar la contraseña');
+                    }
+                }
+                // Si el campo de código está visible, verificamos el código
+                else if (verificationCodeDiv.style.display === 'block' && verificationCode) {
+                    const response = await fetch(`${window.location.origin}${contextPath}/verificar-codigo`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `email=${encodeURIComponent(email)}&codigo=${encodeURIComponent(verificationCode)}`
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        newPasswordDiv.style.display = 'block';
+                        submitButton.textContent = 'Cambiar contraseña';
+                    } else {
+                        alert(data.message || 'Código incorrecto. Por favor, intenta nuevamente.');
+                    }
+                }
+                // Si no hay código ni contraseña nueva, enviamos el correo
+                else {
+                    const response = await fetch(`${window.location.origin}${contextPath}/recuperar-password`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `email=${encodeURIComponent(email)}`
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        verificationCodeDiv.style.display = 'block';
+                        submitButton.textContent = 'Verificar código';
+                        alert('Se ha enviado un código de verificación a tu correo electrónico.');
+                    } else {
+                        alert(data.message || 'Ha ocurrido un error. Por favor, intenta nuevamente.');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ha ocurrido un error. Por favor, intenta nuevamente.');
+            }
+        });
+    }
 });

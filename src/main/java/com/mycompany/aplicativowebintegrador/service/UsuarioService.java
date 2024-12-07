@@ -65,4 +65,11 @@ public class UsuarioService extends ServicioBase<Usuario> {
         }
         return usuarioDAO.buscarPorEmail(email);
     }
+    
+    public boolean existeEmail(String email) throws Exception {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("El email es requerido");
+        }
+        return usuarioDAO.existeEmail(email);
+    }
 } 

@@ -64,4 +64,18 @@ public class UsuarioService {
         usuarioDAO.eliminar(id);
         logger.info("Usuario eliminado: {}", id);
     }
+
+   public boolean existeEmail(String email) throws Exception {
+       if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("El email es requerido");
+        }
+        return usuarioDAO.existeEmail(email);
+    }
+
+    public Usuario buscarPorEmail(String email)throws Exception {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("El email es requerido");
+        }
+        return usuarioDAO.buscarPorEmail(email);
+    }
 } 

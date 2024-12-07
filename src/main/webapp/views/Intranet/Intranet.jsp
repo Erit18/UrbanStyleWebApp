@@ -131,7 +131,7 @@
                     <% 
                         String error = (String) session.getAttribute("error");
                         if (error != null) { 
-                            session.removeAttribute("error"); // Limpiar el mensaje después de mostrarlo
+                            session.removeAttribute("error");
                     %>
                         <div class="alert alert-danger" role="alert">
                             <%= error %>
@@ -139,6 +139,7 @@
                     <% } %>
                     
                     <button type="submit">Iniciar Sesión</button>
+                    <a href="#" class="forgot-password" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
                 </form>
             </div>
             <div class="toggle-container">
@@ -196,6 +197,9 @@
 </footer>
         
 
+        <script>
+            const contextPath = '${pageContext.request.contextPath}';
+        </script>
         <script src="../../js/script.js"></script>
         <script>
             // Debug para verificar que los elementos existen
@@ -255,6 +259,34 @@
                 color: #721c24;
             }
         </style>
+        <!-- Agregar el modal de recuperación de contraseña -->
+        <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="forgotPasswordModalLabel">Recuperar Contraseña</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="forgotPasswordForm" action="${pageContext.request.contextPath}/recuperar-password" method="post">
+                            <div class="mb-3">
+                                <label for="recoveryEmail" class="form-label">Ingresa tu correo electrónico</label>
+                                <input type="email" class="form-control" id="recoveryEmail" name="email" required>
+                            </div>
+                            <div class="mb-3" id="verificationCodeDiv" style="display: none;">
+                                <label for="verificationCode" class="form-label">Código de verificación</label>
+                                <input type="text" class="form-control" id="verificationCode" name="code">
+                            </div>
+                            <div class="mb-3" id="newPasswordDiv" style="display: none;">
+                                <label for="newPassword" class="form-label">Nueva contraseña</label>
+                                <input type="password" class="form-control" id="newPassword" name="newPassword">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Enviar código de verificación</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
   
     

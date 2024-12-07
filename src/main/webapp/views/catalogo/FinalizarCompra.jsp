@@ -19,6 +19,10 @@
         // Inicializar jsPDF
         window.jsPDF = window.jspdf.jsPDF;
     </script>
+    <script>
+        // Definir el contextPath para uso global
+        var contextPath = '${pageContext.request.contextPath}';
+    </script>
 </head>
 <body>
     <!--HEADER-->
@@ -179,6 +183,10 @@
                         <!-- Boleta -->
                         <div id="boletaFields" class="d-none">
                             <div class="mb-3">
+                                <label for="emailBoleta" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="emailBoleta" required>
+                            </div>
+                            <div class="mb-3">
                                 <label for="dni" class="form-label">Número de DNI</label>
                                 <input type="text" class="form-control" id="dni" required>
                             </div>
@@ -186,6 +194,10 @@
 
                         <!-- Factura -->
                         <div id="rucFields" class="d-none">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
                             <div class="mb-3">
                                 <label for="ruc" class="form-label">RUC</label>
                                 <input type="text" class="form-control" id="ruc" required>
@@ -197,10 +209,6 @@
                             <div class="mb-3">
                                 <label for="razonsocial" class="form-label">Razón Social</label>
                                 <input type="text" class="form-control" id="razonsocial" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Correo Electrónico</label>
-                                <input type="email" class="form-control" id="email" required>
                             </div>
                         </div>
                     </form>

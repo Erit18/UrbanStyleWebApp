@@ -194,6 +194,9 @@
 <script src="../../js/ScriptC.js"></script>
 
 <script>
+    // Definir el contextPath para uso global
+    var contextPath = '${pageContext.request.contextPath}';
+    
     // Asegurarnos de que el DOM esté cargado
     document.addEventListener('DOMContentLoaded', function() {
         // Inicializar el carrito
@@ -207,13 +210,35 @@
                 console.log('Carrito:', carrito); // Debug
                 
                 if (carrito.length === 0) {
-                    mostrarMensaje('El carrito está vacío');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Carrito vacío',
+                        text: 'Agrega productos antes de finalizar la compra'
+                    });
                     return;
                 }
                 
-                console.log('Redirigiendo...'); // Debug
-                window.location.href = 'FinalizarCompra.jsp';
+                // Verificar si el usuario está logueado
+                <% if (session.getAttribute("usuario") == null) { %>
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Inicio de sesión requerido',
+                        text: 'Debes iniciar sesión para continuar con la compra',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ir a login',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = contextPath + '/views/Intranet/Intranet.jsp';
+                        }
+                    });
+                <% } else { %>
+                    console.log('Redirigiendo a finalizar compra...'); // Debug
+                    window.location.href = contextPath + '/views/catalogo/FinalizarCompra.jsp';
+                <% } %>
             });
+        } else {
+            console.error('Botón de finalizar compra no encontrado');
         }
     });
 </script>

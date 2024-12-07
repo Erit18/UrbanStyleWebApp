@@ -202,94 +202,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Agregar función para confirmar pago
 async function confirmarPago() {
-    // Verificar campos según el método de envío seleccionado
-    const shippingMethod = document.getElementById('shippingMethod').value;
-    if (!shippingMethod) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Campo requerido',
-            text: 'Por favor seleccione un método de envío'
-        });
-        return;
-    }
-
-    // Verificar campos de envío
-    if (shippingMethod === 'delivery') {
-        const camposDelivery = ['department', 'province', 'district', 'address'];
-        for (let campo of camposDelivery) {
-            const elemento = document.getElementById(campo);
-            if (!elemento || !elemento.value.trim()) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Campos incompletos',
-                    text: 'Por favor complete todos los campos de envío'
-                });
-                return;
-            }
-        }
-    } else if (shippingMethod === 'store-pickup') {
-        const camposPickup = ['storeBranch', 'pickupDate', 'pickupTime'];
-        for (let campo of camposPickup) {
-            const elemento = document.getElementById(campo);
-            if (!elemento || !elemento.value.trim()) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Campos incompletos',
-                    text: 'Por favor complete todos los campos de recojo en tienda'
-                });
-                return;
-            }
-        }
-    }
-
-    // Obtener el tipo de documento una sola vez
-    const tipoDocumento = document.getElementById('shippingOpcion').value;
-    if (!tipoDocumento) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Campo requerido',
-            text: 'Por favor seleccione tipo de documento (Boleta/RUC)'
-        });
-        return;
-    }
-
-    if (tipoDocumento === 'boleta') {
-        if (!document.getElementById('dni').value.trim()) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campo requerido',
-                text: 'Por favor ingrese su DNI'
-            });
-            return;
-        }
-    } else if (tipoDocumento === 'ruc') {
-        const camposRuc = ['ruc', 'direccion', 'razonsocial', 'email'];
-        for (let campo of camposRuc) {
-            const elemento = document.getElementById(campo);
-            if (!elemento || !elemento.value.trim()) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Campos incompletos',
-                    text: 'Por favor complete todos los campos de facturación'
-                });
-                return;
-            }
-        }
-    }
-
-    // Verificar método de pago
-    const paymentMethod = document.getElementById('paymentMethod').value;
-    if (!paymentMethod) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Campo requerido',
-            text: 'Por favor seleccione un método de pago'
-        });
-        return;
-    }
-
     try {
-        // Primero mostrar la animación de procesamiento
+        // Validar que todos los campos necesarios estén completos
+        const shippingMethod = document.getElementById('shippingMethod').value;
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        const tipoDocumento = document.getElementById('shippingOpcion').value;
+
+        if (!shippingMethod || !paymentMethod || !tipoDocumento) {
+            throw new Error('Por favor complete todos los campos requeridos');
+        }
+
+        // Validar campos específicos según el tipo de documento
+        let email;
+        if (tipoDocumento === 'ruc') {
+            email = document.getElementById('email').value;
+            if (!email) {
+                throw new Error('Por favor ingrese un correo electrónico válido');
+            }
+        } else {
+            email = document.getElementById('emailBoleta').value;
+            if (!email) {
+                throw new Error('Por favor ingrese un correo electrónico válido');
+            }
+        }
+
+        // Mostrar animación de procesamiento
         await Swal.fire({
             title: 'Procesando pago',
             html: 'Por favor espere...',
@@ -301,39 +238,55 @@ async function confirmarPago() {
             }
         });
 
-        // Después mostrar el mensaje de éxito
-        const result = await Swal.fire({
-            icon: 'success',
-            title: '¡Pago exitoso!',
-            text: 'Se generará su comprobante de pago',
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
+        // Generar el PDF
+        let pdfBase64;
+        if (tipoDocumento === 'boleta') {
+            pdfBase64 = await generarBoleta(true);
+        } else {
+            pdfBase64 = await generarFactura(true);
+        }
+
+        // Enviar el PDF por correo
+        const response = await fetch(`${window.location.origin}${contextPath || ''}/enviar-comprobante`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `email=${encodeURIComponent(email)}&pdf=${encodeURIComponent(pdfBase64)}&tipoDocumento=${encodeURIComponent(tipoDocumento)}`
         });
 
-        // Solo si el usuario hace clic en Aceptar, generamos y descargamos el PDF
-        if (result.isConfirmed) {
-            const tipoDocumento = document.getElementById('shippingOpcion').value;
-            if (tipoDocumento === 'boleta') {
-                generarBoleta();
-            } else if (tipoDocumento === 'ruc') {
-                generarFactura();
-            }
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            await Swal.fire({
+                icon: 'success',
+                title: '¡Pago exitoso!',
+                text: 'Se ha enviado el comprobante a su correo electrónico',
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar'
+            });
 
             // Limpiar carrito y redirigir
             localStorage.removeItem('cart');
-            window.location.href = '../../index.jsp';
+            window.location.href = `${contextPath || ''}/index.jsp`;
+        } else {
+            throw new Error(result.message || 'Error al enviar el comprobante');
         }
     } catch (error) {
         console.error('Error al procesar el pago:', error);
-        Swal.fire({
+        await Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Hubo un problema al procesar el pago'
+            text: error.message || 'Hubo un problema al procesar el pago'
         });
     }
 }
 
-function generarBoleta() {
+function generarBoleta(returnBase64 = false) {
     try {
         const doc = new jsPDF();
         const carrito = JSON.parse(localStorage.getItem('cart')) || [];
@@ -458,15 +411,18 @@ function generarBoleta() {
         doc.text('URBAN STYLE - Descubre las ropas en tendencia de este año 2024', 105, 280, { align: 'center' });
         doc.text('Los Olivos, UTP 2024 | +51 456 789 067 | DcStyle@empresa.com', 105, 285, { align: 'center' });
         
-        // Guardar PDF
-        doc.save('urban_style_boleta.pdf');
+        if (returnBase64) {
+            return doc.output('datauristring');
+        } else {
+            doc.save('urban_style_boleta.pdf');
+        }
     } catch (error) {
         console.error('Error generando boleta:', error);
         throw error;
     }
 }
 
-function generarFactura() {
+function generarFactura(returnBase64 = false) {
     try {
         const doc = new jsPDF();
         const carrito = JSON.parse(localStorage.getItem('cart')) || [];
@@ -598,8 +554,11 @@ function generarFactura() {
         doc.text('URBAN STYLE - Descubre las ropas en tendencia de este año 2024', 105, 280, { align: 'center' });
         doc.text('Los Olivos, UTP 2024 | +51 456 789 067 | DcStyle@empresa.com', 105, 285, { align: 'center' });
         
-        // Guardar PDF
-        doc.save('urban_style_factura.pdf');
+        if (returnBase64) {
+            return doc.output('datauristring');
+        } else {
+            doc.save('urban_style_factura.pdf');
+        }
     } catch (error) {
         console.error('Error generando factura:', error);
         throw error;

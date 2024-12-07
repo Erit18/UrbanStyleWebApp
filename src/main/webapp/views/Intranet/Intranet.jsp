@@ -129,9 +129,19 @@
                     <input type="password" name="password" placeholder="Password" required>
                     
                     <% 
+                        String mensaje = (String) session.getAttribute("mensaje");
                         String error = (String) session.getAttribute("error");
-                        if (error != null) { 
-                            session.removeAttribute("error");
+                        
+                        if (mensaje != null) { 
+                            session.removeAttribute("mensaje"); // Limpiar el mensaje después de mostrarlo
+                    %>
+                        <div class="alert alert-success" role="alert">
+                            <%= mensaje %>
+                        </div>
+                    <% } %>
+                    
+                    <% if (error != null) { 
+                            session.removeAttribute("error"); // Limpiar el error después de mostrarlo
                     %>
                         <div class="alert alert-danger" role="alert">
                             <%= error %>

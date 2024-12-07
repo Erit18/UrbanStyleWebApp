@@ -64,6 +64,19 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        // Verificar si hay un mensaje de registro exitoso
+        HttpSession session = request.getSession();
+        String mensaje = (String) session.getAttribute("mensaje");
+        String error = (String) session.getAttribute("error");
+        
+        // Si hay mensaje o error, mantenerlos para mostrarlos
+        if (mensaje != null || error != null) {
+            // Los mensajes se mantendrán y se mostrarán en el JSP
+            response.sendRedirect(request.getContextPath() + "/views/Intranet/Intranet.jsp");
+            return;
+        }
+        
+        // Si no hay mensajes, simplemente redirigir
         response.sendRedirect(request.getContextPath() + "/views/Intranet/Intranet.jsp");
     }
 }

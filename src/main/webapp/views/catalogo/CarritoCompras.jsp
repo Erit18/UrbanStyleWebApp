@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styleindex.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/stylicarrito.css">
+    
+    <!-- Agregar SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <title>Carrito de Compras</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -222,11 +226,20 @@
                 <% if (session.getAttribute("usuario") == null) { %>
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Inicio de sesión requerido',
-                        text: 'Debes iniciar sesión para continuar con la compra',
+                        title: '¡Necesitas iniciar sesión!',
+                        text: 'Para continuar con tu compra, primero debes iniciar sesión',
                         showCancelButton: true,
-                        confirmButtonText: 'Ir a login',
-                        cancelButtonText: 'Cancelar'
+                        confirmButtonText: 'Iniciar sesión',
+                        cancelButtonText: 'Cancelar',
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        background: '#fff',
+                        backdrop: `
+                            rgba(0,0,123,0.4)
+                            url("/images/nyan-cat.gif")
+                            left top
+                            no-repeat
+                        `
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = contextPath + '/views/Intranet/Intranet.jsp';

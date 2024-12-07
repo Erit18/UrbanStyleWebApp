@@ -422,7 +422,12 @@
 
         function obtenerTallaSeleccionada() {
             if (!tallaSeleccionada) {
-                alert('Por favor, selecciona una talla');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Selecciona una talla',
+                    text: 'Por favor, selecciona una talla antes de añadir al carrito',
+                    confirmButtonColor: '#3085d6'
+                });
                 return false;
             }
             return tallaSeleccionada;

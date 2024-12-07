@@ -10,17 +10,22 @@ async function cargarProductos() {
             throw new Error('Error al cargar datos');
         }
         
-        const productos = await productosResponse.json();
+        todosLosProductos = await productosResponse.json();
         const proveedores = await proveedoresResponse.json();
         
         const proveedoresMap = new Map(
             proveedores.map(p => [p.id_proveedor, p.nombre])
         );
         
+        // Calcular productos para la página actual
+        const inicio = (paginaActual - 1) * productosPorPagina;
+        const fin = inicio + productosPorPagina;
+        const productosPagina = todosLosProductos.slice(inicio, fin);
+        
         const tbody = document.getElementById('tablaProductos');
         tbody.innerHTML = '';
         
-        productos.forEach(producto => {
+        productosPagina.forEach(producto => {
             const tr = document.createElement('tr');
             
             // Crear todas las celdas con sus clases correspondientes
@@ -44,6 +49,9 @@ async function cargarProductos() {
             
             tbody.appendChild(tr);
         });
+
+        // Actualizar controles de paginación
+        actualizarPaginacion();
     } catch (error) {
         console.error('Error al cargar productos:', error);
     }
@@ -289,3 +297,83 @@ document.addEventListener('DOMContentLoaded', async function() {
         btnGuardarProducto.onclick = guardarProducto;
     }
 });
+
+// Variables para paginación
+let paginaActual = 1;
+const productosPorPagina = 10;
+let todosLosProductos = [];
+
+function actualizarPaginacion() {
+    const totalPaginas = Math.ceil(todosLosProductos.length / productosPorPagina);
+    
+    // Eliminar TODOS los contenedores de paginación existentes
+    const paginacionesExistentes = document.querySelectorAll('.container.mt-3.no-print');
+    paginacionesExistentes.forEach(elem => elem.remove());
+    
+    const paginacionContainer = document.createElement('div');
+    paginacionContainer.className = 'container mt-3 no-print';
+    paginacionContainer.innerHTML = `
+        <nav aria-label="Navegación de productos">
+            <ul class="pagination justify-content-center">
+                <li class="page-item ${paginaActual === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="cambiarPagina(${paginaActual - 1})">Anterior</a>
+                </li>
+                ${generarBotonesPagina(totalPaginas)}
+                <li class="page-item ${paginaActual === totalPaginas ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="cambiarPagina(${paginaActual + 1})">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="text-center">
+            Mostrando ${(paginaActual - 1) * productosPorPagina + 1} - 
+            ${Math.min(paginaActual * productosPorPagina, todosLosProductos.length)} 
+            de ${todosLosProductos.length} productos
+        </div>
+    `;
+    
+    // Agregar el nuevo contenedor después de la tabla
+    document.querySelector('.table').after(paginacionContainer);
+}
+
+function generarBotonesPagina(totalPaginas) {
+    let botones = '';
+    const maxBotones = 5;
+    let inicio = Math.max(1, paginaActual - Math.floor(maxBotones / 2));
+    let fin = Math.min(totalPaginas, inicio + maxBotones - 1);
+    
+    if (inicio > 1) {
+        botones += `
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="cambiarPagina(1)">1</a>
+            </li>
+            ${inicio > 2 ? '<li class="page-item disabled"><span class="page-link">...</span></li>' : ''}
+        `;
+    }
+    
+    for (let i = inicio; i <= fin; i++) {
+        botones += `
+            <li class="page-item ${i === paginaActual ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="cambiarPagina(${i})">${i}</a>
+            </li>
+        `;
+    }
+    
+    if (fin < totalPaginas) {
+        botones += `
+            ${fin < totalPaginas - 1 ? '<li class="page-item disabled"><span class="page-link">...</span></li>' : ''}
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="cambiarPagina(${totalPaginas})">${totalPaginas}</a>
+            </li>
+        `;
+    }
+    
+    return botones;
+}
+
+function cambiarPagina(nuevaPagina) {
+    const totalPaginas = Math.ceil(todosLosProductos.length / productosPorPagina);
+    if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+        paginaActual = nuevaPagina;
+        cargarProductos();
+    }
+}

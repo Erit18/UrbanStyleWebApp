@@ -64,11 +64,10 @@
                 </ul>
             </li>
             <li class="nav-item mx-4" >
-                <a class="nav-link active" aria-current="page" href="nosotros/Nosotros.html">NOSOTROS</a>
+                <a class="nav-link active" aria-current="page" href="views/catalogo/Nosotros.html">NOSOTROS</a>
             </li>
             
             <li class="nav-item mx-4">
-                <a class="nav-link active" href="SCliente/Servicio-Cliente.html">SERVICIO AL CLIENTE</a>
             </li>
             </ul>
             <form class="d-flex" style="width: 35%;">

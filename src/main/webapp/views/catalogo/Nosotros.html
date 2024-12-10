@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
+
 
 <head>
     <meta charset="UTF-8">
@@ -10,127 +12,153 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="../../css/catalogostyles.css">
     <title>Intranet</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     
 </head>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        color: #333;
+    }
+
+    main {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    section {
+        margin-bottom: 20px;
+        padding: 10px 15px;
+        border-left: 5px solid #eb1212;
+        background: #f1f9ff;
+        border-radius: 5px;
+    }
+
+    h2 {
+        color: #ff0303;
+        margin-bottom: 10px;
+    }
+
+    p {
+        margin: 10px 0;
+        text-align: justify;
+    }
+
+    ul {
+        margin: 15px 0;
+        padding-left: 20px;
+    }
+
+    ul li {
+        margin-bottom: 8px;
+    }
+
+    ul li::marker {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    nav ul {
+        display: flex;
+        justify-content: left;
+        gap: 10px;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    nav ul li {
+        display: inline;
+    }
+
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    nav ul li a:hover {
+        text-decoration: underline;
+    }
+
+    @keyframes rotate-image {
+        0%{
+            transform: rotatey (0deg);
+            }
+            100%{
+            transform: rotateY(360deg);
+            }
+    }
+</style>
+
 <body>
-    
-
-        <!--HEADER-->
-        <div id="header-placeholder"></div>
-
+    <!--HEADER-->
+    <div id="header-placeholder"></div>
+         
     <div class="envio-bar d-flex justify-content-center align-items-center">
         <span class="mx-2">
-          <img src="../static/img/INTRANET/peru.png" alt="Perú" width="24">
+          <img src="../Intranet/imagenes/peru.png" alt="Perú" width="24">
         </span>
-        <span class="envio-text">🛩️ENVÍOS GRATIS A TODO EL PERÚ🛩️</span>
+        <marquee class="envio-text">🛩️ENVÍOS GRATIS A TODO EL PERÚ🛩️</marquee>
         <span class="mx-2">
-          <img src="../static/img/INTRANET/peru.png" alt="Avión" width="24">
+          <img src="../Intranet/imagenes/peru.png" alt="Avión" width="24">
         </span>
-      </div>
- 
-    <style>
-    body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
-
-header {
-    background: #333;
-    color: #fff;
-    padding: 20px 0;
-    text-align: center;
-}
-
-header nav ul {
-    list-style: none;
-    padding: 0;
-}
-
-header nav ul li {
-    display: inline;
-    margin: 0 15px;
-}
-
-header nav ul li a {
-    color: #fff;
-    text-decoration: none;
-}
-
-main {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
-}
-
-section {
-    background: #fff;
-    margin: 20px 0;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    color: #333;
-}
-
-ul {
-    padding-left: 20px;
-}
-
-footer {
-    text-align: center;
-    padding: 10px 0;
-    background: #333;
-    color: #fff;
-}
-</style>    
- 
-    <body>
-    <header>
-        <h1>Urban Style</h1>
-        <nav>
-            <ul>
-                <li><a href="#vision">Visión</a></li>
-                <li><a href="#mision">Misión</a></li>
-                <li><a href="#entorno">Entorno</a></li>
-                <li><a href="#estrategias">Estrategias</a></li>
-            </ul>
-        </nav>
-    </header>
+    </div>
 
     <main>
-        <section id="vision">
-            <h2>Visión</h2>
-            <p>Urban Style aspira a convertirse en la tienda líder en moda urbana en la región e internacional, destacándose por su autenticidad y su profunda conexión con la cultura juvenil. Para alcanzar esta visión, desarrollarán un ambicioso plan de expansión que incluye hacer una tienda online con envíos nacionales e internacionales y abrir nuevas sucursales en ciudades estratégicas.</p>
+        <section id="vision" class="image-container border1">
+            <div class="image-wrapper">
+                <img src="imagenes/Nosotros/style1.png" alt="Visión Urban Style">
+            </div>
+            <div class="content">
+                <h2>Visión</h2>
+                <p>Urban Style aspira a convertirse en la tienda líder en moda urbana en la región e internacional, destacándose por su autenticidad y su profunda conexión con la cultura juvenil. Para alcanzar esta visión, desarrollarán un ambicioso plan de expansión que incluye hacer una tienda online con envíos nacionales e internacionales y abrir nuevas sucursales en ciudades estratégicas.</p>
+            </div>
         </section>
-
-        <section id="mision">
-            <h2>Misión</h2>
-            <p>La misión en Urban Style es ofrecer a sus clientes las últimas tendencias en moda urbana, combinando estilo, calidad y accesibilidad. Quieren destacarse por sus diseños exclusivos, resultado de colaboraciones con diseñadores y artistas nacionales que aportarán una perspectiva única a su colección. Además, buscan que la experiencia de compra en Urban Style tanto como online y física se defina por un ambiente moderno y una atención personalizada, garantizando un servicio rápido y eficiente.</p>
+        
+        <section id="mision" class="image-container border2">
+            <div class="image-wrapper">
+                <img src="imagenes/Nosotros/style2.png" alt="Misión Urban Style">
+            </div>
+            <div class="content">
+                <h2>Misión</h2>
+                <p>La misión en Urban Style es ofrecer a sus clientes las últimas tendencias en moda urbana, combinando estilo, calidad y accesibilidad. Quieren destacarse por sus diseños exclusivos, resultado de colaboraciones con diseñadores y artistas nacionales que aportarán una perspectiva única a su colección. Además, buscan que la experiencia de compra en Urban Style tanto como online y física se defina por un ambiente moderno y una atención personalizada, garantizando un servicio rápido y eficiente.</p>
+            </div>
         </section>
-
-        <section id="entorno">
-            <h2>Entorno</h2>
-            <p>Urban Style está en un entorno altamente competitivo, donde se enfrenta a la presencia dominante de grandes marcas y empresas de ropa que establecen las tendencias en la moda urbana. Entre los principales competidores se encuentran Nike, Adidas y Puma, que destacan por su amplia oferta de ropa urbano, así como por sus innovadoras campañas de marketing y colaboraciones. Para sobresalir en este entorno competitivo, Urban Style se enfoca en ofrecer un valor diferenciado con una experiencia de compra única y una conexión auténtica con la cultura urbana. Además, se está desarrollando un aplicativo web para optimizar la gestión de ventas y mejorar la experiencia de compra en línea, facilitando el acceso a nuestros productos y servicios para una audiencia más amplia. Esto les permitirá no solo competir eficazmente, sino también destacar y atraer a un público que busca autenticidad y originalidad en la moda urbana.</p>
-        </section>
-
-        <section id="estrategias">
-            <h2>Estrategias</h2>
-            <p>Para atraer y retener a sus clientes en Urban Style, implementará una serie de estrategias clave:</p>
-            <ul>
-                <li>Ofrecer promociones exclusivas para clientes fieles.</li>
-                <li>Brindar acceso anticipado a lanzamientos especiales y eventos exclusivos.</li>
-                <li>Mantener precios accesibles para asegurar que la moda urbana sea accesible para todos.</li>
-                <li>Introducir descuentos especiales para nuevos usuarios, incentivando su primera compra.</li>
-                <li>Lanzar ofertas especiales cada fin de mes para fomentar las compras recurrentes.</li>
-                <li>Ofrecer un regalo a aquellos clientes que cumplan con un mínimo de compra, recompensando su lealtad.</li>
-            </ul>
+        
+        <section id="entorno" class="image-container border3">
+            <div class="image-wrapper">
+                <img src="imagenes/Nosotros/style3.png" alt="Entorno Urban Style">
+            </div>
+            <div class="content">
+                <h2>Entorno</h2>
+                <p>Urban Style está en un entorno altamente competitivo, donde se enfrenta a la presencia dominante de grandes marcas y empresas de ropa que establecen las tendencias en la moda urbana. Entre los principales competidores se encuentran Nike, Adidas y Puma, que destacan por su amplia oferta de ropa urbano, así como por sus innovadoras campañas de marketing y colaboraciones. Para sobresalir en este entorno competitivo, Urban Style se enfoca en ofrecer un valor diferenciado con una experiencia de compra única y una conexión auténtica con la cultura urbana. Además, se está desarrollando un aplicativo web para optimizar la gestión de ventas y mejorar la experiencia de compra en línea, facilitando el acceso a nuestros productos y servicios para una audiencia más amplia. Esto les permitirá no solo competir eficazmente, sino también destacar y atraer a un público que busca autenticidad y originalidad en la moda urbana.</p>
+            </div>
         </section>
     </main>
     
@@ -152,3 +180,4 @@ footer {
 
     <script src="ScriptC.js"></script>
 </body>
+</html>

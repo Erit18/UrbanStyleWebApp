@@ -30,7 +30,7 @@
         <span class="mx-2">
           <img src="../Intranet/imagenes/peru.png" alt="Perú" width="24">
         </span>
-        <span class="envio-text">🛩️ENVÍOS GRATIS A TODO EL PERÚ🛩️</span>
+        <marquee class="envio-text">🛩️ENVÍOS GRATIS A TODO EL PERÚ🛩️</marquee>
         <span class="mx-2">
           <img src="../Intranet/imagenes/peru.png" alt="Avión" width="24">
         </span>

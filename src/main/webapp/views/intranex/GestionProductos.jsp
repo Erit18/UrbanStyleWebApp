@@ -67,8 +67,6 @@
             <a href="${pageContext.request.contextPath}/views/intranex/GestionProductos.jsp" class="active">
                 <i class="bi bi-box-seam"></i> Gestión de Productos
             </a>
-            <a href="#">
-                <i class="bi bi-cart-check"></i> Gestión de Pedidos
             </a>
             <a href="${pageContext.request.contextPath}/views/intranex/GestionUsuarios.jsp">
                 <i class="bi bi-people"></i> Gestión de Usuarios

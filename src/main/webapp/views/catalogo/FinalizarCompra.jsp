@@ -52,7 +52,7 @@
             color: #666;
         }
         .qr-img {
-            width: 150px;
+            width: 250px;
             margin: 10px 0;
         }
         .d-none {
@@ -140,9 +140,9 @@
                                 <label for="storeBranch" class="form-label">Escoge la Sucursal</label>
                                 <select class="form-select" id="storeBranch" required>
                                     <option value="" disabled selected>Selecciona la sucursal</option>
-                                    <option value="sucursal1">Sucursal 1</option>
-                                    <option value="sucursal2">Sucursal 2</option>
-                                    <option value="sucursal3">Sucursal 3</option>
+                                    <option value="sucursal1">Lima Centro</option>
+                                    <option value="sucursal2">Miraflores</option>
+                                    <option value="sucursal3">Arequipa</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -268,8 +268,7 @@
                         <div id="yapePlinDetails" class="d-none">
                             <label class="form-label">Paga escaneando el QR:</label>
                             <div>
-                                <img src="/src/main/resources/static/img/qr/yape.png" alt="QR Yape" class="qr-img">
-                                <img src="/src/main/resources/static/img/qr/plin.png" alt="QR Plin" class="qr-img">
+                                <img src="imagenes/yape/YapePlin.png" alt="QR Yape" class="qr-img">
                             </div>
                         </div>
 

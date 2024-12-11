@@ -33,6 +33,7 @@ public class AlertaDAO extends BaseDAO implements IAlertaDAO {
                 "SELECT a.*, r.nombre as nombre_producto " +
                 "FROM Alertas a " +
                 "INNER JOIN Ropa r ON a.id_ropa = r.id_ropa " +
+                "WHERE a.estado = 'activa' " +
                 "ORDER BY a.fecha_alerta DESC"
             );
             rs = stmt.executeQuery();
@@ -54,7 +55,9 @@ public class AlertaDAO extends BaseDAO implements IAlertaDAO {
         
         try {
             conn = getConnection();
-            stmt = conn.prepareStatement("DELETE FROM Alertas WHERE id_alerta = ?");
+            stmt = conn.prepareStatement(
+                "UPDATE Alertas SET estado = 'resuelta' WHERE id_alerta = ?"
+            );
             stmt.setInt(1, id);
             
             return stmt.executeUpdate() > 0;
@@ -136,6 +139,82 @@ public class AlertaDAO extends BaseDAO implements IAlertaDAO {
                 return mapearAlerta(rs);
             }
             return null;
+        } finally {
+            closeResources(conn, stmt, rs);
+        }
+    }
+    
+    public void actualizarEstadoAlertasPorProducto(int idRopa, int nuevoStock) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        
+        try {
+            conn = getConnection();
+            stmt = conn.prepareStatement(
+                "UPDATE Alertas SET " +
+                "estado = CASE " +
+                "   WHEN tipo_alerta = 'stock_bajo' AND ? <= umbral THEN 'activa' " +
+                "   WHEN tipo_alerta = 'stock_bajo' AND ? > umbral THEN 'resuelta' " +
+                "   ELSE estado " +
+                "END " +
+                "WHERE id_ropa = ? AND tipo_alerta = 'stock_bajo'"
+            );
+            
+            stmt.setInt(1, nuevoStock);
+            stmt.setInt(2, nuevoStock);
+            stmt.setInt(3, idRopa);
+            
+            stmt.executeUpdate();
+        } finally {
+            closeResources(conn, stmt);
+        }
+    }
+    
+    public void verificarYCrearAlertas() throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = getConnection();
+            
+            stmt = conn.prepareStatement(
+                "UPDATE Alertas a " +
+                "INNER JOIN Ropa r ON a.id_ropa = r.id_ropa " +
+                "SET a.estado = 'activa', a.fecha_alerta = CURRENT_TIMESTAMP " +
+                "WHERE a.estado = 'resuelta' " +
+                "AND ((a.tipo_alerta = 'stock_bajo' AND r.stock <= a.umbral) " +
+                "     OR (a.tipo_alerta = 'caducidad' AND r.fecha_caducidad BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 30 DAY)))"
+            );
+            stmt.executeUpdate();
+            
+            stmt = conn.prepareStatement(
+                "INSERT INTO Alertas (id_ropa, mensaje, tipo_alerta, estado, umbral, fecha_alerta) " +
+                "SELECT r.id_ropa, " +
+                "CONCAT('Stock bajo: ', r.nombre, ' (', r.stock, ' unidades)'), " +
+                "'stock_bajo', 'activa', 30, CURRENT_TIMESTAMP " +
+                "FROM Ropa r " +
+                "WHERE r.stock <= 30 " +
+                "AND NOT EXISTS (SELECT 1 FROM Alertas a " +
+                "               WHERE a.id_ropa = r.id_ropa " +
+                "               AND a.tipo_alerta = 'stock_bajo')"
+            );
+            stmt.executeUpdate();
+            
+            stmt = conn.prepareStatement(
+                "INSERT INTO Alertas (id_ropa, mensaje, tipo_alerta, estado, umbral, fecha_alerta) " +
+                "SELECT r.id_ropa, " +
+                "CONCAT('Próximo a caducar: ', r.nombre, ' (', DATE_FORMAT(r.fecha_caducidad, '%d/%m/%Y'), ')'), " +
+                "'caducidad', 'activa', 30, CURRENT_TIMESTAMP " +
+                "FROM Ropa r " +
+                "WHERE r.fecha_caducidad IS NOT NULL " +
+                "AND r.fecha_caducidad BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL 30 DAY) " +
+                "AND NOT EXISTS (SELECT 1 FROM Alertas a " +
+                "               WHERE a.id_ropa = r.id_ropa " +
+                "               AND a.tipo_alerta = 'caducidad')"
+            );
+            stmt.executeUpdate();
+            
         } finally {
             closeResources(conn, stmt, rs);
         }

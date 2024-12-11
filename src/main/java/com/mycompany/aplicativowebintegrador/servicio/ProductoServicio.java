@@ -1,5 +1,6 @@
 package com.mycompany.aplicativowebintegrador.servicio;
 
+import com.mycompany.aplicativowebintegrador.dao.AlertaDAO;
 import com.mycompany.aplicativowebintegrador.dao.ProductoDAO;
 import com.mycompany.aplicativowebintegrador.dao.IProductoDAO;
 import com.mycompany.aplicativowebintegrador.modelo.Producto;
@@ -14,15 +15,18 @@ public class ProductoServicio {
     
     private final IProductoDAO productoDAO;
     private final ProductoValidador validador;
+    private final AlertaDAO alertaDAO;
 
     public ProductoServicio() {
         this.productoDAO = new ProductoDAO();
         this.validador = new ProductoValidador();
+        this.alertaDAO = new AlertaDAO();
     }
 
     public ProductoServicio(IProductoDAO productoDAO) {
         this.productoDAO = productoDAO;
         this.validador = new ProductoValidador();
+        this.alertaDAO = new AlertaDAO();
     }
 
     public List<Producto> obtenerTodosLosProductos() throws SQLException {
@@ -45,6 +49,7 @@ public class ProductoServicio {
         logger.debug("Actualizando producto con ID: {}", producto.getId_ropa());
         validador.validar(producto);
         productoDAO.actualizar(producto);
+        alertaDAO.actualizarEstadoAlertasPorProducto(producto.getId_ropa(), producto.getStock());
     }
 
     public void eliminarProducto(int id) throws SQLException {
